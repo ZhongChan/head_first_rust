@@ -3,5 +3,6 @@ name = "world_hello"
 version = "0.1.0"
 edition = "2021"
 
-[dependencies]
-serde = "1.0.201"
+[[bin]]
+name = "ch2_1"
+path = "src/ch2/1_variable.rs"
