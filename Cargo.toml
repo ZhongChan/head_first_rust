@@ -5,4 +5,8 @@ edition = "2021"
 
 [[bin]]
 name = "ch2_1"
-path = "src/ch2/1_variable.rs"
+path = "src/ch2/1_0_variable.rs"
+
+[[bin]]
+name = "ch2_2"
+path = "src/ch2/2_0_basic_type.rs"
