@@ -1,3 +1,5 @@
+mod lib;
+
 fn main() {
     greet_world();
     penguin_new();

@@ -6,6 +6,9 @@ edition = "2021"
 [dependencies]
 num = "0.4.0"
 
+[lib]
+path = "src/lib.rs"
+
 [[bin]]
 name = "ch2_1"
 path = "src/ch2/1_0_variable.rs"
@@ -21,3 +24,7 @@ path = "src/ch2/2_1_number.rs"
 [[bin]]
 name = "ch2_2_2"
 path = "src/ch2/2_2_char_bool_unit.rs"
+
+[[bin]]
+name = "ch2_2_3"
+path = "src/ch2/2_3_expression.rs"

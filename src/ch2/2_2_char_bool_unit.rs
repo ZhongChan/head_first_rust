@@ -1,3 +1,6 @@
+#[macro_use]
+extern crate head_first_rust;
+
 fn main() {
     let functions: Vec<(&str, Box<dyn Fn()>)> = vec![
         ("字符类型", Box::new(|| char_type())),
@@ -28,17 +31,17 @@ fn char_type() {
     let z = 'ℤ';
     let g = '国';
     let heart_eyed_cat = '😻';
-    println!("字符'{}'占用了 {} 个字节", c, std::mem::size_of_val(&c));
-    println!("字符'{}'占用了 {} 个字节", z, std::mem::size_of_val(&z));
-    println!("字符'{}'占用了 {} 个字节", g, std::mem::size_of_val(&g));
-    println!("字符'{}'占用了 {} 个字节", heart_eyed_cat, std::mem::size_of_val(&heart_eyed_cat))
+    print_size_of_char!(c);
+    print_size_of_char!(z);
+    print_size_of_char!(g);
+    print_size_of_char!(heart_eyed_cat);
 }
 
 fn bool_type() {
     let t = true;
     let f: bool = false; //使用类型标注
-    println!("{}", std::mem::size_of_val(&t));
-    println!("{}", std::mem::size_of_val(&f));
+    print_size_of_val!(t);
+    print_size_of_val!(f);
 }
 
 ///单元类型
