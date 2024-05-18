@@ -28,3 +28,7 @@ path = "src/ch2/2_2_char_bool_unit.rs"
 [[bin]]
 name = "ch2_2_3"
 path = "src/ch2/2_3_expression.rs"
+
+[[bin]]
+name = "ch2_2_4"
+path = "src/ch2/2_4_function.rs"
