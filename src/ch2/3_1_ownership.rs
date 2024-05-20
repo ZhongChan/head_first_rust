@@ -5,6 +5,8 @@ use head_first_rust::print_size_of_val;
 fn main() {
     let functions: Vec<(&str, Box<dyn Fn()>)> = vec![
         ("所有权原则", Box::new(|| ownership_principle())),
+        ("深拷贝和浅拷贝", Box::new(|| clone_and_copy())),
+        ("函数值和返回", Box::new(|| fn_args_and_ret())),
     ];
 
     for (name, function) in functions.into_iter() {
@@ -86,4 +88,66 @@ fn box_basic_type() {
     let y = x;
     //println!("{}", x);  // borrow of moved value: `x`
     println!("{}", y);
+}
+
+fn clone_and_copy() {
+    // 深拷贝：栈指针和堆数据
+    let s1 = String::from("hello");
+    let s2 = s1.clone();
+    println!("s1:{},s2:{}", s1, s2);
+
+    // 浅拷贝
+    // 所有的基本类型 和 包含基本类型的 ()
+    let i: i32 = 10;
+    let j = i;
+    println!("i:{},j:{}", i, j);
+
+    let f1: f64 = 11.1;
+    let f2 = f1;
+    println!("f1:{},f2:{}", f1, f2);
+
+    let t1 = true;
+    let t2 = t1;
+    println!("t1:{},t2:{}", t1, t2);
+
+    let ut = (10, 12.0);
+    let ut2 = ut;
+    println!("ut:{:?},ut2:{:?}", ut, ut2);
+
+    // 只能是深拷贝
+    let nt = (1, String::from("hello"));
+    let nt2 = nt.clone();
+    println!("nt:{:?},nt2:{:?}", nt, nt2);
+}
+
+fn fn_args_and_ret() {
+    let s = String::from("hello");
+    takes_ownership(s);
+    // println!("{}", s); //borrow of moved value: `s`
+
+    let x = 5;
+    makes_copy(x);
+    println!("x:{}", x);
+
+    let s1 = gives_ownership();
+    let s2 = String::from("hello");
+    let s3 = takes_and_give_back(s2);
+    println!("s1:{},s3:{}", s1, s3); //s2 没有所有权
+}
+
+fn takes_ownership(some_string: String) {
+    println!("{}", some_string);
+}
+
+fn makes_copy(x: i32) {
+    println!("{}", x);
+}
+
+fn gives_ownership() -> String {
+    let some_string = String::from("hello");
+    some_string
+}
+
+fn takes_and_give_back(a_string: String) -> String {
+    a_string
 }
