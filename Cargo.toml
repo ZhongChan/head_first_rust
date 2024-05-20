@@ -36,3 +36,7 @@ path = "src/ch2/2_4_function.rs"
 [[bin]]
 name = "ch2_3_1"
 path = "src/ch2/3_1_ownership.rs"
+
+[[bin]]
+name = "ch2_3_2"
+path = "src/ch2/3_2_ref_or_borrow.rs"
