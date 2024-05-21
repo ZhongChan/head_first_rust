@@ -5,6 +5,7 @@ fn main() {
         ("可变引用", Box::new(|| mut_ref())),
         ("可变引用同时只有有一个", Box::new(|| only_one_mut_ref())),
         ("NLL", Box::new(|| nll())),
+        ("悬垂引用", Box::new(|| dangle_ref())),
     ];
 
     for (name, function) in functions.into_iter() {
@@ -97,4 +98,24 @@ fn nll() {
 
     let s4 = &mut s1; //只能由一个可变引用
     println!("s4:{}", s4);
+}
+
+/// 悬垂引用
+/// # Examples
+///
+/// ```
+///  fn dangle() -> &String { //返回字符串的引用
+///     let s = String::from("hello");
+///     &s //返回字符串 s 的引用
+///  } // s 内存被释放
+/// ```
+///因为 s 是在 dangle 函数内创建的，当 dangle 的代码执行完毕后，s 将被释放，
+///但是此时我们又尝试去返回它的引用。这意味着这个引用会指向一个无效的 String，这可不对！
+fn dangle_ref() {
+    println!("{}", no_dangle());
+}
+
+fn no_dangle() -> String {
+    let s = String::from("hello");
+    s
 }
