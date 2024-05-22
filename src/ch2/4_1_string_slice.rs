@@ -30,6 +30,7 @@ fn read(f: &mut File, save_to: &mut Vec<u8>) -> ! {
 fn main() {
     let functions: Vec<(&str, Box<dyn Fn()>)> = vec![
         ("基本示例", Box::new(|| basic())),
+        ("切片", Box::new(|| slice())),
     ];
 
     for (name, function) in functions.into_iter() {
@@ -46,4 +47,36 @@ fn basic() {
     open(&mut f);
     // read(&mut f, &mut vec![]);
     close(&mut f);
+}
+
+fn slice() {
+    let s = String::from("hello,rust");
+    let s1 = &s[0..4]; //s的不可变引用
+    let s2 = &s[3..7]; //s的不可变引用
+    println!("s1:{},s2:{}", s1, s2, );
+
+    //最后一个字节
+    let s3 = &s[4..s.len()];
+    let s4 = &s[4..];
+    println!("s3:{},s4:{}", s3, s4);
+
+    //整个字符串
+    let s5 = &s[0..s.len()];
+    let s6 = &s[..];
+    println!("s5:{},s6:{}", s5, s6);
+
+    let utf8_str = String::from("中国人");//每个汉字3个字节
+    // let u1 = &utf8_str[0..2]; 报错
+    let u1 = &utf8_str[0..3]; //打印：中
+    println!("u1:{}", u1);
+
+    //消除编译器警告，示例用
+    #[allow(warnings)] let mut all = String::from("hello,everyone");
+    let f = first_world(&all); //不可变引用
+    // everyone.clear(); //可变引用  cannot borrow `everyone` as mutable because it is also borrowed as immutable
+    println!("all:{},first_word:{}", all, f); //不可变引用
+}
+
+fn first_world(s: &String) -> &str {
+    &s[..1]
 }
