@@ -1,6 +1,5 @@
+#[macro_use]
 extern crate head_first_rust;
-
-use head_first_rust::print_size_of_val;
 
 fn main() {
     let functions: Vec<(&str, Box<dyn Fn()>)> = vec![

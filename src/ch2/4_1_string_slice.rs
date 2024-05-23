@@ -1,4 +1,6 @@
 #![allow(unused_variables)]
+#[macro_use]
+extern crate head_first_rust;
 
 /// 从代码设计角度来看，关于文件操作的类型和函数应该组织在一起，
 /// 散落得到处都是，是难以管理和使用的。
@@ -31,6 +33,9 @@ fn main() {
     let functions: Vec<(&str, Box<dyn Fn()>)> = vec![
         ("基本示例", Box::new(|| basic())),
         ("切片", Box::new(|| slice())),
+        ("字符串基础", Box::new(|| string_basic())),
+        ("String与&str的转换", Box::new(|| string_str())),
+        ("字符串索引", Box::new(|| string_index())),
     ];
 
     for (name, function) in functions.into_iter() {
@@ -79,4 +84,36 @@ fn slice() {
 
 fn first_world(s: &String) -> &str {
     &s[..1]
+}
+
+/// 字符串基础
+/// 字符 是Unicode 编码（4字节）
+/// 字符串 utf-8 编码（1~4字节）
+fn string_basic() {
+    let s1 = "中";
+    print_size_of_val!(s1);
+    let c1 = '中';
+    print_size_of_char!(c1);
+}
+
+/// String 与 &str 转换
+/// &str 硬编码进可执行文件、utf-8编码
+/// String 可变长度、utf-8编码、所有权
+fn string_str() {
+    let s = String::from("hello,rust");
+    say_hello(&s); //不可变引用
+    say_hello(&s[..]); //切片
+    say_hello(s.as_str()); //底层直接返回 &str
+}
+
+fn say_hello(s: &str) {
+    println!("{}", s);
+}
+
+/// String 和 &str 变长 ，按index取出来也没有意义
+fn string_index() {
+    let s = "你好，rust";//您好，9字节+4字节
+    // let h = s[0]; //The type `str` cannot be indexed by `{integer}` [E0277]
+    print_size_of_val!(s); //13字节
+    println!("{:?}", s.as_bytes());
 }
