@@ -36,6 +36,7 @@ fn main() {
         ("字符串基础", Box::new(|| string_basic())),
         ("String与&str的转换", Box::new(|| string_str())),
         ("字符串索引", Box::new(|| string_index())),
+        ("字符串切片", Box::new(|| string_slice())),
     ];
 
     for (name, function) in functions.into_iter() {
@@ -116,4 +117,14 @@ fn string_index() {
     // let h = s[0]; //The type `str` cannot be indexed by `{integer}` [E0277]
     print_size_of_val!(s); //13字节
     println!("{:?}", s.as_bytes());
+}
+
+/// 危险：字符串切片
+/// 字符串要去校验每个字符的边界
+fn string_slice() {
+    let s = "你好，rust";//您好，9字节+4字节
+    println!("{}", s);
+    // let h = &s[0..2]; //byte index 2 is not a char boundary; it is inside '你' (bytes 0..3) of `你好，rust`
+    let h: String = s.chars().take(3).collect();
+    println!("{}", h);
 }
