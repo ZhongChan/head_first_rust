@@ -216,4 +216,10 @@ fn string_operating() {
     let mut result = dbg!(result) + "!"; //String + &str
     result += "!!!"; //使用的是 push_str()
     dbg!(result);
+
+    // 使用 format
+    let s10 = "hello,";
+    let s11 = String::from("rust");
+    let s12 = format!("{}{}!", s10, s11);
+    println!("{}", s12);
 }
