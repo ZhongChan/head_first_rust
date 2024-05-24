@@ -2,6 +2,7 @@
 #[macro_use]
 extern crate head_first_rust;
 
+
 /// 从代码设计角度来看，关于文件操作的类型和函数应该组织在一起，
 /// 散落得到处都是，是难以管理和使用的。
 ///
@@ -37,6 +38,7 @@ fn main() {
         ("String与&str的转换", Box::new(|| string_str())),
         ("字符串索引", Box::new(|| string_index())),
         ("字符串切片", Box::new(|| string_slice())),
+        ("字符操作", Box::new(|| string_operating())),
     ];
 
     for (name, function) in functions.into_iter() {
@@ -127,4 +129,91 @@ fn string_slice() {
     // let h = &s[0..2]; //byte index 2 is not a char boundary; it is inside '你' (bytes 0..3) of `你好，rust`
     let h: String = s.chars().take(3).collect();
     println!("{}", h);
+}
+
+fn string_operating() {
+    /*
+    追加 Push
+    */
+    let mut s1 = String::from("hello");
+    //追加字符串
+    s1.push_str(",rust");
+    println!("{}", s1);
+    //追加字符
+    s1.push('!');
+    println!("{}", s1);
+
+    /*
+    插入 Insert
+    */
+    s1.insert(5, '你');
+    println!("{}", s1);
+
+    s1.insert_str(8, "好啊"); //和字符串切片一样的问题，utf-8变长编码，位置不一定对
+    println!("{}", s1);
+
+    /*
+    替换 Replace
+     */
+    let new_s1 = s1.replace("rust", "RUST");
+    println!("{}", new_s1);
+    // 如果没有匹配到 直接返回原字符串切片
+    assert_eq!(s1, s1.replace("foo", "bar"));
+
+    let s2 = "foo foo 123 foo";
+    assert_eq!("new new 123 foo", s2.replacen("foo", "new", 2)); //只匹配2次
+    assert_eq!("faa fao 123 foo", s2.replacen('o', "a", 3)); //只匹配3才
+    assert_eq!("foo foo newnew3 foo", s2.replacen(char::is_numeric, "new", 2)); //数字 替换成 new 匹配2次
+
+    // 如果没有匹配到 直接返回原字符串切片
+    assert_eq!(s2, s2.replacen("bar", "foo_bar", 1));
+
+    //修改字符串
+    let mut s3 = String::from("I like rust!");
+    s3.replace_range(7..8, "R");
+    dbg!(s3);
+
+    /*
+    删除 Delete
+    */
+    // pop 删除并返回字符最后一个字符
+    let mut s4 = String::from("rust pop 中文！");
+    let p1 = s4.pop();
+    let p2 = s4.pop();
+    dbg!(p1);
+    dbg!(p2);
+    dbg!(s4);
+
+    // delete
+    let mut s5 = String::from("测试remove方法");
+    s5.remove(0);
+    // s5.remove(1); //byte index 1 is not a char boundary 老问题了，字符串切片 utf-8编码
+    dbg!(s5);
+
+    // truncate
+    let mut s6 = String::from("测试truncate");
+    // s6.truncate(2); //assertion failed: self.is_char_boundary(new_len) 老问题了，字符串切片 utf-8编码
+    s6.truncate(3);
+    dbg!(s6);
+
+    // clear
+    let mut s7 = String::from("测试clear"); //6+5=11
+    s7.clear();
+    assert!(s7.is_empty());
+    assert_eq!(0, s7.len());
+    assert_eq!(11, s7.capacity());
+
+    /*
+    连接 Concatenate
+    */
+    let s8 = String::from("hello,");
+    let s9 = String::from("rust");
+    // s8自动解引用为 &str 本质是调用 add 方法
+    // + 运算，左侧只能是 String
+    // 根据 add 的定义，s8 的所有权被转移了
+    let result = s8 + &s9; //value moved here
+    // dbg!(s8);
+    let mut result = dbg!(result) + "!"; //String + &str
+    result += "!!!"; //使用的是 push_str()
+    dbg!(result);
 }
