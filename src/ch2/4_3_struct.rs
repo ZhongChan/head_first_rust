@@ -1,6 +1,7 @@
 fn main() {
     let functions: Vec<(&str, Box<dyn Fn()>)> = vec![
         ("基础操作", Box::new(|| basic())),
+        ("结构体内存", Box::new(|| struct_mem_sort())),
     ];
 
     for (name, function) in functions.into_iter() {
@@ -84,4 +85,20 @@ fn build_user(email: String, username: String) -> User {
         email, // 同名直接省略key
         sign_in_count: 999,
     }
+}
+
+
+#[derive(Debug)]
+struct File {
+    name: String,
+    data: Vec<u8>,
+}
+
+/// 结构体内存排序
+fn struct_mem_sort() {
+    let f1 = File { name: "f1.txt".to_string(), data: Vec::new() };
+    let f_name = &f1.name;
+    let f_length = &f1.data.len();
+    println!("{:?}", f1);
+    println!("{} is {} bytes long", f_name, f_length);
 }
