@@ -41,6 +41,7 @@ fn main() {
         ("字符串操作", Box::new(|| string_operating())),
         ("字符串转义", Box::new(|| string_escape())),
         ("字符串不转义", Box::new(|| string_unescape())),
+        ("字符串utf8操作", Box::new(|| string_utf8())),
     ];
 
     for (name, function) in functions.into_iter() {
@@ -259,4 +260,21 @@ fn string_unescape() {
     // 如果还是有歧义，可以继续增加，没有限制
     let longer_delimiter = r###"A string with "# in it. And even "##!"###;
     println!("{}", longer_delimiter);
+}
+
+fn string_utf8() {
+    //Unicode 字符串遍历
+    for x in "中国人".chars() {
+        println!("{}", x);
+    }
+
+    //字节遍历
+    for x in "中国人".bytes() {
+        println!("{}", x);
+    }
+
+    //复杂字符串获取子串
+    let complex_string = String::from("holla中国人नमस्ते");
+    let x1 = complex_string.chars().nth(7).unwrap();
+    println!("{}", x1);
 }
