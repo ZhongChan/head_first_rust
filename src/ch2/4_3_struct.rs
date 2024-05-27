@@ -1,0 +1,87 @@
+fn main() {
+    let functions: Vec<(&str, Box<dyn Fn()>)> = vec![
+        ("基础操作", Box::new(|| basic())),
+    ];
+
+    for (name, function) in functions.into_iter() {
+        println!();
+        println!(">>>>>>>>>>开始执行：{}", name);
+        function();
+        println!("{}: 执行结束<<<<<<<<<<", name);
+    }
+}
+
+#[derive(Debug)]
+struct User {
+    username: String,
+    email: String,
+    active: bool,
+    sign_in_count: i64,
+}
+
+fn basic() {
+    let u1 = User {
+        active: false,
+        username: "whom".to_string(),
+        email: "foo@bar.com".to_string(),
+        sign_in_count: 10,
+    };
+    println!("{:?}", u1);
+
+    // 不支持某个字段单独标记为可变
+    let mut u2 = User {
+        active: false,
+        username: "".to_string(),
+        email: "".to_string(),
+        sign_in_count: 2,
+    };
+
+    u2.active = true;
+    u2.username = "foo_foo".to_string();
+    u2.email = "foo_foo@qq.com".to_string();
+    dbg!(u2);
+
+    let u3 = build_user("foo@qq.com".to_string(), "foo_bar_bar".to_string());
+    dbg!(u3);
+
+    // 结构体更新语法
+    let u4 = User {
+        active: u1.active,
+        username: u1.username,
+        email: "strut_update@qq.com".to_string(),
+        sign_in_count: 0,
+    };
+    dbg!(u4);
+
+    let u5 = User {
+        email: "foo@bar.com".to_string(),
+        ..build_user("my@qq.com".to_string(), "my_name".to_string()) // 自动赋值只能放最后
+    };
+    dbg!(u5);
+
+    let user1 = User {
+        username: "foo".to_string(),
+        email: "user1@qq.com".to_string(),
+        active: true,
+        sign_in_count: 1,
+    };
+
+    let user2 = User {
+        username: user1.username, // 所有权转移
+        email: "user2@qq.com".to_string(),
+        active: user1.active, // 基本类型 copy
+        sign_in_count: user1.sign_in_count, // 基本类型 copy
+    };
+    println!("{}", user1.active); // 正常打印
+    //println!("{}", user1.username) // borrow of moved value: `user1.username`
+    println!("{:?}", user2);
+}
+
+fn build_user(email: String, username: String) -> User {
+    User {
+        active: false,
+        username, // 同名直接省略key
+        email, // 同名直接省略key
+        sign_in_count: 999,
+    }
+}
