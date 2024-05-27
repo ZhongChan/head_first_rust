@@ -2,6 +2,8 @@ fn main() {
     let functions: Vec<(&str, Box<dyn Fn()>)> = vec![
         ("基础操作", Box::new(|| basic())),
         ("结构体内存", Box::new(|| struct_mem_sort())),
+        ("元组结构", Box::new(|| tuple_struct())),
+        ("单元结构体", Box::new(|| unit_like_struct())),
     ];
 
     for (name, function) in functions.into_iter() {
@@ -101,4 +103,34 @@ fn struct_mem_sort() {
     let f_length = &f1.data.len();
     println!("{:?}", f1);
     println!("{} is {} bytes long", f_name, f_length);
+}
+
+#[derive(Debug)]
+struct Color(i32, i32, i32);
+
+#[derive(Debug)]
+struct Point(i32, i32, i32);
+
+fn tuple_struct() {
+    let black = Color(0, 0, 0);
+    let origin = Point(0, 0, 0);
+    println!("{:?}", black);
+    println!("{:?}", origin);
+}
+
+
+#[derive(Debug)]
+struct AlwaysEqual;
+
+fn unit_like_struct() {
+    let subject = AlwaysEqual;
+    println!("{:?}", subject);
+}
+
+
+struct UserLifetimes {
+    // username: &str, //Missing lifetime specifier [E0106] todo 引入生命周期解决
+    // email: &str, //Missing lifetime specifier [E0106] todo 引入生命周期解决
+    sign_in_count: u64,
+    active: bool,
 }
