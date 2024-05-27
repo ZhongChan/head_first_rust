@@ -33,4 +33,12 @@ fn basic() {
     let e = [10, 9, 8, 7, 6];
     let ten = e[0];
     dbg!(ten);
+
+    // 字符串类型 重复生成
+    // 基本类型才有 copy
+    // let f = [String::from("hello"); 8]; // the trait `Copy` is not implemented for `String`
+    // println!("{:#?}", f);
+
+    let f: [String; 8] = std::array::from_fn(|_i| String::from("hello,rust"));
+    dbg!(f);
 }
