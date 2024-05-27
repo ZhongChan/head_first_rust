@@ -56,3 +56,11 @@ path = "src/ch2/4_3_struct.rs"
 [[bin]]
 name = "ch2_4_4"
 path = "src/ch2/4_4_enum.rs"
+
+[[bin]]
+name = "ch2_4_5"
+path = "src/ch2/4_5_array.rs"
+
+[[bin]]
+name = "ch2_4_5_2"
+path = "src/ch2/4_5_array_input.rs"
