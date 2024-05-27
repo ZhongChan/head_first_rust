@@ -44,3 +44,7 @@ path = "src/ch2/3_2_ref_or_borrow.rs"
 [[bin]]
 name = "ch2_4_1"
 path = "src/ch2/4_1_string_slice.rs"
+
+[[bin]]
+name = "ch2_4_2"
+path = "src/ch2/4_2_unit_type.rs"
