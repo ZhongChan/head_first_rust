@@ -52,3 +52,7 @@ path = "src/ch2/4_2_tuple.rs"
 [[bin]]
 name = "ch2_4_3"
 path = "src/ch2/4_3_struct.rs"
+
+[[bin]]
+name = "ch2_4_4"
+path = "src/ch2/4_4_enum.rs"
