@@ -1,6 +1,7 @@
 fn main() {
     let functions: Vec<(&str, Box<dyn Fn()>)> = vec![
         ("基本示例", Box::new(|| basic())),
+        ("match 匹配", Box::new(|| match_demo())),
     ];
 
     for (name, function) in functions.into_iter() {
@@ -30,5 +31,42 @@ fn basic() {
             println!("West or North");
         }
         _ => { println!("West"); }
+    }
+}
+
+/// match 匹配
+/// # Example
+/// ```
+/// match target {
+///     模式1 => 表达式1,
+///     模式2 => {
+///         语句1;
+///         语句2;
+///         表达式2
+///     },
+///     _ => 表达式3
+/// }
+/// ```
+fn match_demo() {
+    println!("{}", value_in_cents(Coin::Dime));
+    println!("{}", value_in_cents(Coin::Penney));
+}
+
+enum Coin {
+    Penney,
+    Nickel,
+    Dime,
+    Quarter,
+}
+
+fn value_in_cents(coin: Coin) -> u8 {
+    match coin {
+        Coin::Penney => {
+            println!("Lucky Penny");
+            1
+        }
+        Coin::Nickel => { 5 }
+        Coin::Dime => { 10 }
+        Coin::Quarter => { 25 }
     }
 }
