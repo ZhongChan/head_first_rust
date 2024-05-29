@@ -68,3 +68,7 @@ path = "src/ch2/4_5_array_input.rs"
 [[bin]]
 name = "ch2_5_0"
 path = "src/ch2/5_0_flow_ctl.rs"
+
+[[bin]]
+name = "ch2_6_1"
+path = "src/ch2/6_1_match_if_let.rs"
