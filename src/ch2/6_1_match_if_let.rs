@@ -2,6 +2,7 @@ fn main() {
     let functions: Vec<(&str, Box<dyn Fn()>)> = vec![
         ("基本示例", Box::new(|| basic())),
         ("match 匹配", Box::new(|| match_demo())),
+        ("match 表达式赋值", Box::new(|| match_expression())),
     ];
 
     for (name, function) in functions.into_iter() {
@@ -69,4 +70,18 @@ fn value_in_cents(coin: Coin) -> u8 {
         Coin::Dime => { 10 }
         Coin::Quarter => { 25 }
     }
+}
+
+enum IpAddr {
+    IpV4,
+    IpV6,
+}
+
+fn match_expression() {
+    let ip1 = IpAddr::IpV4;
+    let ip_str = match ip1 {
+        IpAddr::IpV4 => { "127.0.0.1" }
+        _ => { "::1" }
+    };
+    println!("{}", ip_str);
 }
