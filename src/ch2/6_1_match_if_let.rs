@@ -9,6 +9,7 @@ fn main() {
         ("match 穷尽匹配", Box::new(|| match_exhaustive())),
         ("if let 匹配", Box::new(|| if_let())),
         ("matches! 宏", Box::new(|| matches_macro())),
+        ("变量遮蔽", Box::new(|| variable_shadowing())),
     ];
 
     for (name, function) in functions.into_iter() {
@@ -245,4 +246,39 @@ fn matches_macro() {
 
     let bar = Some(4);
     assert!(matches!(bar,Some(x) if x > 2))
+}
+
+/// 变量遮蔽
+fn variable_shadowing() {
+    let age = Some(30);
+    println!("在匹配前age是：{:?}", age);
+    // Some(age) 被 age:i32遮蔽了
+    if let Some(age) = age {
+        println!("匹配出来的age是：{}", age);
+    }
+
+    println!("在匹配后age是：{:?}", age);
+
+
+    // match 也会变量遮蔽
+    let age2 = Some(33);
+    println!("在匹配前age2是：{:?}", age2);
+    match age2 {
+        None => {}
+        Some(age2) => {
+            println!("匹配出来的age2是：{}", age2);
+        }
+    }
+    println!("在匹配后age2是：{:?}", age2);
+
+
+    let x = 5;
+    {
+        let x = x + 1;
+        println!("The value of x in the inner scope is: {}", x);
+    }
+    println!("The value of x is: {}", x);
+
+    let x = x * 2;
+    println!("The value of x after shadowing is: {}", x);
 }
