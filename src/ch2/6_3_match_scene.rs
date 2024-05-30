@@ -4,6 +4,7 @@ fn main() {
         ("while let", Box::new(|| while_let())),
         ("for 循环", Box::new(|| for_loop())),
         ("let 语句", Box::new(|| let_expression())),
+        ("函数参数", Box::new(|| func_args())),
     ];
 
     for (name, function) in functions.into_iter() {
@@ -84,4 +85,21 @@ fn let_expression() {
 
     // let (r,g,b) = (1,2); //Type mismatch [E0308]
     // let (r, g) = (1, 2, 3); //Type mismatch [E0308]
+}
+
+/// 函数参数
+/// ```
+/// fn foo(x: i32) {
+///     // 代码
+/// }
+/// ```
+/// 其中 x 就是一个模式，你还可以在参数中匹配元组：
+///
+fn func_args() {
+    let point = (3, 5);
+    print_coordinates(&point);
+}
+
+fn print_coordinates(&(x, y): &(i32, i32)) {
+    println!("Current location: ({},{})", x, y);
 }
