@@ -7,6 +7,7 @@ fn main() {
         ("match 表达式赋值", Box::new(|| match_expression())),
         ("match 模式绑定", Box::new(|| match_binding())),
         ("match 穷尽匹配", Box::new(|| match_exhaustive())),
+        ("if let 匹配", Box::new(|| if_let())),
     ];
 
     for (name, function) in functions.into_iter() {
@@ -175,5 +176,22 @@ fn match_exhaustive() {
         other => {
             println!("Some other coin: {:?}", other);
         }
+    }
+}
+
+/// 当你只要匹配一个条件，且忽略其他条件时就用 if let ，否则都用 match。
+fn if_let() {
+    // 使用 match  需要穷尽匹配
+    let v = Some(3u8);
+    match v {
+        Some(3) => {
+            println!("three");
+        }
+        _ => ()
+    }
+
+    let v1 = Some(3u8);
+    if let Some(3) = v1 {
+        println!("three");
     }
 }
