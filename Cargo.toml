@@ -72,3 +72,7 @@ path = "src/ch2/5_0_flow_ctl.rs"
 [[bin]]
 name = "ch2_6_1"
 path = "src/ch2/6_1_match_if_let.rs"
+
+[[bin]]
+name = "ch2_6_3"
+path = "src/ch2/6_3_match_scene.rs"
