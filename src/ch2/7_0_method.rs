@@ -2,6 +2,8 @@ fn main() {
     let functions: Vec<(&str, Box<dyn Fn()>)> = vec![
         ("基本示例", Box::new(|| basic())),
         ("所有权", Box::new(|| owner_ship())),
+        ("自动引用", Box::new(|| auto_referencing())),
+        ("自动解引用", Box::new(|| auto_dereferencing())),
     ];
 
     for (name, function) in functions.into_iter() {
@@ -103,4 +105,42 @@ impl Example {
     fn modified(&mut self) {
         self.data.push_str(",Rust")
     }
+}
+
+struct Point {
+    x: i32,
+    y: i32,
+}
+
+impl Point {
+    fn move_by(&mut self, dx: i32, dy: i32) {
+        self.x += dx;
+        self.y += dy;
+    }
+
+    fn get_x(&self) -> i32 {
+        self.x
+    }
+}
+
+/// # 自动引用 (Auto-Referencing)
+/// 当你调用一个对象的方法时，Rust 会自动根据方法签名添加 & 或 &mut。
+/// 这意味着即使你有一个值，而方法期望一个引用，你不需要显式地引用这个值；Rust 会为你处理这个引用。
+fn auto_referencing() {
+    let mut p = Point { x: 0, y: 0 };
+    // 直接调用，无需显式使用 &mut point
+    p.move_by(12, 33);
+    println!("Point move to:({}, {})", p.x, p.y);
+}
+
+/// # 自动解引用 (Auto-Dereferencing)
+/// 当你调用一个方法时，如果该方法是在一个引用的类型上定义的（如 Box, &, Rc, 等），
+/// Rust 将自动解引用这个引用以匹配方法。这意味着你可以在一个类型的引用上调用直接定义在该类型上的方法。
+fn auto_dereferencing() {
+    let p = Point { x: 20, y: 30 };
+    let p_ref = &p;
+    // 手动解引用
+    println!("The x coordinate is :{}", (*p_ref).get_x());
+    // 自动解引用，无需写 (*p_ref).get_x()
+    println!("The x coordinate is :{}", p_ref.get_x());
 }
