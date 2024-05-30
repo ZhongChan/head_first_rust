@@ -6,6 +6,7 @@ fn main() {
         ("match 匹配", Box::new(|| match_demo())),
         ("match 表达式赋值", Box::new(|| match_expression())),
         ("match 模式绑定", Box::new(|| match_binding())),
+        ("match 穷尽匹配", Box::new(|| match_exhaustive())),
     ];
 
     for (name, function) in functions.into_iter() {
@@ -17,6 +18,7 @@ fn main() {
 }
 
 #[allow(dead_code)]
+#[derive(Debug)]
 enum Direction {
     East,
     West,
@@ -67,6 +69,7 @@ enum UsState {
 }
 
 #[allow(dead_code)]
+#[derive(Debug)]
 enum Coin {
     Penney,
     Nickel,
@@ -131,6 +134,46 @@ fn match_binding() {
             ChangeColorRGB(r, g, _) => {
                 println!("change color into '(r:{},g:{},b:0)','b' has been ignored", r, g);
             }
+        }
+    }
+}
+
+/// 穷尽匹配
+/// 使用通配符或者变量
+/// 有点类似 switch 的 default 分支。
+fn match_exhaustive() {
+    let dire = Direction::West;
+    match dire {
+        Direction::East => { println!("heading {:?}", dire); }
+        _ => {
+            println!("通配符匹配其他情况：{:?}", dire);
+        }
+    }
+
+    match dire {
+        Direction::East => {}
+        other => {
+            println!("变量绑定匹配其他情况: {:?}", other);
+        }
+    }
+
+    let coin = Coin::Quarter(UsState::Alabama);
+    match coin {
+        Coin::Penney => {}
+        //other 不能直接解构 Quarter 中的值
+        other => {
+            println!("{:?}", other);
+        }
+    }
+
+    let quarter = Coin::Quarter(UsState::Alabama);
+    match quarter {
+        // 单独处理 解构值
+        Coin::Quarter(state) => {
+            println!("State quarter from {:?}!", state);
+        }
+        other => {
+            println!("Some other coin: {:?}", other);
         }
     }
 }
