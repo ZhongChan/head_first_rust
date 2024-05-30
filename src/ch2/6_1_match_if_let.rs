@@ -8,6 +8,7 @@ fn main() {
         ("match 模式绑定", Box::new(|| match_binding())),
         ("match 穷尽匹配", Box::new(|| match_exhaustive())),
         ("if let 匹配", Box::new(|| if_let())),
+        ("matches! 宏", Box::new(|| matches_macro())),
     ];
 
     for (name, function) in functions.into_iter() {
@@ -194,4 +195,54 @@ fn if_let() {
     if let Some(3) = v1 {
         println!("three");
     }
+}
+
+#[derive(PartialEq)]
+#[derive(Debug)]
+enum MyEnum {
+    Foo,
+    Bar,
+}
+
+/// matches! 宏
+/// Rust 标准库中提供了一个非常实用的宏：matches!，
+/// 它可以将一个表达式跟模式进行匹配，然后返回匹配的结果 true or false。
+///
+/// ```matches!(expression, pattern)```
+///
+/// * expression：这是要匹配的表达式，它的类型是任意的，但通常是一些变量或值。
+/// * pattern：这是一个模式，用于与表达式进行匹配。这个模式可以是字面值、结构体、枚举变体或其他复合数据类型的匹配模式。
+///
+/// # Example
+/// ```
+/// enum MyEnum {
+///     Foo(i32),
+///     Bar,
+///     Baz { x: i32, y: i32 }
+/// }
+///
+/// let value = MyEnum::Foo(42);
+///
+/// if matches!(value, MyEnum::Foo(x) if x > 40) {
+///     println!("It's a Foo variant with a value greater than 40.");
+/// }
+///
+/// ```
+/// 在这个例子中，matches! 宏检查 value 是否是 __MyEnum::Foo__ 变体，并且其内部的值大于 40。
+///
+fn matches_macro() {
+    let v = vec![MyEnum::Foo, MyEnum::Bar, MyEnum::Foo];
+    let filtered: Vec<_> = v.iter().filter(|x| **x == MyEnum::Foo).collect();
+    dbg!(filtered);
+
+    // 使用 matches! 宏匹配
+    let v2 = vec![MyEnum::Foo, MyEnum::Bar, MyEnum::Foo];
+    let filtered2: Vec<_> = v2.iter().filter(|x| matches!(x,MyEnum::Foo)).collect();
+    dbg!(filtered2);
+
+    let foo = 'f';
+    assert!(matches!(foo,'A'..='Z' | 'a'..='z'));
+
+    let bar = Some(4);
+    assert!(matches!(bar,Some(x) if x > 2))
 }
