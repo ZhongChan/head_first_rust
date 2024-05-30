@@ -76,3 +76,7 @@ path = "src/ch2/6_1_match_if_let.rs"
 [[bin]]
 name = "ch2_6_3"
 path = "src/ch2/6_3_match_scene.rs"
+
+[[bin]]
+name = "ch2_7_0"
+path = "src/ch2/7_0_method.rs"
