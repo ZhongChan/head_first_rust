@@ -4,6 +4,7 @@ fn main() {
         ("所有权", Box::new(|| owner_ship())),
         ("自动引用", Box::new(|| auto_referencing())),
         ("自动解引用", Box::new(|| auto_dereferencing())),
+        ("enum 实现方法", Box::new(|| enum_impl())),
     ];
 
     for (name, function) in functions.into_iter() {
@@ -155,4 +156,30 @@ fn auto_dereferencing() {
     println!("The x coordinate is :{}", (*p_ref).get_x());
     // 自动解引用，无需写 (*p_ref).get_x()
     println!("The x coordinate is :{}", p_ref.get_x());
+}
+
+#[allow(dead_code)]
+enum Message {
+    Quit,
+    Move { x: i32, y: i32 },
+    Write(String),
+    ChangeColor(i32, i32, i32),
+}
+
+impl Message {
+    fn call(&self) {
+        match self {
+            Message::Quit => {}
+            Message::Move { .. } => {}
+            Message::Write(msg) => {
+                println!("{}", msg);
+            }
+            Message::ChangeColor(_, _, _) => {}
+        }
+    }
+}
+
+fn enum_impl() {
+    let m = Message::Write("hello,enum impl".to_string());
+    m.call();
 }
