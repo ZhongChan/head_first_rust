@@ -69,6 +69,7 @@ fn struct_generics() {
 
 #[derive(Debug)]
 #[allow(dead_code)]
+/// 不能的泛型参数
 struct Point<T, U> {
     x: T,
     y: U,
