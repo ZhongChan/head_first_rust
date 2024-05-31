@@ -4,6 +4,7 @@ use std::ops::Add;
 fn main() {
     let functions: Vec<(&str, Box<dyn Fn()>)> = vec![
         ("基本示例", Box::new(|| basic())),
+        ("结构体泛型", Box::new(|| struct_generics())),
     ];
 
     for (name, function) in functions.into_iter() {
@@ -55,4 +56,27 @@ fn largest<T1: PartialOrd + Copy>(list: &[T1]) -> T1 {
         }
     }
     largest
+}
+
+/// # 结构体泛型
+fn struct_generics() {
+    let p1 = Point { x: 3.0, y: "hello".to_string() };
+    dbg!(p1);
+
+    let p2 = Point2 { x: 3.0, y: 4.0 };
+    dbg!(p2);
+}
+
+#[derive(Debug)]
+#[allow(dead_code)]
+struct Point<T, U> {
+    x: T,
+    y: U,
+}
+
+#[derive(Debug)]
+#[allow(dead_code)]
+struct Point2<T> {
+    x: T,
+    y: T,
 }
