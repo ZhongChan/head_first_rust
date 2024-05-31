@@ -21,6 +21,7 @@ fn basic() {
     let r = Rectangle::new(4f64, 9f64);
     println!("{}", r.area());
     println!("{}", r.perimeter());
+    r.anther();
 }
 
 #[allow(dead_code)]
@@ -60,6 +61,16 @@ impl Rectangle {
     }
 }
 
+
+/// 多个 impl 方便文件分块
+/// new 只能有一个
+/// 关联函数、方法 都不支持重载
+impl Rectangle {
+    fn anther(&self) {
+        println!("anther impl:({}, {})", self.width, self.height);
+    }
+}
+
 /// self 依然有所有权的概念：
 /// * ```self``` 表示所有权转移到该方法中，这种形式用的较少
 /// * ```&self``` 表示该方法对实例的不可变借用
@@ -84,6 +95,7 @@ struct Example {
 
 #[allow(dead_code)]
 impl Example {
+    //注意这里是 关联函数(静态方法) 没有 self
     pub fn new(data: String) -> Self {
         Self { data }
     }
