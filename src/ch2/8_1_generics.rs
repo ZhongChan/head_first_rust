@@ -1,10 +1,13 @@
 use std::cmp::Ordering;
+use std::fs::File;
+use std::io::{Error, Read};
 use std::ops::Add;
 
 fn main() {
     let functions: Vec<(&str, Box<dyn Fn()>)> = vec![
         ("基本示例", Box::new(|| basic())),
         ("结构体泛型", Box::new(|| struct_generics())),
+        ("枚举泛型", Box::new(|| enum_generics())),
     ];
 
     for (name, function) in functions.into_iter() {
@@ -80,4 +83,36 @@ struct Point<T, U> {
 struct Point2<T> {
     x: T,
     y: T,
+}
+
+/// # 枚举中使用泛型
+/// 两个最常用的枚举泛型:
+/// null 和 错误处理
+/// ```
+/// enum Option<T> {
+///      Some(T),
+///      None,
+///  }
+///
+/// enum Result<T, E> {
+///     Ok(T),
+///     Err(E),
+/// }
+/// ```
+fn enum_generics() {
+    match read_file_to_string("test.json") {
+        Ok(contents) => {
+            println!("{}", contents);
+        }
+        Err(error) => {
+            println!("Error reading file: {}", error);
+        }
+    }
+}
+
+fn read_file_to_string(file_path: &str) -> Result<String, Error> {
+    let mut file = File::open(file_path)?;
+    let mut contents = String::new();
+    file.read_to_string(&mut contents)?;
+    Ok(contents)
 }
