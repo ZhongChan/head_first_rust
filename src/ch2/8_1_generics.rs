@@ -8,6 +8,7 @@ fn main() {
         ("基本示例", Box::new(|| basic())),
         ("结构体泛型", Box::new(|| struct_generics())),
         ("枚举泛型", Box::new(|| enum_generics())),
+        ("方法中使用泛型", Box::new(|| method_generics())),
     ];
 
     for (name, function) in functions.into_iter() {
@@ -115,4 +116,54 @@ fn read_file_to_string(file_path: &str) -> Result<String, Error> {
     let mut contents = String::new();
     file.read_to_string(&mut contents)?;
     Ok(contents)
+}
+
+/// # 方法中使用泛型
+fn method_generics() {
+    let p = PointGeneric::new(-1.0, -2.0);
+    println!("{}", p.x);
+
+    let p1 = PointGeneric2 { x: 1.0, y: 2.0 };
+    let p2 = PointGeneric2::new("Hello", 'c');
+    let p3 = p1.mix_up(p2);
+    dbg!(p3);
+}
+
+#[allow(dead_code)]
+struct PointGeneric<T> {
+    x: T,
+    y: T,
+}
+
+#[allow(dead_code)]
+impl<T> PointGeneric<T> {
+    pub fn x(&self) -> &T {
+        &self.x
+    }
+}
+
+impl<T> PointGeneric<T> {
+    pub fn new(x: T, y: T) -> Self {
+        Self { x, y }
+    }
+}
+
+#[allow(dead_code)]
+#[derive(Debug)]
+struct PointGeneric2<T, U> {
+    x: T,
+    y: U,
+}
+
+impl<T, U> PointGeneric2<T, U> {
+    pub fn new(x: T, y: U) -> Self {
+        Self { x, y }
+    }
+
+    fn mix_up<V, W>(self, other: PointGeneric2<V, W>) -> PointGeneric2<T, W> {
+        PointGeneric2 {
+            x: self.x,
+            y: other.y,
+        }
+    }
 }
