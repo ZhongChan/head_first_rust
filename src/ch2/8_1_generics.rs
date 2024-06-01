@@ -2,6 +2,7 @@ use std::cmp::Ordering;
 use std::fs::File;
 use std::io::{Error, Read};
 use std::ops::Add;
+use num::abs;
 
 fn main() {
     let functions: Vec<(&str, Box<dyn Fn()>)> = vec![
@@ -127,6 +128,9 @@ fn method_generics() {
     let p2 = PointGeneric2::new("Hello", 'c');
     let p3 = p1.mix_up(p2);
     dbg!(p3);
+
+    let point_f64 = Point { x: 1.0, y: 2.0 };
+    println!("distance of two point: {}", point_f64.distance());
 }
 
 #[allow(dead_code)]
@@ -165,5 +169,12 @@ impl<T, U> PointGeneric2<T, U> {
             x: self.x,
             y: other.y,
         }
+    }
+}
+
+/// 为具体的泛型类实现方法
+impl Point<f64, f64> {
+    fn distance(&self) -> f64 {
+        abs(self.x - self.y)
     }
 }
