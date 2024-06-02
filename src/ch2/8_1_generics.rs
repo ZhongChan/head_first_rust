@@ -11,6 +11,7 @@ fn main() {
         ("枚举泛型", Box::new(|| enum_generics())),
         ("方法中使用泛型", Box::new(|| method_generics())),
         ("const 泛型", Box::new(|| const_generics())),
+        ("TryInto 安全转换", Box::new(|| try_into())),
     ];
 
     for (name, function) in functions.into_iter() {
@@ -198,4 +199,17 @@ impl<T, const N: usize> ArrayWrapper<T, N> {
     pub fn get(&self, index: usize) -> Option<&T> {
         self.data.get(index)
     }
+}
+
+fn try_into() {
+    let large_number: i32 = 1000;
+    let smaller_number: u8 = match large_number.try_into() {
+        Ok(num) => num,
+        Err(e) => {
+            println!("错误转换：{}", e);
+            return;
+        }
+    };
+
+    println!("成功转换：{}", smaller_number);
 }
