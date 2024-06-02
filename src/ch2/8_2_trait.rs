@@ -17,8 +17,10 @@ fn main() {
 fn basic() {
     let post = Post::new("Head first Rust".to_string(), "Zhong".to_string(), "一本介绍Rust的书籍".to_string());
     println!("{}", post.summarize());
+    println!("{}", post.something()); //默认实现
     let weibo = Weibo::new("重".to_string(), "我发了一条微博".to_string());
     println!("{}", weibo.summarize());
+    println!("{}", weibo.something()); //覆盖默认实现
 }
 
 /// # 孤儿规则（Orphan Rule）
@@ -30,6 +32,12 @@ fn orphan_rule() {
 
 pub trait Summary {
     fn summarize(&self) -> String;
+}
+
+pub trait Say {
+    fn something(&self) -> String {
+        "Read more...".to_string()
+    }
 }
 
 #[allow(dead_code)]
@@ -44,6 +52,8 @@ impl Post {
         Self { title, author, content }
     }
 }
+
+impl Say for Post {}
 
 impl Summary for Post {
     fn summarize(&self) -> String {
@@ -77,5 +87,11 @@ impl Weibo {
 impl Summary for Weibo {
     fn summarize(&self) -> String {
         format!("{}发表了微博{}", self.username, self.content)
+    }
+}
+
+impl Say for Weibo {
+    fn something(&self) -> String {
+        "微博".to_string()
     }
 }
