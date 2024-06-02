@@ -5,6 +5,7 @@ fn main() {
         ("基本示例", Box::new(|| basic())),
         ("孤儿规则", Box::new(|| orphan_rule())),
         ("使用特征作为函数参数", Box::new(|| trait_as_params())),
+        ("特征约束", Box::new(|| trait_bound())),
     ];
 
     for (name, function) in functions.into_iter() {
@@ -105,6 +106,35 @@ fn trait_as_params() {
     // notify("hello");//Trait `Summary` is not implemented for `str` [E0277]
 }
 
+/// # 泛型参数的语法糖
+/// # Example
+///```
+/// pub fn notify<T: Summary>(item: &T) {
+///     println!("Breaking news! {}", item.summarize());
+/// }
+///```
 pub fn notify(item: &impl Summary) {
     println!("Breaking news! {}", item.summarize());
+}
+
+/// # 特征约束
+fn trait_bound() {
+    let post = Post::new("Head first Rust".to_string(), "Zhong".to_string(), "一本介绍Rust的书籍".to_string());
+    let post2 = Post::new("Head first Golang".to_string(), "Zhong".to_string(), "一本介绍Go的书籍".to_string());
+    let weibo = Weibo::new("重".to_string(), "我发了一条微博".to_string());
+
+    notify2(&post, &post2);
+    // notify2(&post, &weibo); //type mismatch [E0308] expected `&Post`, but found `&Weibo`
+    notify3(&post2, &weibo);
+    notify3(&post, &post2);
+}
+
+/// 同时限制类型和Trait
+pub fn notify2<T: Summary>(item1: &T, item2: &T) {
+    println!("{} {}", item1.summarize(), item2.summarize());
+}
+
+/// 没有类型限制，只需要实现 Summary Trait
+pub fn notify3(item1: &impl Summary, item2: &impl Summary) {
+    println!("{} {}", item1.summarize(), item2.summarize());
 }
