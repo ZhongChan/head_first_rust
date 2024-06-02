@@ -4,6 +4,7 @@ fn main() {
     let functions: Vec<(&str, Box<dyn Fn()>)> = vec![
         ("基本示例", Box::new(|| basic())),
         ("孤儿规则", Box::new(|| orphan_rule())),
+        ("使用特征作为函数参数", Box::new(|| trait_as_params())),
     ];
 
     for (name, function) in functions.into_iter() {
@@ -94,4 +95,16 @@ impl Say for Weibo {
     fn something(&self) -> String {
         "微博".to_string()
     }
+}
+
+fn trait_as_params() {
+    let post = Post::new("Head first Rust".to_string(), "Zhong".to_string(), "一本介绍Rust的书籍".to_string());
+    let weibo = Weibo::new("重".to_string(), "我发了一条微博".to_string());
+    notify(&post);
+    notify(&weibo);
+    // notify("hello");//Trait `Summary` is not implemented for `str` [E0277]
+}
+
+pub fn notify(item: &impl Summary) {
+    println!("Breaking news! {}", item.summarize());
 }
