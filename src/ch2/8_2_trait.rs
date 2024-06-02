@@ -7,6 +7,7 @@ fn main() {
         ("使用特征作为函数参数", Box::new(|| trait_as_params())),
         ("特征约束", Box::new(|| trait_bound())),
         ("Where 约束", Box::new(|| where_bound())),
+        ("有条件实现方法或特征", Box::new(|| condition_bound())),
     ];
 
     for (name, function) in functions.into_iter() {
@@ -187,4 +188,34 @@ fn some_where_function<T, U>(t: &T, u: &U) -> i32
 
     let debug_output = format!("{:?}", u);
     debug_output.len() as i32
+}
+
+/// # 特征约束，可以让我们在指定类型 + 指定特征的条件下去实现方法
+fn condition_bound() {
+    let p = Pair::new(1.0, 2.0);
+    p.cmp_display();
+
+    let c = Pair::new('z', 'a');
+    c.cmp_display();
+}
+
+struct Pair<T> {
+    x: T,
+    y: T,
+}
+
+impl<T> Pair<T> {
+    pub fn new(x: T, y: T) -> Self {
+        Self { x, y }
+    }
+}
+
+impl<T: Display + PartialOrd> Pair<T> {
+    fn cmp_display(&self) {
+        if self.x >= self.y {
+            println!("The largest member is x = {}", self.x);
+        } else {
+            println!("The largest member is y = {}", self.y);
+        }
+    }
 }
