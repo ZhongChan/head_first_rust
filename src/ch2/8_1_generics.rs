@@ -1,4 +1,5 @@
 use std::cmp::Ordering;
+use std::fmt::{Display, Formatter};
 use std::fs::File;
 use std::io::{Error, Read};
 use std::ops::Add;
@@ -12,6 +13,7 @@ fn main() {
         ("方法中使用泛型", Box::new(|| method_generics())),
         ("const 泛型", Box::new(|| const_generics())),
         ("TryInto 安全转换", Box::new(|| try_into())),
+        ("综合示例", Box::new(|| example())),
     ];
 
     for (name, function) in functions.into_iter() {
@@ -212,4 +214,84 @@ fn try_into() {
     };
 
     println!("成功转换：{}", smaller_number);
+}
+
+//派生Debug特征，方便打印
+#[derive(Debug)]
+struct NewPoint<T: Add<T, Output=T>> { //类型T必须实现 Add 特征
+    x: T,
+    y: T,
+}
+
+impl<T: Add<T, Output=T>> NewPoint<T> {
+    pub fn new(x: T, y: T) -> Self {
+        Self { x, y }
+    }
+}
+
+impl<T: Add<T, Output=T>> Add for NewPoint<T> {
+    type Output = NewPoint<T>;
+
+    fn add(self, rhs: Self) -> Self::Output {
+        NewPoint {
+            x: self.x + rhs.x,
+            y: self.y + rhs.y,
+        }
+    }
+}
+
+
+#[derive(Debug)]
+#[allow(dead_code)]
+enum FileState {
+    Open,
+    Closed,
+}
+
+#[derive(Debug)]
+#[allow(dead_code)]
+struct MyFile {
+    name: String,
+    data: Vec<u8>,
+    state: FileState,
+}
+
+impl MyFile {
+    pub fn new(name: &str) -> Self {
+        MyFile {
+            name: String::from(name),
+            data: vec![],
+            state: FileState::Closed,
+        }
+    }
+}
+
+impl Display for FileState {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        match *self {
+            FileState::Open => write!(f, "OPEN file"),
+            FileState::Closed => write!(f, "CLOSED file"),
+        }
+    }
+}
+
+impl Display for MyFile {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "<{} ({})>", self.name, self.state)
+    }
+}
+
+fn example() {
+    let p1 = NewPoint::new(1.0, 2.0);
+    let p2 = NewPoint::new(2.0, 1.0);
+    println!("{:?}", add(p1, p2));
+
+    let p3 = NewPoint::new(1, 2);
+    let p4 = NewPoint::new(2, 1);
+    println!("{:?}", add(p3, p4));
+
+    // 文件状态
+    let f = MyFile::new("test.json");
+    println!("{:?}", f); // Debug trait
+    println!("{}", f); // Display trait
 }
