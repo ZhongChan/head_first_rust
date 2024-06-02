@@ -84,3 +84,7 @@ path = "src/ch2/7_0_method.rs"
 [[bin]]
 name = "ch2_8_1"
 path = "src/ch2/8_1_generics.rs"
+
+[[bin]]
+name = "ch2_8_2"
+path = "src/ch2/8_2_trait.rs"
