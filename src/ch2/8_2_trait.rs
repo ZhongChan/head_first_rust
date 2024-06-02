@@ -1,4 +1,4 @@
-use std::fmt::{Display, Formatter};
+use std::fmt::{Debug, Display, Formatter};
 
 fn main() {
     let functions: Vec<(&str, Box<dyn Fn()>)> = vec![
@@ -6,6 +6,7 @@ fn main() {
         ("孤儿规则", Box::new(|| orphan_rule())),
         ("使用特征作为函数参数", Box::new(|| trait_as_params())),
         ("特征约束", Box::new(|| trait_bound())),
+        ("Where 约束", Box::new(|| where_bound())),
     ];
 
     for (name, function) in functions.into_iter() {
@@ -158,4 +159,32 @@ pub fn notify4(item: &(impl Summary + Display)) {
 pub fn notify5<T: Summary + Display>(item: &T) {
     println!("{}", item.summarize()); //Summary 特征方法
     println!("{}", item); // Display 格式化输出 fmt
+}
+
+/// # Where 约束
+fn where_bound() {
+    let t = "Hello,Rust";
+    let u = vec![1, 2, 3];
+    let result = some_function(&t, &u);
+    println!("The length of U's debug output is: {}", result);
+
+    let result2 = some_where_function(&t, &u);
+    println!("The length of U's debug output is: {}", result2);
+}
+
+fn some_function<T: Display + Clone, U: Clone + Debug>(t: &T, u: &U) -> i32 {
+    println!("Displaying T: {}", t);
+
+    let debug_output = format!("{:?}", u);
+    debug_output.len() as i32
+}
+
+fn some_where_function<T, U>(t: &T, u: &U) -> i32
+    where T: Display + Clone,
+          U: Clone + Debug
+{
+    println!("Displaying T: {}", t);
+
+    let debug_output = format!("{:?}", u);
+    debug_output.len() as i32
 }
