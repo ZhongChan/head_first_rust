@@ -8,6 +8,7 @@ fn main() {
         ("特征约束", Box::new(|| trait_bound())),
         ("Where 约束", Box::new(|| where_bound())),
         ("有条件实现方法或特征", Box::new(|| condition_bound())),
+        ("函数返回 Trait", Box::new(|| return_impl_trait())),
     ];
 
     for (name, function) in functions.into_iter() {
@@ -90,7 +91,7 @@ impl Weibo {
 
 impl Summary for Weibo {
     fn summarize(&self) -> String {
-        format!("{}发表了微博{}", self.username, self.content)
+        format!("{} 发表了微博=> {}", self.username, self.content)
     }
 }
 
@@ -216,6 +217,45 @@ impl<T: Display + PartialOrd> Pair<T> {
             println!("The largest member is x = {}", self.x);
         } else {
             println!("The largest member is y = {}", self.y);
+        }
+    }
+}
+
+/// # 函数返回中的 impl Trait
+fn return_impl_trait() {
+    println!("{}", returns_summarize().summarize());
+    // println!("{}", returns_summarizable(true).summarize()); //error[E0308]: `if` and `else` have incompatible types
+}
+
+/// 虽然是返回的 Trait 。但是对类型是有要求的，必须是同一个类型
+fn returns_summarize() -> impl Summary {
+    Weibo {
+        username: "重".to_string(),
+        content: "Trait 作为返回值".to_string(),
+    }
+}
+
+/// 使用条件编译，编码这个错误的函数被编译
+/// 该函数返回了不同的 结构体
+#[cfg(feature = "example")]
+fn returns_summarizable(switch: bool) -> impl Summary {
+    if switch {
+        Post {
+            title: String::from(
+                "Penguins win the Stanley Cup Championship!",
+            ),
+            author: String::from("Iceburgh"),
+            content: String::from(
+                "The Pittsburgh Penguins once again are the best \
+                 hockey team in the NHL.",
+            ),
+        }
+    } else {
+        Weibo {
+            username: String::from("horse_ebooks"),
+            content: String::from(
+                "of course, as you probably already know, people",
+            ),
         }
     }
 }
