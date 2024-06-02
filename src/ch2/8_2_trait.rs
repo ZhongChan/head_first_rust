@@ -127,6 +127,14 @@ fn trait_bound() {
     // notify2(&post, &weibo); //type mismatch [E0308] expected `&Post`, but found `&Weibo`
     notify3(&post2, &weibo);
     notify3(&post, &post2);
+
+    // 多重约束 Summary + Display
+    //notify4(&weibo); //Trait `Display` is not implemented for `Weibo` [E0277]
+    notify4(&post);
+
+    // 多重约束 类型+泛型
+    // notify("Hello"); // Trait `Summary` is not implemented for `str` [E0277]
+    notify5(&post);
 }
 
 /// 同时限制类型和Trait
@@ -137,4 +145,17 @@ pub fn notify2<T: Summary>(item1: &T, item2: &T) {
 /// 没有类型限制，只需要实现 Summary Trait
 pub fn notify3(item1: &impl Summary, item2: &impl Summary) {
     println!("{} {}", item1.summarize(), item2.summarize());
+}
+
+/// 多重约束
+pub fn notify4(item: &(impl Summary + Display)) {
+    println!("{}", item.summarize()); //Summary 特征方法
+    println!("{}", item); // Display 格式化输出 fmt
+}
+
+
+/// 多重约束 : 类型T + 泛型 Summary 和 Display
+pub fn notify5<T: Summary + Display>(item: &T) {
+    println!("{}", item.summarize()); //Summary 特征方法
+    println!("{}", item); // Display 格式化输出 fmt
 }
