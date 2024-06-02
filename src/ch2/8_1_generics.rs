@@ -10,6 +10,7 @@ fn main() {
         ("结构体泛型", Box::new(|| struct_generics())),
         ("枚举泛型", Box::new(|| enum_generics())),
         ("方法中使用泛型", Box::new(|| method_generics())),
+        ("const 泛型", Box::new(|| const_generics())),
     ];
 
     for (name, function) in functions.into_iter() {
@@ -176,5 +177,25 @@ impl<T, U> PointGeneric2<T, U> {
 impl Point<f64, f64> {
     fn distance(&self) -> f64 {
         abs(self.x - self.y)
+    }
+}
+
+fn const_generics() {
+    let array_wrapper = ArrayWrapper::new([1, 2, 3]);
+    println!("Element at index 2: {:?}", array_wrapper.get(2));
+}
+
+
+struct ArrayWrapper<T, const N: usize> {
+    data: [T; N],
+}
+
+
+impl<T, const N: usize> ArrayWrapper<T, N> {
+    pub fn new(data: [T; N]) -> Self {
+        Self { data }
+    }
+    pub fn get(&self, index: usize) -> Option<&T> {
+        self.data.get(index)
     }
 }
