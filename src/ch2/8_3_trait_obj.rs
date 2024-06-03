@@ -259,6 +259,11 @@ fn object_safetiy(){
     let cat =  Cat;
     make_some_nosie(&dog);
     make_some_nosie(&cat);
+
+    // let obj: Box<dyn MyTrait> = Box::new(5);  // 这行代码会报错，不满足特征对象安全
+    let x = i32::new();
+    println!("x: {}",x);
+    println!("method: {}",x.method());
 }
 
 
@@ -283,4 +288,19 @@ impl Speak for Cat {
 
 fn make_some_nosie(animal: &dyn Speak){
     animal.speak();
+}
+
+trait MyTrait {
+   fn new() -> Self;
+   fn method(&self)->i32; 
+}
+
+impl MyTrait for i32 {
+    fn new() -> Self {
+        0
+    }
+
+    fn method(&self) ->i32{
+        *self
+    }
 }
