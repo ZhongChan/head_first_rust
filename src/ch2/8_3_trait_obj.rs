@@ -2,6 +2,7 @@ fn main() {
     let functions: Vec<(&str, Box<dyn Fn()>)> = vec![
         ("使用枚举解决多结构体返回", Box::new(|| enum_return_struct())),
         ("特征对象的定义", Box::new(|| trait_obj_def())),
+        ("self 和 Self", Box::new(|| self_and_big_self())),
     ];
 
     for (name, function) in functions.into_iter() {
@@ -201,4 +202,35 @@ impl Draw for String {
     fn drawing(&self) {
         println!("Draw String {:?}", self);
     }
+}
+
+#[allow(dead_code)]
+trait Appearance {
+    fn skin(&self) -> Self;
+}
+
+#[derive(Clone)]
+#[derive(Debug)]
+struct Duck;
+
+impl Appearance for Duck {
+    fn skin(&self) -> Self {
+        return self.clone();
+    }
+}
+
+/// # self
+/// * self 指向具体的对象实例。
+/// * 在 Rust 中，self 用于实例方法中，代表方法被调用的具体实例。
+/// * 根据方法的定义，self 可以是所有权形式 (self)，不可变引用 (&self)，或可变引用 (&mut self)。
+/// * 这允许方法根据需要读取或修改实例的状态。
+///
+/// # Self
+/// * Self 是类型本身的一个别名，确实可以视作一种语法糖，使得在特征或类型的实现中不必重复类型名称。
+/// * 这在特征定义和实现时特别有用，因为它允许代码更加通用和易于维护。
+/// * 当在类型 T 的 impl 块中使用 Self 时，Self 就代表了 T。
+fn self_and_big_self() {
+    let duck = Duck;
+    let new_duck = duck.skin();
+    println!("{:?}", new_duck);
 }
