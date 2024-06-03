@@ -3,6 +3,7 @@ fn main() {
         ("使用枚举解决多结构体返回", Box::new(|| enum_return_struct())),
         ("特征对象的定义", Box::new(|| trait_obj_def())),
         ("self 和 Self", Box::new(|| self_and_big_self())),
+        ("特征对象使用条件", Box::new(|| object_safetiy())),
     ];
 
     for (name, function) in functions.into_iter() {
@@ -233,4 +234,53 @@ fn self_and_big_self() {
     let duck = Duck;
     let new_duck = duck.skin();
     println!("{:?}", new_duck);
+}
+
+/// ## 特征对象的安全
+/// * 特质中的所有方法都必须至少有一个参数是 self（可以是 &self 或 &mut self）。
+/// * 特质中不能包含任何返回 Self 的方法。
+/// * 特质中不能使用泛型参数。 
+/// 
+/// ## 特征对象的使用
+/// * 特质对象通常通过指针（如 Box<dyn Trait> 或 &dyn Trait）来使用。 
+/// * 
+/// 
+/// ## 为什么返回 Self 会破坏对象安全？
+/// * 在使用特质对象时，具体的类型在编译时是未知的，只有在运行时才确定。
+/// * 如果一个方法返回 Self 类型，编译器无法知道具体应该构造和返回哪种类型的实例，
+/// * 因为 Self 的具体类型在使用特质对象时是不确定的。
+/// 
+/// 这就是为什么返回 Self 的方法会导致特质不是对象安全的。
+/// 
+/// ## 关联函数和对象安全
+/// 
+fn object_safetiy(){
+    let dog = Dog;
+    let cat =  Cat;
+    make_some_nosie(&dog);
+    make_some_nosie(&cat);
+}
+
+
+trait Speak {
+   fn speak(&self); 
+}
+
+struct Dog;
+struct Cat;
+
+impl Speak for Dog {
+    fn speak(&self) {
+        println!("Woof!");
+    }
+}
+
+impl Speak for Cat {
+    fn speak(&self) {
+        println!("Miaoo!");
+    }
+}
+
+fn make_some_nosie(animal: &dyn Speak){
+    animal.speak();
 }
