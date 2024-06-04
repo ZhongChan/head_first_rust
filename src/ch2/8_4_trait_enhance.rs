@@ -5,6 +5,7 @@ fn main() {
         ("关联类型", Box::new(|| associated_types())),
         ("默认泛型类型参数", Box::new(|| default_generic_params())),
         ("同名方法调用", Box::new(|| same_method())),
+        ("同名关联函数", Box::new(|| same_assoicated_function())),
     ];
 
     for (name, function) in functions.into_iter() {
@@ -264,5 +265,31 @@ impl Wizard for Human {
 impl Human {
     fn fly(&self) {
         println!("Human can not fly")
+    }
+}
+
+/// # 同名 关联函数
+/// * 完全限定语法 
+/// ```<Type as Trait>::function()```
+fn same_assoicated_function() {
+    println!("A baby dog called a {}", Dog::baby_name());
+    println!("A baby dog called a {}", <Dog as Animal>::baby_name()); //完全限定语法
+}
+
+trait Animal {
+    fn baby_name() -> String;
+}
+
+struct Dog;
+
+impl Dog {
+    fn baby_name() -> String {
+        "Spot".to_string()
+    }
+}
+
+impl Animal for Dog {
+    fn baby_name() -> String {
+        "puppy".to_string()
     }
 }
