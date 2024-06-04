@@ -4,6 +4,7 @@ fn main() {
     let functions: Vec<(&str, Box<dyn Fn()>)> = vec![
         ("关联类型", Box::new(|| associated_types())),
         ("默认泛型类型参数", Box::new(|| default_generic_params())),
+        ("同名方法调用", Box::new(|| same_method())),
     ];
 
     for (name, function) in functions.into_iter() {
@@ -222,10 +223,46 @@ struct Millimeters(u32);
 struct Meters(u32);
 
 // 两种不同类型相加 操作符重载
-impl Add<Meters>  for Millimeters {
+impl Add<Meters> for Millimeters {
     type Output = Millimeters;
 
     fn add(self, rhs: Meters) -> Self::Output {
-          Millimeters(self.0 + rhs.0 * 1000)
+        Millimeters(self.0 + rhs.0 * 1000)
+    }
+}
+
+/// # 同名方法调用
+fn same_method() {
+    let person = Human;
+    person.fly();
+    Pilot::fly(&person);
+    Wizard::fly(&person);
+}
+
+trait Pilot {
+    fn fly(&self);
+}
+
+trait Wizard {
+    fn fly(&self);
+}
+
+struct Human;
+
+impl Pilot for Human {
+    fn fly(&self) {
+        println!("Human as Pilot can fly");
+    }
+}
+
+impl Wizard for Human {
+    fn fly(&self) {
+        println!("Human as Wizard can fly");
+    }
+}
+
+impl Human {
+    fn fly(&self) {
+        println!("Human can not fly")
     }
 }
