@@ -1,5 +1,10 @@
+use std::ops::Add;
+
 fn main() {
-    let functions: Vec<(&str, Box<dyn Fn()>)> = vec![("关联类型", Box::new(|| associated_types()))];
+    let functions: Vec<(&str, Box<dyn Fn()>)> = vec![
+        ("关联类型", Box::new(|| associated_types())),
+        ("默认泛型类型参数", Box::new(|| default_generic_params())),
+    ];
 
     for (name, function) in functions.into_iter() {
         println!();
@@ -131,8 +136,8 @@ impl<N, E> GraphG<N, E> for AdjacencyMatrixG<N, E> {
 
         //初始化空行
         let mut new_row = Vec::new();
-        for _ in 0..self.nodes.len(){
-          new_row.push(None);
+        for _ in 0..self.nodes.len() {
+            new_row.push(None);
         }
 
         self.edges.push(new_row);
@@ -181,5 +186,46 @@ impl Iterator for Counter {
         } else {
             None
         }
+    }
+}
+
+/// # 默认泛型参数
+/// 在 Rust 中，"RHS" 通常指的是 "right-hand side"，即在表达式中等号右侧的部分。
+/// 这个术语通常用于讨论赋值、比较或其他二元操作符的上下文中。
+/// 在 Rust 编程中，理解 RHS 是理解表达式求值和类型推断的关键部分。
+fn default_generic_params() {
+    dbg!(Point { x: 1, y: 0 } + Point { x: 3, y: 3 });
+    dbg!(Millimeters(1) + Meters(2));
+}
+
+#[derive(Debug, PartialEq)]
+struct Point {
+    x: i32,
+    y: i32,
+}
+
+// 模拟 运算符重载
+impl Add for Point {
+    type Output = Point;
+
+    fn add(self, rhs: Self) -> Self::Output {
+        Point {
+            x: self.x + rhs.x,
+            y: self.y + rhs.y,
+        }
+    }
+}
+
+#[derive(Debug)]
+struct Millimeters(u32);
+#[derive(Debug)]
+struct Meters(u32);
+
+// 两种不同类型相加 操作符重载
+impl Add<Meters>  for Millimeters {
+    type Output = Millimeters;
+
+    fn add(self, rhs: Meters) -> Self::Output {
+          Millimeters(self.0 + rhs.0 * 1000)
     }
 }
