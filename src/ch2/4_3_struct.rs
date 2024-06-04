@@ -106,9 +106,11 @@ fn struct_mem_sort() {
 }
 
 #[derive(Debug)]
+#[allow(dead_code)]
 struct Color(i32, i32, i32);
 
 #[derive(Debug)]
+#[allow(dead_code)]
 struct Point(i32, i32, i32);
 
 fn tuple_struct() {
@@ -128,6 +130,7 @@ fn unit_like_struct() {
 }
 
 
+#[allow(dead_code)]
 struct UserLifetimes {
     // username: &str, //Missing lifetime specifier [E0106] todo 引入生命周期解决
     // email: &str, //Missing lifetime specifier [E0106] todo 引入生命周期解决

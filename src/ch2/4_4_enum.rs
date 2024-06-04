@@ -14,6 +14,7 @@ fn main() {
 
 /// 扑克的花色
 #[derive(Debug)]
+#[allow(dead_code)]
 enum PokerSuit {
     Clubs,
     Spades,
@@ -22,12 +23,14 @@ enum PokerSuit {
 }
 
 #[derive(Debug)]
+#[allow(dead_code)]
 struct PokerCard {
     suit: PokerSuit,
     value: u8,
 }
 
 #[derive(Debug)]
+#[allow(dead_code)]
 enum PokerCardSuit {
     Clubs(u8),
     Spades(u8),
@@ -36,6 +39,7 @@ enum PokerCardSuit {
 }
 
 #[derive(Debug)]
+#[allow(dead_code)]
 enum PokerCartSuitOther {
     Clubs(u8),
     Spades(u8),
@@ -44,6 +48,7 @@ enum PokerCartSuitOther {
 }
 
 #[derive(Debug)]
+#[allow(dead_code)]
 enum Message {
     Quit, // 无关联数据
     Move { x: i32, y: i32 }, // 匿名结构体
