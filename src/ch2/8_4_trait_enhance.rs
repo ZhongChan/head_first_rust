@@ -1,3 +1,5 @@
+use std::fmt::Debug;
+use std::fmt::Display;
 use std::ops::Add;
 
 fn main() {
@@ -6,6 +8,7 @@ fn main() {
         ("默认泛型类型参数", Box::new(|| default_generic_params())),
         ("同名方法调用", Box::new(|| same_method())),
         ("同名关联函数", Box::new(|| same_assoicated_function())),
+        ("特征定义中的特征约束", Box::new(|| trait_bounds())),
     ];
 
     for (name, function) in functions.into_iter() {
@@ -269,7 +272,7 @@ impl Human {
 }
 
 /// # 同名 关联函数
-/// * 完全限定语法 
+/// * 完全限定语法
 /// ```<Type as Trait>::function()```
 fn same_assoicated_function() {
     println!("A baby dog called a {}", Dog::baby_name());
@@ -293,3 +296,66 @@ impl Animal for Dog {
         "puppy".to_string()
     }
 }
+
+/// # 特征定义中的特征约束
+fn trait_bounds() {
+    let button = Button {
+        label: "normal".to_string(),
+    };
+    button.draw();
+    button.click();
+
+    let point = Point2::new(11, 12);
+    point.outline_print();
+}
+
+trait Widget: Debug + Clone {
+    fn draw(&self);
+    fn click(&self);
+}
+
+#[derive(Debug, Clone)]
+struct Button {
+    label: String,
+}
+
+impl Widget for Button {
+    fn draw(&self) {
+        println!("Drawing button: {}", self.label)
+    }
+
+    fn click(&self) {
+        println!("Click button")
+    }
+}
+
+trait OutlinePrint: Display {
+    fn outline_print(&self) {
+        let output = self.to_string();
+        let len = output.len();
+        println!("{}", "*".repeat(len + 4));
+        println!("*{}*", " ".repeat(len + 2));
+        println!("* {} *", output);
+        println!("*{}*", " ".repeat(len + 2));
+        println!("{}", "*".repeat(len + 4));
+    }
+}
+
+struct Point2 {
+    x: i32,
+    y: i32,
+}
+
+impl Point2 {
+    fn new(x: i32, y: i32) -> Self {
+        Point2 { x, y }
+    }
+}
+
+impl Display for Point2 {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "x:{},y:{}", self.x, self.y)
+    }
+}
+
+impl OutlinePrint for Point2 {}
