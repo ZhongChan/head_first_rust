@@ -9,6 +9,7 @@ fn main() {
         ("Where 约束", Box::new(|| where_bound())),
         ("有条件实现方法或特征", Box::new(|| condition_bound())),
         ("函数返回 Trait", Box::new(|| return_impl_trait())),
+        ("newtype", Box::new(|| new_type())),
     ];
 
     for (name, function) in functions.into_iter() {
@@ -257,5 +258,30 @@ fn returns_summarizable(switch: bool) -> impl Summary {
                 "of course, as you probably already know, people",
             ),
         }
+    }
+}
+
+/// 为外部类型实现外部特征
+/// 绕过孤儿原则
+/// 
+/// # 为 Vec<T> 实现外部特征 
+/// ```
+/// // Vec` is not defined in the current crate
+/// impl<T> Display for Vec<T> {
+/// } 
+/// ``` 
+/// 可以使用newtype 绕过这个限制 
+/// 
+fn new_type(){
+    let w = Wrapper(vec!["hello".to_string(),"tuple struct".to_string()]);
+    println!("{}",w)
+}
+
+// 元组结构体
+struct Wrapper(Vec<String>);
+
+impl Display for Wrapper {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f,"[{}]",self.0.join(","))
     }
 }
