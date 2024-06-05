@@ -96,3 +96,7 @@ path = "src/ch2/8_3_trait_obj.rs"
 [[bin]]
 name = "ch2_8_4"
 path = "src/ch2/8_4_trait_enhance.rs"
+
+[[bin]]
+name = "ch2_9_1"
+path = "src/ch2/9_1_collection_vec.rs"
