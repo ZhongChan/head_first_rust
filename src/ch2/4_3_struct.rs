@@ -96,7 +96,7 @@ struct File {
     data: Vec<u8>,
 }
 
-/// 结构体内存排序
+/// # 结构体内存排序
 fn struct_mem_sort() {
     let f1 = File { name: "f1.txt".to_string(), data: Vec::new() };
     let f_name = &f1.name;

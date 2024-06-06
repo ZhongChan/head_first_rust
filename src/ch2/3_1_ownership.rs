@@ -55,13 +55,13 @@ fn val_binding() {
     println!("{}", y);
 }
 
-/// 预防优于治疗
-/// Rust 没有类似于 Go 的 panic 和 recover 机制。
-/// Rust 的错误处理哲学是“预防优于治疗”，
-/// 它鼓励开发者通过编译时检查来预防错误，
-/// 而不是在运行时捕获它们。
-/// Rust 的错误处理主要依赖于返回 Result 或 Option 类型，
-/// 以及使用 match 语句或 if let 表达式来处理这些类型。
+/// # 预防优于治疗
+/// * Rust 没有类似于 Go 的 panic 和 recover 机制。
+/// * Rust 的错误处理哲学是“预防优于治疗”，
+/// * 它鼓励开发者通过编译时检查来预防错误，
+/// * 而不是在运行时捕获它们。
+/// * Rust 的错误处理主要依赖于返回 Result 或 Option 类型，
+/// * 以及使用 match 语句或 if let 表达式来处理这些类型。
 fn borrow_of_moved_value() {
     let s1 = String::from("hello");
     let s2 = s1;
@@ -69,7 +69,7 @@ fn borrow_of_moved_value() {
     println!("{}", s2);
 }
 
-/// String 如何防止 borrow of moved
+/// # String 如何防止 borrow of moved
 fn solve_borrow_of_moved_value() {
     // 克隆
     let s1 = String::from("hello");

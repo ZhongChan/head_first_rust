@@ -44,7 +44,7 @@ fn plus_or_minus(x: i32) -> i32 {
     x + 5
 }
 
-// 特殊返回
+/// # 特殊返回
 fn function_ret_sp() {
     let numbers = [1, 2, 3, 4, 5];
     report(numbers);
@@ -55,12 +55,12 @@ fn function_ret_sp() {
     println!("the value of my_srt is {}", my_str);
 }
 
-// 隐式返回  unit type
+/// # 隐式返回  unit type
 fn report<T: Debug>(item: T) {
     println!("{:?}", item);
 }
 
-// 显示返回 unit type
+/// # 显示返回 unit type
 fn clear(text: &mut String) -> () {
     *text = String::from("")
 }

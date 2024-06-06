@@ -29,6 +29,7 @@ enum Direction {
     South,
 }
 
+/// # match
 /// match 中用三个匹配分支来完全覆盖枚举变量 Direction 的所有成员类型，有以下几点值得注意：
 /// * match 的匹配必须要穷举出所有可能，因此这里用 _ 来代表未列出的所有可能性
 /// * match 的每一个分支都必须是一个表达式，且所有分支的表达式最终返回值的类型必须相同
@@ -141,7 +142,7 @@ fn match_binding() {
     }
 }
 
-/// 穷尽匹配
+/// # 穷尽匹配
 /// 使用通配符或者变量
 /// 有点类似 switch 的 default 分支。
 fn match_exhaustive() {
@@ -181,7 +182,7 @@ fn match_exhaustive() {
     }
 }
 
-/// 当你只要匹配一个条件，且忽略其他条件时就用 if let ，否则都用 match。
+/// # 当你只要匹配一个条件，且忽略其他条件时就用 if let ，否则都用 match。
 fn if_let() {
     // 使用 match  需要穷尽匹配
     let v = Some(3u8);
@@ -205,7 +206,7 @@ enum MyEnum {
     Bar,
 }
 
-/// matches! 宏
+/// # matches! 宏
 /// Rust 标准库中提供了一个非常实用的宏：matches!，
 /// 它可以将一个表达式跟模式进行匹配，然后返回匹配的结果 true or false。
 ///
@@ -248,7 +249,7 @@ fn matches_macro() {
     assert!(matches!(bar,Some(x) if x > 2))
 }
 
-/// 变量遮蔽
+/// # 变量遮蔽
 fn variable_shadowing() {
     let age = Some(30);
     println!("在匹配前age是：{:?}", age);

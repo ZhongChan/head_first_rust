@@ -261,7 +261,7 @@ fn returns_summarizable(switch: bool) -> impl Summary {
     }
 }
 
-/// 为外部类型实现外部特征
+/// # 为外部类型实现外部特征
 /// 绕过孤儿原则
 /// 
 /// # 为 Vec<T> 实现外部特征 

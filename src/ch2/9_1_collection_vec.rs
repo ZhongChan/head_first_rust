@@ -31,3 +31,14 @@ fn basic() {
         None => println!("nothing get"),
     }
 }
+
+/// # 同时借用多个数组元素
+/// 这段代码无法执行
+/// 使用条件编译，编码这个错误的函数被编译
+#[cfg(feature = "multi_borrow")] 
+fn multi_borrow() {
+    let mut v = vec![1, 2, 3, 4, 5];
+    let first = &v[0]; // immutable borrow occurs here
+    v.push(6); //mutable borrow occurs here
+    println!("the first element is: {first}"); // immutable borrow later used here
+}

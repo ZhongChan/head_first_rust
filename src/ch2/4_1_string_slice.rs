@@ -3,12 +3,12 @@
 extern crate head_first_rust;
 
 
-/// 从代码设计角度来看，关于文件操作的类型和函数应该组织在一起，
-/// 散落得到处都是，是难以管理和使用的。
+/// * 从代码设计角度来看，关于文件操作的类型和函数应该组织在一起，
+/// * 散落得到处都是，是难以管理和使用的。
 ///
-/// 而且通过 open(&mut f1) 进行调用，
-/// 也远没有使用 f1.open() 来调用好，
-/// 这就体现出了只使用基本类型的局限性：无法从更高的抽象层次去简化代码。
+/// * 而且通过 open(&mut f1) 进行调用，
+/// * 也远没有使用 f1.open() 来调用好，
+/// * 这就体现出了只使用基本类型的局限性：无法从更高的抽象层次去简化代码。
 type File = String;
 
 fn open(f: &mut File) -> bool {
@@ -19,12 +19,12 @@ fn close(f: &mut File) -> bool {
     true
 }
 
-/// 发散函数
-/// unimplemented!() 告诉编译器该函数尚未实现，
-/// unimplemented!() 标记通常意味着我们期望快速完成主要代码，
-/// 回头再通过搜索这些标记来完成次要代码，类似的标记还有 todo!()，
-/// 当代码执行到这种未实现的地方时，程序会直接报错。
-/// 你可以反注释 read(&mut f1, &mut vec![]); 这行，然后再观察下结果。
+/// # 发散函数
+/// * unimplemented!() 告诉编译器该函数尚未实现，
+/// * unimplemented!() 标记通常意味着我们期望快速完成主要代码，
+/// * 回头再通过搜索这些标记来完成次要代码，类似的标记还有 todo!()，
+/// * 当代码执行到这种未实现的地方时，程序会直接报错。
+/// * 你可以反注释 read(&mut f1, &mut vec![]); 这行，然后再观察下结果。
 #[allow(dead_code)]
 fn read(f: &mut File, save_to: &mut Vec<u8>) -> ! {
     unimplemented!()
@@ -92,9 +92,9 @@ fn first_world(s: &String) -> &str {
     &s[..1]
 }
 
-/// 字符串基础
-/// 字符 是Unicode 编码（4字节）
-/// 字符串 utf-8 编码（1~4字节）
+/// # 字符串基础
+/// * 字符 是Unicode 编码（4字节）
+/// * 字符串 utf-8 编码（1~4字节）
 fn string_basic() {
     let s1 = "中";
     print_size_of_val!(s1);
@@ -102,9 +102,9 @@ fn string_basic() {
     print_size_of_char!(c1);
 }
 
-/// String 与 &str 转换
-/// &str 硬编码进可执行文件、utf-8编码
-/// String 可变长度、utf-8编码、所有权
+/// # String 与 &str 转换
+/// * ```&str``` 硬编码进可执行文件、utf-8编码
+/// * ```String``` 可变长度、utf-8编码、所有权
 fn string_str() {
     let s = String::from("hello,rust");
     say_hello(&s); //不可变引用
@@ -124,7 +124,7 @@ fn string_index() {
     println!("{:?}", s.as_bytes());
 }
 
-/// 危险：字符串切片
+/// # 危险：字符串切片
 /// 字符串要去校验每个字符的边界
 fn string_slice() {
     let s = "你好，rust";//您好，9字节+4字节

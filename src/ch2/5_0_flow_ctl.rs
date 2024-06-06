@@ -26,7 +26,7 @@ fn if_ctl() {
     println!("the value of number is {}", number);
 }
 
-/// else if
+/// # else if
 /// 有一点要注意，就算有多个分支能匹配，也只有第一个匹配的分支会被执行！
 fn else_if_ctl() {
     let n = 12;
@@ -113,7 +113,7 @@ fn while_loop() {
 }
 
 
-/// loop 不要轻易使用
+/// # loop 不要轻易使用
 /// break 可以单独使用，也可以带一个返回值，有些类似 return
 /// loop 是一个表达式，因此可以返回一个值
 fn the_loop() {
