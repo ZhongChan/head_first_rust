@@ -11,7 +11,6 @@ fn main() {
 
 fn basic() {
     let v1 = vec![1, 2, 3];
-    dbg!(v1);
     let v2: Vec<f32> = Vec::new();
     dbg!(v2);
     let mut v3 = Vec::new();
@@ -23,4 +22,12 @@ fn basic() {
         dbg!(v4);
     }
     // println!("{}",v4);//cannot find value `v4` in this scope
+
+    // 访问元素
+    // let does_not_exits = &v1[100]; //index out of bounds: the len is 3 but the index is 100
+    let default_value = v1.get(100);
+    match default_value {
+        Some(i) => println!("the value is {}", i),
+        None => println!("nothing get"),
+    }
 }
