@@ -30,6 +30,17 @@ fn basic() {
         Some(i) => println!("the value is {}", i),
         None => println!("nothing get"),
     }
+
+    let v5 = vec![1,2,3];
+    for ele in &v5 {
+        println!("{ele}") 
+    }
+
+    let mut v6 = vec![4,5,6];
+    for ele in &mut v6 {
+       *ele += 10; 
+    }
+
 }
 
 /// # 同时借用多个数组元素
