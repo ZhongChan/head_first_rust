@@ -3,6 +3,7 @@ fn main() {
         ("关联类型", Box::new(|| basic())),
         ("存储不同类型元素", Box::new(|| diff_element())),
         ("常用方法", Box::new(|| common_usage())),
+        ("排序", Box::new(|| vec_sort())),
     ];
 
     for (name, function) in functions.into_iter() {
@@ -157,4 +158,35 @@ fn common_usage() {
     let v8 = vec![11, 22, 33, 44, 55];
     let v8_slice = &v8[1..=3]; //从 index 取 size 个元素
     assert_eq!(v8_slice, [22, 33, 44]);
+}
+
+/// # Vector 排序
+fn vec_sort() {
+    let mut i32_v = vec![1, 7, 9, 2, 11];
+    i32_v.sort_unstable(); //非稳定排序，比 稳定排序速度快 空间少
+    assert_eq!(i32_v, [1, 2, 7, 9, 11]);
+
+    let items = vec![
+        Item { value: 5, original_index: 1 },
+        Item { value: 3, original_index: 2 },
+        Item { value: 3, original_index: 3 },
+        Item { value: 8, original_index: 4 },
+        Item { value: 5, original_index: 5 },
+    ];
+
+    // 使用 sort_unstable
+    let mut items_unstable = items.clone();
+    items_unstable.sort_unstable_by(|a, b| a.value.cmp(&b.value));
+    println!("After sort_unstable: {:?}", items_unstable);
+
+    // 使用 sort_stable
+    let mut items_stable = items.clone();
+    items_stable.sort_by(|a, b| a.value.cmp(&b.value));
+    println!("After sort_stable: {:?}", items_stable);
+}
+
+#[derive(Debug, PartialEq, Eq, Clone)]
+struct Item {
+    value: i32,
+    original_index: usize,
 }
