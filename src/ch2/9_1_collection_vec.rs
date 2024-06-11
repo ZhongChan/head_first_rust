@@ -166,6 +166,24 @@ fn vec_sort() {
     i32_v.sort_unstable(); //非稳定排序，比 稳定排序速度快 空间少
     assert_eq!(i32_v, [1, 2, 7, 9, 11]);
 
+
+    let mut f32_v = vec![1.0, 5.6, 10.3, 2.0, 15f32];
+    // f32_v.sort_unstable(); //Trait `Ord` is not implemented for `f32` [E0277] 浮点数有 NAN
+    f32_v.sort_unstable_by(|a, b| a.partial_cmp(b).unwrap()); //我们确定在我们的浮点数数组当中，不包含 NAN 值，那么我们可以使用 partial_cmp 来作为大小判断的依据。
+    assert_eq!(f32_v, vec![1.0, 2.0, 5.6, 10.3, 15f32]);
+
+    let mut nan_v = vec![1.0, 5.6, 10.3, 2.0, 15.0, f32::NAN, 3.3, f32::NAN];
+    nan_v.sort_unstable_by(|a, b| {
+        match (a.is_nan(), b.is_nan()) {
+            (true, true) => std::cmp::Ordering::Equal,
+            (true, false) => std::cmp::Ordering::Greater,
+            (false, true) => std::cmp::Ordering::Less,
+            (false, false) => a.partial_cmp(b).unwrap(),
+        }
+    });
+    println!("{:?}", nan_v); //NAN 通常在开头或末尾
+
+
     let items = vec![
         Item { value: 5, original_index: 1 },
         Item { value: 3, original_index: 2 },
