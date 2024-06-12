@@ -1,4 +1,4 @@
-fn main() {
+pub fn main() {
     let functions: Vec<(&str, Box<dyn Fn()>)> = vec![
         ("关联类型", Box::new(|| basic())),
         ("存储不同类型元素", Box::new(|| diff_element())),

@@ -1,4 +1,4 @@
-fn main() {
+pub fn main() {
     let functions: Vec<(&str, Box<dyn Fn()>)> = vec![
         ("基本用法", Box::new(|| basic())),
         ("数组切片", Box::new(|| array_slice())),

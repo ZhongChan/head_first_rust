@@ -1,7 +1,7 @@
 #![allow(unused_variables)]
-#[macro_use]
-extern crate head_first_rust;
 
+
+use crate::{print_size_of_char, print_size_of_val};
 
 /// * 从代码设计角度来看，关于文件操作的类型和函数应该组织在一起，
 /// * 散落得到处都是，是难以管理和使用的。
@@ -30,7 +30,7 @@ fn read(f: &mut File, save_to: &mut Vec<u8>) -> ! {
     unimplemented!()
 }
 
-fn main() {
+pub fn main() {
     let functions: Vec<(&str, Box<dyn Fn()>)> = vec![
         ("基本示例", Box::new(|| basic())),
         ("切片", Box::new(|| slice())),

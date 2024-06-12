@@ -1,6 +1,6 @@
 use std::io;
 
-fn main() {
+pub fn main() {
     let a = [1, 2, 3, 4, 5];
 
     println!("please enter an array index:");

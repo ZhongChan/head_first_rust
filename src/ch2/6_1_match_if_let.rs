@@ -1,6 +1,6 @@
-use crate::Action::ChangeColorRGB;
+use crate::ch2::match_if_let::Action::ChangeColorRGB;
 
-fn main() {
+pub fn main() {
     let functions: Vec<(&str, Box<dyn Fn()>)> = vec![
         ("基本示例", Box::new(|| basic())),
         ("match 匹配", Box::new(|| match_demo())),
@@ -54,7 +54,7 @@ fn basic() {
 ///         语句1;
 ///         语句2;
 ///         表达式2
-///     },
+///     }
 ///     _ => 表达式3
 /// }
 /// ```

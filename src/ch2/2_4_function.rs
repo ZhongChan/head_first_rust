@@ -1,6 +1,6 @@
 use std::fmt::Debug;
 
-fn main() {
+pub fn main() {
     let functions: Vec<(&str, Box<dyn Fn()>)> = vec![
         ("函数参数", Box::new(|| function_args())),
         ("函数返回", Box::new(|| function_ret())),

@@ -1,7 +1,6 @@
-#[macro_use]
-extern crate head_first_rust;
+use crate::{print_size_of_char, print_size_of_val};
 
-fn main() {
+pub fn main() {
     let functions: Vec<(&str, Box<dyn Fn()>)> = vec![
         ("字符类型", Box::new(|| char_type())),
         ("布尔类型", Box::new(|| bool_type())),

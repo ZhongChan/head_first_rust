@@ -1,4 +1,4 @@
-fn main() {
+pub fn main() {
     let functions: Vec<(&str, Box<dyn Fn()>)> = vec![
         ("if 分支控制", Box::new(|| if_ctl())),
         ("else if 分支控制", Box::new(|| else_if_ctl())),

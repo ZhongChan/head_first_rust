@@ -1,4 +1,4 @@
-fn main() {
+pub fn main() {
     let functions: Vec<(&str, Box<dyn Fn()>)> = vec![
         ("使用枚举解决多结构体返回", Box::new(|| enum_return_struct())),
         ("特征对象的定义", Box::new(|| trait_obj_def())),

@@ -1,7 +1,6 @@
-#[macro_use]
-extern crate head_first_rust;
+use crate::print_size_of_val;
 
-fn main() {
+pub fn main() {
     let functions: Vec<(&str, Box<dyn Fn()>)> = vec![
         ("语句和表达式", Box::new(|| statements_and_expressions())),
         ("表达式", Box::new(|| expressions())),

@@ -1,7 +1,6 @@
-#[macro_use]
-extern crate head_first_rust;
+use crate::print_size_of_val;
 
-fn main() {
+pub fn main() {
     let functions: Vec<(&str, Box<dyn Fn()>)> = vec![
         ("所有权原则", Box::new(|| ownership_principle())),
         ("深拷贝和浅拷贝", Box::new(|| clone_and_copy())),

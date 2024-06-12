@@ -1,6 +1,6 @@
 use num::complex::Complex;
 
-fn main() {
+pub fn main() {
     let functions: Vec<(&str, Box<dyn Fn()>)> = vec![
         ("整型溢出", Box::new(|| u8_overflow())),
         ("浮点数", Box::new(|| float())),

@@ -1,4 +1,4 @@
-fn main() {
+pub fn main() {
     let functions: Vec<(&str, Box<dyn Fn()>)> = vec![
         ("枚举值", Box::new(|| enum_value())),
         ("Option 枚举值", Box::new(|| enum_option())),

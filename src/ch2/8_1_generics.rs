@@ -5,7 +5,7 @@ use std::io::{Error, Read};
 use std::ops::Add;
 use num::abs;
 
-fn main() {
+pub fn main() {
     let functions: Vec<(&str, Box<dyn Fn()>)> = vec![
         ("基本示例", Box::new(|| basic())),
         ("结构体泛型", Box::new(|| struct_generics())),

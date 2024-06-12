@@ -1,6 +1,6 @@
 use std::fmt::{Debug, Display, Formatter};
 
-fn main() {
+pub fn main() {
     let functions: Vec<(&str, Box<dyn Fn()>)> = vec![
         ("基本示例", Box::new(|| basic())),
         ("孤儿规则", Box::new(|| orphan_rule())),

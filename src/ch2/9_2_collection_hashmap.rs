@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-fn main() {
+pub fn main() {
     let functions: Vec<(&str, Box<dyn Fn()>)> = vec![
         ("基本示例", Box::new(|| basic())),
         ("所有权转移", Box::new(|| owner_ship())),

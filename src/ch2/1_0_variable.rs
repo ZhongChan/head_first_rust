@@ -1,7 +1,7 @@
-fn main() {
+pub fn main() {
     let a = 10;
     let b: i32 = 20;
-    let mut c: i32 = 30i32;
+    let c: i32 = 30i32;
     let d = 30_i32;
     let e = add(add(a, b), add(c, d));
     println!("( a + b ) + (c + d ) = {}", e);

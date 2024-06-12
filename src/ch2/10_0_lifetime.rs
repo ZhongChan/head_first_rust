@@ -1,8 +1,10 @@
+#[allow(unused_imports)]
 use crate::ch2::ref_or_borrow::dangle_ref;
 
-fn main() {
+pub fn main() {
     let functions: Vec<(&str, Box<dyn Fn()>)> = vec![
         ("基本示例", Box::new(|| basic())),
+        ("悬垂引用和生命周期", Box::new(|| dangle_ref_lifetime())),
     ];
 
     for (name, function) in functions.into_iter() {
@@ -50,4 +52,15 @@ fn basic() {
 /// 悬垂引用（dangling reference）指的是一个引用指向了已经被释放或移除的内存位置
 /// # 参考
 /// - [`dangle_ref`]
-fn dangle_ref_lifetime() {}
+///
+/// # 生命周期
+/// 生命周期的主要作用是避免悬垂引用，它会导致程序引用了本不该引用的数据
+fn dangle_ref_lifetime() {
+    let r;
+    {
+        let x = 5;
+        r = &x;
+        println!("{}", r);
+    }
+    // println!("{}", r);
+}

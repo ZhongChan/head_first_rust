@@ -11,100 +11,100 @@ path = "src/lib.rs"
 
 [[bin]]
 name = "ch2_1"
-path = "src/ch2/1_0_variable.rs"
+path = "src/bin/1_0_variable.rs"
 
 [[bin]]
 name = "ch2_2"
-path = "src/ch2/2_0_basic_type.rs"
+path = "src/bin/2_0_basic_type.rs"
 
 [[bin]]
 name = "ch2_2_1"
-path = "src/ch2/2_1_number.rs"
+path = "src/bin/2_1_number.rs"
 
 [[bin]]
 name = "ch2_2_2"
-path = "src/ch2/2_2_char_bool_unit.rs"
+path = "src/bin/2_2_char_bool_unit.rs"
 
 [[bin]]
 name = "ch2_2_3"
-path = "src/ch2/2_3_expression.rs"
+path = "src/bin/2_3_expression.rs"
 
 [[bin]]
 name = "ch2_2_4"
-path = "src/ch2/2_4_function.rs"
+path = "src/bin/2_4_function.rs"
 
 [[bin]]
 name = "ch2_3_1"
-path = "src/ch2/3_1_ownership.rs"
+path = "src/bin/3_1_ownership.rs"
 
 [[bin]]
 name = "ch2_3_2"
-path = "src/ch2/3_2_ref_or_borrow.rs"
+path = "src/bin/3_2_ref_or_borrow.rs"
 
 [[bin]]
 name = "ch2_4_1"
-path = "src/ch2/4_1_string_slice.rs"
+path = "src/bin/4_1_string_slice.rs"
 
 [[bin]]
 name = "ch2_4_2"
-path = "src/ch2/4_2_tuple.rs"
+path = "src/bin/4_2_tuple.rs"
 
 [[bin]]
 name = "ch2_4_3"
-path = "src/ch2/4_3_struct.rs"
+path = "src/bin/4_3_struct.rs"
 
 [[bin]]
 name = "ch2_4_4"
-path = "src/ch2/4_4_enum.rs"
+path = "src/bin/4_4_enum.rs"
 
 [[bin]]
 name = "ch2_4_5"
-path = "src/ch2/4_5_array.rs"
+path = "src/bin/4_5_array.rs"
 
 [[bin]]
 name = "ch2_4_5_2"
-path = "src/ch2/4_5_array_input.rs"
+path = "src/bin/4_5_array_input.rs"
 
 [[bin]]
 name = "ch2_5_0"
-path = "src/ch2/5_0_flow_ctl.rs"
+path = "src/bin/5_0_flow_ctl.rs"
 
 [[bin]]
 name = "ch2_6_1"
-path = "src/ch2/6_1_match_if_let.rs"
+path = "src/bin/6_1_match_if_let.rs"
 
 [[bin]]
 name = "ch2_6_3"
-path = "src/ch2/6_3_match_scene.rs"
+path = "src/bin/6_3_match_scene.rs"
 
 [[bin]]
 name = "ch2_7_0"
-path = "src/ch2/7_0_method.rs"
+path = "src/bin/7_0_method.rs"
 
 [[bin]]
 name = "ch2_8_1"
-path = "src/ch2/8_1_generics.rs"
+path = "src/bin/8_1_generics.rs"
 
 [[bin]]
 name = "ch2_8_2"
-path = "src/ch2/8_2_trait.rs"
+path = "src/bin/8_2_trait.rs"
 
 [[bin]]
 name = "ch2_8_3"
-path = "src/ch2/8_3_trait_obj.rs"
+path = "src/bin/8_3_trait_obj.rs"
 
 [[bin]]
 name = "ch2_8_4"
-path = "src/ch2/8_4_trait_enhance.rs"
+path = "src/bin/8_4_trait_enhance.rs"
 
 [[bin]]
 name = "ch2_9_1"
-path = "src/ch2/9_1_collection_vec.rs"
+path = "src/bin/9_1_collection_vec.rs"
 
 [[bin]]
 name = "ch2_9_2"
-path = "src/ch2/9_2_collection_hashmap.rs"
+path = "src/bin/9_2_collection_hashmap.rs"
 
 [[bin]]
 name = "ch2_10_0"
-path = "src/ch2/10_0_lifetime.rs"
+path = "src/bin/10_0_lifetime.rs"

@@ -2,7 +2,7 @@ use std::fmt::Debug;
 use std::fmt::Display;
 use std::ops::Add;
 
-fn main() {
+pub fn main() {
     let functions: Vec<(&str, Box<dyn Fn()>)> = vec![
         ("关联类型", Box::new(|| associated_types())),
         ("默认泛型类型参数", Box::new(|| default_generic_params())),
