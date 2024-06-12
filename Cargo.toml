@@ -104,3 +104,7 @@ path = "src/ch2/9_1_collection_vec.rs"
 [[bin]]
 name = "ch2_9_2"
 path = "src/ch2/9_2_collection_hashmap.rs"
+
+[[bin]]
+name = "ch2_10_0"
+path = "src/ch2/10_0_lifetime.rs"
