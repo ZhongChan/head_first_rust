@@ -4,7 +4,7 @@ fn main() {
     let functions: Vec<(&str, Box<dyn Fn()>)> = vec![
         ("基本示例", Box::new(|| basic())),
         ("悬垂引用和生命周期", Box::new(|| dangle_ref_lifetime())),
-        ("函数中的生命周期", Box::new(|| method_lifetime())),
+        ("函数中的生命周期", Box::new(|| function_lifetime())),
     ];
 
     for (name, function) in functions.into_iter() {
@@ -63,7 +63,7 @@ fn dangle_ref_lifetime() {
     // println!("{}", r)
 }
 
-fn method_lifetime() {
+fn function_lifetime() {
     let s1 = String::from("Lifetime");
     let s2 = "Rust";
     let result = longest_dangle(s1.as_str(), s2);
