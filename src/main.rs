@@ -1,4 +1,5 @@
 mod lib;
+mod ch2;
 
 fn main() {
     greet_world();

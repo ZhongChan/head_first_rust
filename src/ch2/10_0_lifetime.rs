@@ -1,3 +1,5 @@
+use crate::ch2::ref_or_borrow::dangle_ref;
+
 fn main() {
     let functions: Vec<(&str, Box<dyn Fn()>)> = vec![
         ("基本示例", Box::new(|| basic())),
@@ -43,3 +45,9 @@ fn basic() {
     let r3 = &mut y;
     println!("r3:{}", r3);
 }
+
+/// # 悬垂引用
+/// 悬垂引用（dangling reference）指的是一个引用指向了已经被释放或移除的内存位置
+/// # 参考
+/// - [`dangle_ref`]
+fn dangle_ref_lifetime() {}

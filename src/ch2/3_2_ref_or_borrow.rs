@@ -112,7 +112,7 @@ fn nll() {
 /// * 因为 s 是在 dangle 函数内创建的，当 dangle 的代码执行完毕后，s 将被释放，
 /// * 但是此时我们又尝试去返回它的引用。
 /// * 这意味着这个引用会指向一个无效的 String，这可不对！
-fn dangle_ref() {
+pub fn dangle_ref() {
     println!("{}", no_dangle());
 }
 
