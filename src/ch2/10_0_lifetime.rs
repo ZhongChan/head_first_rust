@@ -1,8 +1,10 @@
-use crate::ch2::ref_or_borrow::dangle_ref;
+use std::{ptr};
 
 fn main() {
     let functions: Vec<(&str, Box<dyn Fn()>)> = vec![
         ("基本示例", Box::new(|| basic())),
+        ("悬垂引用和生命周期", Box::new(|| dangle_ref_lifetime())),
+        ("函数中的生命周期", Box::new(|| method_lifetime())),
     ];
 
     for (name, function) in functions.into_iter() {
@@ -50,4 +52,59 @@ fn basic() {
 /// 悬垂引用（dangling reference）指的是一个引用指向了已经被释放或移除的内存位置
 /// # 参考
 /// - [`dangle_ref`]
-fn dangle_ref_lifetime() {}
+/// todo 优化文档引用
+fn dangle_ref_lifetime() {
+    let r;
+    {
+        let x = 5;
+        r = &x; //error[E0597]: `x` does not live long enough
+        println!("{}", r)
+    }
+    // println!("{}", r)
+}
+
+fn method_lifetime() {
+    let s1 = String::from("Lifetime");
+    let s2 = "Rust";
+    let result = longest_dangle(s1.as_str(), s2);
+    println!("The longest string is {}", result);
+}
+
+/// # 生命周期
+/// 生命周期参数 'a：
+/// * 我们在 longest 函数中添加了生命周期参数 'a，
+/// * 这表示 s1 和 s2 的引用必须在同一个生命周期内，
+/// * 并且返回的引用也将具有相同的生命周期。
+#[allow(dead_code)]
+fn longest<'a>(s1: &'a str, s2: &'a str) -> &'a str {
+    if s1.len() > s2.len() {
+        s1
+    } else {
+        s2
+    }
+}
+
+/// # 使用 unsafe 破坏内存
+/// ## 解释
+/// 1. Box::new：我们使用 Box 来分配在堆上的字符串，这样我们可以手动释放它。
+/// 2. unsafe 块：使用 unsafe 块绕过 Rust 的借用检查器。
+/// 3. 指针转换：将 s1 转换为一个原始指针 *const str。
+/// 4. 手动释放：通过 ptr::drop_in_place 手动释放 s1 所指向的 Box<String>，这会使 s1 成为悬垂引用。
+/// 5. 悬垂引用：尝试通过原始指针 s1_ptr 访问已经被释放的内存。
+fn longest_dangle<'a>(s1: &'a str, s2: &'a str) -> &'a str {
+    unsafe {
+        // 将 s1 转换为一个原始指针
+        let s1_ptr = s1 as *const str;
+
+        // 手动释放 s1 所指向的 Box<String>
+        let s1_boxed = s1_ptr as *const Box<String>;
+        ptr::drop_in_place(s1_boxed as *mut Box<String>);
+
+        // 尝试通过原始指针访问已经被释放的内存
+        if (*s1_ptr).len() > s2.len() {
+            &*s1_ptr
+        } else {
+            s2
+        }
+    }
+}
