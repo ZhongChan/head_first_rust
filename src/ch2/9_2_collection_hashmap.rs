@@ -5,6 +5,7 @@ fn main() {
         ("基本示例", Box::new(|| basic())),
         ("所有权转移", Box::new(|| owner_ship())),
         ("查询", Box::new(|| query())),
+        ("更新", Box::new(|| update())),
     ];
 
     for (name, function) in functions.into_iter() {
@@ -115,4 +116,47 @@ fn query_foreach(score_map: &HashMap<String, i32>) {
     for (k, v) in score_map {
         println!("The score of {} is {}", k, v)
     }
+}
+
+/// # 更新 ```HashMap``` 中的值
+fn update() {
+    update_basic();
+    update_when_exist();
+}
+
+fn update_basic() {
+    let mut scores = HashMap::new();
+    scores.insert("Blue".to_string(), 100);
+
+    // 直接覆盖
+    let old = scores.insert("Blue".to_string(), 20);
+    assert_eq!(old, Some(100));//返回旧值
+
+    // 查询新值
+    let new = scores.get("Blue");
+    assert_eq!(new, Some(&20));
+
+    // 查询或插入
+    let v = scores.entry("Yellow".to_string()).or_insert(30);
+    assert_eq!(*v, 30);
+
+    // 查询或插入：已存在无法查询
+    let t = scores.entry("Yellow".to_string()).or_insert(1000);
+    assert_eq!(*t, 30); //存在则无法插入
+}
+
+
+/// # 在已有值上进行更新
+/// ```or_insert``` 方法会返回一个可变引用 (```&mut V```) 指向插入或已存在的值。这使得你可以直接通过这个引用来修改值。
+/// 具体来说，```or_insert``` 的行为如下：
+/// * 如果键已经存在于 ```HashMap``` 中，```or_insert``` 会返回该键对应值的可变引用。
+/// * 如果键不存在于 ```HashMap``` 中，```or_insert``` 会插入一个给定的默认值，并返回该值的可变引用。
+fn update_when_exist() {
+    let text = "Hello world wonderful world";
+    let mut words_map = HashMap::new();
+    for word in text.split_whitespace() {
+        let count = words_map.entry(word).or_insert(0);
+        *count += 1;
+    }
+    println!("{:?}", words_map);
 }
