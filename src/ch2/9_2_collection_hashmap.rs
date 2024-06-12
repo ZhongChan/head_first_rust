@@ -4,6 +4,7 @@ fn main() {
     let functions: Vec<(&str, Box<dyn Fn()>)> = vec![
         ("基本示例", Box::new(|| basic())),
         ("所有权转移", Box::new(|| owner_ship())),
+        ("查询", Box::new(|| query())),
     ];
 
     for (name, function) in functions.into_iter() {
@@ -69,4 +70,49 @@ fn ref_lifetime_with_map() {
 
     println!("{}", name);
     println!("{}", age);
+}
+
+/// # 查询```HashMap```
+fn query() {
+    let mut score_map = HashMap::new();
+    score_map.insert("Yellow".to_string(), 100);
+    score_map.insert("Blue".to_string(), 85);
+
+    let team_name = "Yellow".to_string();
+
+    query_match(&team_name, &score_map);
+    query_unwrap_or(&team_name, &score_map);
+    query_if_let(&team_name, &score_map);
+    query_foreach(&score_map);
+}
+
+fn query_match(team_name: &String, score_map: &HashMap<String, i32>) {
+    let team_score = score_map.get(team_name); //key必须是借用。否则会发送权限转移
+    match team_score {
+        None => {
+            println!("Team name dose not exist");
+        }
+        Some(score) => {
+            println!("Match the score: {}", score);
+        }
+    }
+}
+
+fn query_unwrap_or(team_name: &String, score_map: &HashMap<String, i32>) {
+    let the_score = score_map.get(team_name).copied().unwrap_or(0);
+    println!("Unwrap query score: {}", the_score);
+}
+
+fn query_if_let(team_name: &String, score_map: &HashMap<String, i32>) {
+    if let Some(&score) = score_map.get(team_name) {
+        println!("The score of {} is {} ", team_name, score);
+    } else {
+        println!("Team {} not found", team_name);
+    }
+}
+
+fn query_foreach(score_map: &HashMap<String, i32>) {
+    for (k, v) in score_map {
+        println!("The score of {} is {}", k, v)
+    }
 }
