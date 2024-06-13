@@ -9,6 +9,7 @@ fn main() {
         ("生命周期标注语法", Box::new(|| lifetime_tag())),
         ("结构体中的生命周期", Box::new(|| struct_lifetime())),
         ("生命周期消除", Box::new(|| lifetime_elision())),
+        ("静态生命周期", Box::new(|| lifetime_static())),
     ];
 
     for (name, function) in functions.into_iter() {
@@ -533,4 +534,75 @@ impl<'a> ImportantExcerpt<'a> {
             Either::Announcement(announcement)
         }
     }
+}
+
+
+/// # 静态生命周期
+/// 静态生命周期（'static）是 Rust 中最长的生命周期，表示数据在整个程序运行期间都有效。具有静态生命周期的数据可以是：
+/// 编译时确定的常量或字符串字面量。
+/// 在程序运行期间一直存在的数据，例如通过 Box::leak 或者 lazy_static 宏创建的数据。
+/// 下面是一些示例来解释静态生命周期。
+///
+/// - [`示例 1: 字符串字面量`](static_str_literal)
+/// - [`示例 2: 常量`](static_constant)
+/// - [`示例 3: 使用 Box::leak`](box_leak_example)
+/// - [`示例 4: lazy_static 宏`](lazy_static_example)
+/// - [`示例 5: 静态生命周期参数`](static_lifetime_parameter_example)
+fn lifetime_static() {
+    static_str_literal();
+    static_constant();
+    box_leak_example();
+    lazy_static_example();
+    static_lifetime_parameter_example();
+}
+
+
+/// 示例 1: 字符串字面量
+/// * 字符串字面量具有 'static 生命周期，因为它们在整个程序的生命周期内都是有效的。
+fn static_str_literal() {
+    let s: &'static str = "Hello,world!";
+    println!("Static string literal: {}", s);
+}
+
+const GREETING: &'static str = "Hello, world!";
+
+/// 示例 2: 常量
+fn static_constant() {
+    println!("Static constant: {}", GREETING);
+}
+
+/// 示例 3: 使用 Box::leak
+fn box_leak_example() {
+    let s: &'static str = Box::leak(Box::new(String::from("Hello, world!")));
+    println!("Box::leak example: {}", s);
+}
+
+#[macro_use]
+extern crate lazy_static;
+
+use std::collections::HashMap;
+
+lazy_static! {
+    static ref HASHMAP: HashMap<i32, &'static str> = {
+        let mut m = HashMap::new();
+        m.insert(1, "one");
+        m.insert(2, "two");
+        m
+    };
+}
+
+// 示例 4: lazy_static 宏
+fn lazy_static_example() {
+    println!("lazy_static example: {:?}", *HASHMAP);
+}
+
+
+fn print_static_str(s: &'static str) {
+    println!("Static lifetime parameter: {}", s);
+}
+
+// 示例 5: 静态生命周期参数
+fn static_lifetime_parameter_example() {
+    let s: &'static str = "Hello, world!";
+    print_static_str(s);
 }

@@ -5,6 +5,8 @@ edition = "2021"
 
 [dependencies]
 num = "0.4.0"
+lazy_static = "1.4"
+
 
 [lib]
 path = "src/lib.rs"
