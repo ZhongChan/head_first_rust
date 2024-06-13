@@ -1,3 +1,4 @@
+use std::panic;
 use head_first_rust::generate_main;
 generate_main!(
     ("基本示例",basic)
@@ -14,4 +15,24 @@ generate_main!(
 /// `Rust` 没有异常，但是 `Rust` 也有自己的卧龙凤雏：
 /// * `Result<T, E>` 用于可恢复错误，
 /// * `panic!` 用于不可恢复错误。
-fn basic() {}
+fn basic() {
+    let result = panic::catch_unwind(|| {
+        let v = vec![1, 2, 3];
+        v[99];
+    });
+
+    match result {
+        Ok(_) => {}
+        Err(err) => {
+            if let Some(s) = err.downcast_ref::<&str>() {
+                println!("Panic caught: {:?}", s)
+            } else if let Some(s) = err.downcast_ref::<String>() {
+                println!("Panic caught: {:?}", s)
+            } else {
+                println!("Panic caught but could not determine the cause")
+            }
+        }
+    }
+
+    println!("Still running");
+}
