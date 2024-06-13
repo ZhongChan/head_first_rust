@@ -276,6 +276,7 @@ fn longest_from_string<'a>(_x: &str, _y: &str) -> String {
 /// # 结构体中的生命周期
 fn struct_lifetime() {
     struct_lifetime_base();
+    struct_lifetime_wrong();
 }
 
 /// # 结构体生命周期：基础示例
@@ -295,6 +296,54 @@ fn struct_lifetime_base() {
     let i = ImportantExcerpt {
         part: first_sentence,
     };
+    println!("{}", i.part);
+}
+
+/// # 结构体生命周期：错误示例
+/// ## 代码
+/// ```rust
+/// fn struct_lifetime_wrong() {
+///     let i;
+///     {
+///         let novel = "Call me Ishmael. Some years ago...".to_string();
+///         let first_sentence = novel.split('.').next().expect("Could not found a '.'");
+///         i = ImportantExcerpt {
+///             part: first_sentence,
+///         };
+///     }
+///     println!("{}", i.part);
+/// }
+///
+/// struct ImportantExcerpt<'a> {
+///     part: &'a str,
+/// }
+/// ```
+/// ## 编译错误
+/// ```text
+/// error[E0597]: `novel` does not live long enough
+///    --> src/ch2/10_0_lifetime.rs:306:30
+///     |
+/// 305 |         let novel = "Call me Ishmael. Some years ago...".to_string();
+///     |             ----- binding `novel` declared here
+/// 306 |         let first_sentence = novel.split('.').next().expect("Could not found a '.'");
+///     |                              ^^^^^ borrowed value does not live long enough
+/// ...
+/// 310 |     }
+///     |     - `novel` dropped here while still borrowed
+/// 311 |     println!("{}", i.part);
+///     |                    ------ borrow later used here
+/// ```
+///
+fn struct_lifetime_wrong() {
+    let i; //结构体生命周期长
+    let novel = "Call me Ishmael. Some years ago...".to_string();
+    {
+        // let novel = "Call me Ishmael. Some years ago...".to_string(); //被结构体引用
+        let first_sentence = novel.split('.').next().expect("Could not found a '.'");
+        i = ImportantExcerpt {
+            part: first_sentence,
+        };
+    }
     println!("{}", i.part);
 }
 
