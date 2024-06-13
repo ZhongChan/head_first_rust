@@ -350,3 +350,51 @@ fn struct_lifetime_wrong() {
 struct ImportantExcerpt<'a> {
     part: &'a str,
 }
+
+/// # 生命周期消除
+/// 在 Rust 中，生命周期消除（lifetime elision）是指编译器在某些情况下自动推断生命周期，而不需要程序员显式地注解生命周期。
+/// 这种机制使得代码更简洁，同时保持了 Rust 的内存安全性。Rust 语言的设计者为了简化常见代码模式，引入了一些生命周期消除规则。
+///
+/// ## 生命周期消除规则
+/// Rust 编译器在以下情况下会应用生命周期消除规则：
+/// 1. 输入生命周期：
+///     * 如果一个函数只有一个输入生命周期参数，那么这个生命周期会被赋给所有的输出生命周期参数。
+///     * 如果有多个输入生命周期参数，但其中一个是 &self 或 &mut self，那么 self 的生命周期会被赋给所有的输出生命周期参数。
+/// 2. 多输入生命周期：
+///     * 如果有多个输入生命周期参数，但没有 &self 或 &mut self，编译器无法自动推断输出生命周期，因此需要显式地指定生命周期。
+///
+/// ## 具体规则
+/// 1. 单输入引用：
+/// ```rust
+/// fn first_word(s: &str) -> &str {
+///     // 函数体
+/// }
+/// //编译器推断为
+/// fn first_word<'a>(s: &'a str) -> &'a str {
+///     // 函数体
+/// }
+/// ```
+/// 2. 多输入引用，有 `&self` 或 `&mut self`：
+/// ```rust
+/// impl MyStruct {
+///     fn get_value(&self, key: &str) -> &str {
+///         // 函数体
+///     }
+/// }
+///
+/// //编译器推断为
+///  impl MyStruct {
+///     fn get_value<'a>(&'a self, key: &'a str) -> &'a str {
+///         // 函数体
+///     }
+/// }
+///
+/// ```
+/// 3. 多输入引用，无 `&self` 或 `&mut self`：
+/// ```rust
+///  fn longest(x: &str, y: &str) -> &str // error[E0106]: missing lifetime specifier
+///
+///  // 需要显示声明周期
+///  fn longest<'a>(x: &'a str, y: &'a str) -> &'a str
+/// ```
+fn lifetime_elision() {}
