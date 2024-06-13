@@ -1,20 +1,12 @@
 use std::fmt::Debug;
+use head_first_rust::generate_main;
 
-fn main() {
-    let functions: Vec<(&str, Box<dyn Fn()>)> = vec![
-        ("函数参数", Box::new(|| function_args())),
-        ("函数返回", Box::new(|| function_ret())),
-        ("特殊返回", Box::new(|| function_ret_sp())),
-        ("发散函数", Box::new(|| diverge_function())),
-    ];
-
-    for (name, function) in functions.into_iter() {
-        println!();
-        println!(">>>>>>>>>>开始执行：{}", name);
-        function();
-        println!("{}: 执行结束<<<<<<<<<<", name);
-    }
-}
+generate_main!(
+    ("函数参数", function_args),
+    ("函数返回", function_ret),
+    ("特殊返回", function_ret_sp),
+    ("发散函数", diverge_function)
+);
 
 fn function_args() {
     another_function(5, 6.6);

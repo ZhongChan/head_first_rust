@@ -2,22 +2,16 @@ use std::fmt::Debug;
 use std::fmt::Display;
 use std::ops::Add;
 
-fn main() {
-    let functions: Vec<(&str, Box<dyn Fn()>)> = vec![
-        ("关联类型", Box::new(|| associated_types())),
-        ("默认泛型类型参数", Box::new(|| default_generic_params())),
-        ("同名方法调用", Box::new(|| same_method())),
-        ("同名关联函数", Box::new(|| same_assoicated_function())),
-        ("特征定义中的特征约束", Box::new(|| trait_bounds())),
-    ];
+use head_first_rust::generate_main;
 
-    for (name, function) in functions.into_iter() {
-        println!();
-        println!(">>>>>>>>>>开始执行：{}", name);
-        function();
-        println!("{}: 执行结束<<<<<<<<<<", name);
-    }
-}
+generate_main!(
+    ("关联类型", associated_types),
+    ("默认泛型类型参数", default_generic_params),
+    ("同名方法调用", same_method),
+    ("同名关联函数", same_assoicated_function),
+    ("特征定义中的特征约束", trait_bounds)
+);
+
 
 /// # 关联类型
 /// * 关联类型在 trait 中定义。
@@ -223,6 +217,7 @@ impl Add for Point {
 
 #[derive(Debug)]
 struct Millimeters(u32);
+
 #[derive(Debug)]
 struct Meters(u32);
 

@@ -1,20 +1,13 @@
 #[macro_use]
-extern crate head_first_rust;
+use head_first_rust::generate_main;
+use head_first_rust::print_size_of_val;
 
-fn main() {
-    let functions: Vec<(&str, Box<dyn Fn()>)> = vec![
-        ("所有权原则", Box::new(|| ownership_principle())),
-        ("深拷贝和浅拷贝", Box::new(|| clone_and_copy())),
-        ("函数值和返回", Box::new(|| fn_args_and_ret())),
-    ];
+generate_main!(
+    ("所有权原则", ownership_principle),
+    ("深拷贝和浅拷贝", clone_and_copy),
+    ("函数值和返回", fn_args_and_ret)
+);
 
-    for (name, function) in functions.into_iter() {
-        println!();
-        println!(">>>>>>>>>>开始执行：{}", name);
-        function();
-        println!("{}: 执行结束<<<<<<<<<<", name);
-    }
-}
 
 
 /// 所有权原则

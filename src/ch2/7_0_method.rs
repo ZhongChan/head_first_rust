@@ -1,19 +1,12 @@
-fn main() {
-    let functions: Vec<(&str, Box<dyn Fn()>)> = vec![
-        ("基本示例", Box::new(|| basic())),
-        ("所有权", Box::new(|| owner_ship())),
-        ("自动引用", Box::new(|| auto_referencing())),
-        ("自动解引用", Box::new(|| auto_dereferencing())),
-        ("enum 实现方法", Box::new(|| enum_impl())),
-    ];
+use head_first_rust::generate_main;
 
-    for (name, function) in functions.into_iter() {
-        println!();
-        println!(">>>>>>>>>>开始执行：{}", name);
-        function();
-        println!("{}: 执行结束<<<<<<<<<<", name);
-    }
-}
+generate_main!(
+    ("基本示例", basic),
+    ("所有权", owner_ship),
+    ("自动引用", auto_referencing),
+    ("自动解引用", auto_dereferencing),
+    ("enum 实现方法", enum_impl)
+);
 
 fn basic() {
     let c = Circle::new(10.0, 20.0, 5.0);

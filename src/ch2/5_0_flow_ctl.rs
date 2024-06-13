@@ -1,19 +1,12 @@
-fn main() {
-    let functions: Vec<(&str, Box<dyn Fn()>)> = vec![
-        ("if 分支控制", Box::new(|| if_ctl())),
-        ("else if 分支控制", Box::new(|| else_if_ctl())),
-        ("for 循环", Box::new(|| for_loop())),
-        ("while 循环", Box::new(|| while_loop())),
-        ("loop 循环", Box::new(|| the_loop())),
-    ];
+use head_first_rust::generate_main;
 
-    for (name, function) in functions.into_iter() {
-        println!();
-        println!(">>>>>>>>>>开始执行：{}", name);
-        function();
-        println!("{}: 执行结束<<<<<<<<<<", name);
-    }
-}
+generate_main!(
+    ("if 分支控制", if_ctl),
+    ("else if 分支控制", else_if_ctl),
+    ("for 循环", for_loop),
+    ("while 循环", while_loop),
+    ("loop 循环", the_loop)
+);
 
 fn if_ctl() {
     let condition = true;

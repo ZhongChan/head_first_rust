@@ -1,24 +1,17 @@
 use crate::Action::ChangeColorRGB;
+use head_first_rust::generate_main;
 
-fn main() {
-    let functions: Vec<(&str, Box<dyn Fn()>)> = vec![
-        ("基本示例", Box::new(|| basic())),
-        ("match 匹配", Box::new(|| match_demo())),
-        ("match 表达式赋值", Box::new(|| match_expression())),
-        ("match 模式绑定", Box::new(|| match_binding())),
-        ("match 穷尽匹配", Box::new(|| match_exhaustive())),
-        ("if let 匹配", Box::new(|| if_let())),
-        ("matches! 宏", Box::new(|| matches_macro())),
-        ("变量遮蔽", Box::new(|| variable_shadowing())),
-    ];
+generate_main!(
+    ("基本示例", basic),
+    ("match 匹配", match_demo),
+    ("match 表达式赋值", match_expression),
+    ("match 模式绑定", match_binding),
+    ("match 穷尽匹配", match_exhaustive),
+    ("if let 匹配", if_let),
+    ("matches! 宏", matches_macro),
+    ("变量遮蔽", variable_shadowing)
+);
 
-    for (name, function) in functions.into_iter() {
-        println!();
-        println!(">>>>>>>>>>开始执行：{}", name);
-        function();
-        println!("{}: 执行结束<<<<<<<<<<", name);
-    }
-}
 
 #[allow(dead_code)]
 #[derive(Debug)]

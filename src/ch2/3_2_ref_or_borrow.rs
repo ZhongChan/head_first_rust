@@ -1,20 +1,13 @@
-fn main() {
-    let functions: Vec<(&str, Box<dyn Fn()>)> = vec![
-        ("基本示例", Box::new(|| basic())),
-        ("不可变引用", Box::new(|| not_mut_ref())),
-        ("可变引用", Box::new(|| mut_ref())),
-        ("可变引用同时只有有一个", Box::new(|| only_one_mut_ref())),
-        ("NLL", Box::new(|| nll())),
-        ("悬垂引用", Box::new(|| dangle_ref())),
-    ];
+use head_first_rust::generate_main;
 
-    for (name, function) in functions.into_iter() {
-        println!();
-        println!(">>>>>>>>>>开始执行：{}", name);
-        function();
-        println!("{}: 执行结束<<<<<<<<<<", name);
-    }
-}
+generate_main!(
+    ("基本示例", basic),
+    ("不可变引用", not_mut_ref),
+    ("可变引用", mut_ref),
+    ("可变引用同时只有有一个", only_one_mut_ref),
+    ("NLL", nll),
+    ("悬垂引用", dangle_ref)
+);
 
 fn basic() {
     let x = 5;

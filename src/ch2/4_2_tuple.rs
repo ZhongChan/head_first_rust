@@ -1,15 +1,7 @@
-fn main() {
-    let functions: Vec<(&str, Box<dyn Fn()>)> = vec![
-        ("基础操作", Box::new(|| basic())),
-    ];
-
-    for (name, function) in functions.into_iter() {
-        println!();
-        println!(">>>>>>>>>>开始执行：{}", name);
-        function();
-        println!("{}: 执行结束<<<<<<<<<<", name);
-    }
-}
+use head_first_rust::generate_main;
+generate_main!(
+    ("基础操作", basic)
+);
 
 /// # 元组是多种类型组合形成，因此是复合类型
 /// 长度固定、顺序固定

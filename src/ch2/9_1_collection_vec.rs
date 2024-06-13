@@ -1,18 +1,10 @@
-fn main() {
-    let functions: Vec<(&str, Box<dyn Fn()>)> = vec![
-        ("关联类型", Box::new(|| basic())),
-        ("存储不同类型元素", Box::new(|| diff_element())),
-        ("常用方法", Box::new(|| common_usage())),
-        ("排序", Box::new(|| vec_sort())),
-    ];
-
-    for (name, function) in functions.into_iter() {
-        println!();
-        println!(">>>>>>>>>>开始执行：{}", name);
-        function();
-        println!("{}: 执行结束<<<<<<<<<<", name);
-    }
-}
+use head_first_rust::generate_main;
+generate_main!(
+    ("关联类型", basic),
+    ("存储不同类型元素", diff_element),
+    ("常用方法", common_usage),
+    ("排序", vec_sort)
+);
 
 fn basic() {
     let v1 = vec![1, 2, 3];

@@ -1,18 +1,10 @@
-fn main() {
-    let functions: Vec<(&str, Box<dyn Fn()>)> = vec![
-        ("基础操作", Box::new(|| basic())),
-        ("结构体内存", Box::new(|| struct_mem_sort())),
-        ("元组结构", Box::new(|| tuple_struct())),
-        ("单元结构体", Box::new(|| unit_like_struct())),
-    ];
-
-    for (name, function) in functions.into_iter() {
-        println!();
-        println!(">>>>>>>>>>开始执行：{}", name);
-        function();
-        println!("{}: 执行结束<<<<<<<<<<", name);
-    }
-}
+use head_first_rust::generate_main;
+generate_main!(
+    ("基础操作", basic),
+    ("结构体内存", struct_mem_sort),
+    ("元组结构", tuple_struct),
+    ("单元结构体", unit_like_struct)
+);
 
 #[derive(Debug)]
 struct User {

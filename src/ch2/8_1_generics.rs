@@ -5,24 +5,18 @@ use std::io::{Error, Read};
 use std::ops::Add;
 use num::abs;
 
-fn main() {
-    let functions: Vec<(&str, Box<dyn Fn()>)> = vec![
-        ("基本示例", Box::new(|| basic())),
-        ("结构体泛型", Box::new(|| struct_generics())),
-        ("枚举泛型", Box::new(|| enum_generics())),
-        ("方法中使用泛型", Box::new(|| method_generics())),
-        ("const 泛型", Box::new(|| const_generics())),
-        ("TryInto 安全转换", Box::new(|| try_into())),
-        ("综合示例", Box::new(|| example())),
-    ];
+use head_first_rust::generate_main;
 
-    for (name, function) in functions.into_iter() {
-        println!();
-        println!(">>>>>>>>>>开始执行：{}", name);
-        function();
-        println!("{}: 执行结束<<<<<<<<<<", name);
-    }
-}
+generate_main!(
+    ("基本示例", basic),
+    ("结构体泛型", struct_generics),
+    ("枚举泛型", enum_generics),
+    ("方法中使用泛型", method_generics),
+    ("const 泛型", const_generics),
+    ("TryInto 安全转换", try_into),
+    ("综合示例", example)
+);
+
 
 fn basic() {
     println!("{} + {} = {}", 10, 9, add_i8(10, 9));

@@ -30,27 +30,20 @@ fn read(f: &mut File, save_to: &mut Vec<u8>) -> ! {
     unimplemented!()
 }
 
-fn main() {
-    let functions: Vec<(&str, Box<dyn Fn()>)> = vec![
-        ("基本示例", Box::new(|| basic())),
-        ("切片", Box::new(|| slice())),
-        ("字符串基础", Box::new(|| string_basic())),
-        ("String与&str的转换", Box::new(|| string_str())),
-        ("字符串索引", Box::new(|| string_index())),
-        ("字符串切片", Box::new(|| string_slice())),
-        ("字符串操作", Box::new(|| string_operating())),
-        ("字符串转义", Box::new(|| string_escape())),
-        ("字符串不转义", Box::new(|| string_unescape())),
-        ("字符串utf8操作", Box::new(|| string_utf8())),
-    ];
+use head_first_rust::generate_main;
+generate_main!(
+    ("基本示例", basic),
+    ("切片", slice),
+    ("字符串基础", string_basic),
+    ("String与&str的转换", string_str),
+    ("字符串索引", string_index),
+    ("字符串切片", string_slice),
+    ("字符串操作", string_operating),
+    ("字符串转义", string_escape),
+    ("字符串不转义", string_unescape),
+    ("字符串utf8操作", string_utf8)
+);
 
-    for (name, function) in functions.into_iter() {
-        println!();
-        println!(">>>>>>>>>>开始执行：{}", name);
-        function();
-        println!("{}: 执行结束<<<<<<<<<<", name);
-    }
-}
 
 
 fn basic() {

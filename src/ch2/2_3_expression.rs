@@ -1,19 +1,10 @@
-#[macro_use]
-extern crate head_first_rust;
+use head_first_rust::{generate_main, print_size_of_val};
 
-fn main() {
-    let functions: Vec<(&str, Box<dyn Fn()>)> = vec![
-        ("语句和表达式", Box::new(|| statements_and_expressions())),
-        ("表达式", Box::new(|| expressions())),
-    ];
+generate_main!(
+    ("语句和表达式", statements_and_expressions),
+    ("表达式", expressions)
+);
 
-    for (name, function) in functions.into_iter() {
-        println!();
-        println!(">>>>>>>>>>开始执行：{}", name);
-        function();
-        println!("{}: 执行结束<<<<<<<<<<", name);
-    }
-}
 
 /// # 语句和表达式
 /// * Rust 的函数体是由一系列语句组成，最后由一个表达式来返回值

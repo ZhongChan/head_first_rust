@@ -1,23 +1,16 @@
 use num::complex::Complex;
+use head_first_rust::generate_main;
 
-fn main() {
-    let functions: Vec<(&str, Box<dyn Fn()>)> = vec![
-        ("整型溢出", Box::new(|| u8_overflow())),
-        ("浮点数", Box::new(|| float())),
-        ("NaN", Box::new(|| number_nan())),
-        ("四则运算", Box::new(|| four_operations())),
-        ("位运算", Box::new(|| bit_operation())),
-        ("序列（Range）", Box::new(|| range())),
-        ("有理数和复数", Box::new(|| rational_and_complex_numbers())),
-    ];
+generate_main!(
+    ("整型溢出", u8_overflow),
+    ("浮点数", float),
+    ("NaN", number_nan),
+    ("四则运算", four_operations),
+    ("位运算", bit_operation),
+    ("序列（Range）", range),
+    ("有理数和复数", rational_and_complex_numbers)
+);
 
-    for (name, function) in functions.into_iter() {
-        println!();
-        println!(">>>>>>>>>>开始执行：{}", name);
-        function();
-        println!("{}: 执行结束<<<<<<<<<<", name);
-    }
-}
 
 /// # 整数溢出
 /// * wrapping_* 方法：补码循环溢出

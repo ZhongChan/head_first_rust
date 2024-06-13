@@ -1,19 +1,12 @@
 use head_first_rust::{print_size_of_char, print_size_of_val};
+use head_first_rust::generate_main;
 
-fn main() {
-    let functions: Vec<(&str, Box<dyn Fn()>)> = vec![
-        ("字符类型", Box::new(|| char_type())),
-        ("布尔类型", Box::new(|| bool_type())),
-        ("单元类型", Box::new(|| unit_type())),
-    ];
+generate_main!(
+    ("字符类型", char_type),
+    ("布尔类型", bool_type),
+    ("单元类型", unit_type)
+);
 
-    for (name, function) in functions.into_iter() {
-        println!();
-        println!(">>>>>>>>>>开始执行：{}", name);
-        function();
-        println!("{}: 执行结束<<<<<<<<<<", name);
-    }
-}
 
 /// # 字符类型
 /// * Rust 的 char 类型可以表示任何 Unicode 标量值。

@@ -1,24 +1,18 @@
 use std::fmt::{Debug, Display, Formatter};
 
-fn main() {
-    let functions: Vec<(&str, Box<dyn Fn()>)> = vec![
-        ("基本示例", Box::new(|| basic())),
-        ("孤儿规则", Box::new(|| orphan_rule())),
-        ("使用特征作为函数参数", Box::new(|| trait_as_params())),
-        ("特征约束", Box::new(|| trait_bound())),
-        ("Where 约束", Box::new(|| where_bound())),
-        ("有条件实现方法或特征", Box::new(|| condition_bound())),
-        ("函数返回 Trait", Box::new(|| return_impl_trait())),
-        ("newtype", Box::new(|| new_type())),
-    ];
+use head_first_rust::generate_main;
 
-    for (name, function) in functions.into_iter() {
-        println!();
-        println!(">>>>>>>>>>开始执行：{}", name);
-        function();
-        println!("{}: 执行结束<<<<<<<<<<", name);
-    }
-}
+generate_main!(
+    ("基本示例", basic),
+    ("孤儿规则", orphan_rule),
+    ("使用特征作为函数参数", trait_as_params),
+    ("特征约束", trait_bound),
+    ("Where 约束", where_bound),
+    ("有条件实现方法或特征", condition_bound),
+    ("函数返回 Trait", return_impl_trait),
+    ("new type", new_type)
+);
+
 
 fn basic() {
     let post = Post::new("Head first Rust".to_string(), "Zhong".to_string(), "一本介绍Rust的书籍".to_string());
@@ -263,7 +257,7 @@ fn returns_summarizable(switch: bool) -> impl Summary {
 
 /// # 为外部类型实现外部特征
 /// 绕过孤儿原则
-/// 
+///
 /// # 为 Vec<T> 实现外部特征 
 /// ```
 /// // Vec` is not defined in the current crate
@@ -271,10 +265,10 @@ fn returns_summarizable(switch: bool) -> impl Summary {
 /// } 
 /// ``` 
 /// 可以使用newtype 绕过这个限制 
-/// 
-fn new_type(){
-    let w = Wrapper(vec!["hello".to_string(),"tuple struct".to_string()]);
-    println!("{}",w)
+///
+fn new_type() {
+    let w = Wrapper(vec!["hello".to_string(), "tuple struct".to_string()]);
+    println!("{}", w)
 }
 
 // 元组结构体
@@ -282,6 +276,6 @@ struct Wrapper(Vec<String>);
 
 impl Display for Wrapper {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(f,"[{}]",self.0.join(","))
+        write!(f, "[{}]", self.0.join(","))
     }
 }

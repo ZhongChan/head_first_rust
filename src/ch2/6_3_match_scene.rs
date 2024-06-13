@@ -1,19 +1,13 @@
-fn main() {
-    let functions: Vec<(&str, Box<dyn Fn()>)> = vec![
-        ("基本示例", Box::new(|| basic())),
-        ("while let", Box::new(|| while_let())),
-        ("for 循环", Box::new(|| for_loop())),
-        ("let 语句", Box::new(|| let_expression())),
-        ("函数参数", Box::new(|| func_args())),
-    ];
+use head_first_rust::generate_main;
 
-    for (name, function) in functions.into_iter() {
-        println!();
-        println!(">>>>>>>>>>开始执行：{}", name);
-        function();
-        println!("{}: 执行结束<<<<<<<<<<", name);
-    }
-}
+generate_main!(
+    ("基本示例", basic),
+    ("while let", while_let),
+    ("for 循环", for_loop),
+    ("let 语句", let_expression),
+    ("函数参数", func_args)
+);
+
 
 /// # 模式
 /// 模式是 Rust 中的特殊语法，它用来匹配类型中的结构和数据，它往往和 match 表达式联用，以实现强大的模式匹配能力。模式一般由以下内容组合而成：

@@ -1,16 +1,10 @@
-fn main() {
-    let functions: Vec<(&str, Box<dyn Fn()>)> = vec![
-        ("枚举值", Box::new(|| enum_value())),
-        ("Option 枚举值", Box::new(|| enum_option())),
-    ];
+use head_first_rust::generate_main;
 
-    for (name, function) in functions.into_iter() {
-        println!();
-        println!(">>>>>>>>>>开始执行：{}", name);
-        function();
-        println!("{}: 执行结束<<<<<<<<<<", name);
-    }
-}
+generate_main!(
+    ("枚举值", enum_value),
+    ("Option 枚举值", enum_option)
+);
+
 
 /// # 扑克的花色
 #[derive(Debug)]
