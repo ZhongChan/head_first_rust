@@ -1,3 +1,4 @@
+use std::borrow::Cow;
 use std::ptr;
 
 fn main() {
@@ -7,6 +8,7 @@ fn main() {
         ("函数中的生命周期", Box::new(|| function_lifetime())),
         ("生命周期标注语法", Box::new(|| lifetime_tag())),
         ("结构体中的生命周期", Box::new(|| struct_lifetime())),
+        ("生命周期消除", Box::new(|| lifetime_elision())),
     ];
 
     for (name, function) in functions.into_iter() {
@@ -397,4 +399,97 @@ struct ImportantExcerpt<'a> {
 ///  // 需要显示声明周期
 ///  fn longest<'a>(x: &'a str, y: &'a str) -> &'a str
 /// ```
-fn lifetime_elision() {}
+fn lifetime_elision() {
+    // 单输入
+    println!("单输入引用：{}", lifetime_elision_single("Rust"));
+
+    // 多输入无&self
+    let long = "The long string".to_string();
+    let short = "short".to_string();
+    let the_long = lifetime_elision_multi(long.as_str(), short.as_str());
+    println!("多输入引用无&self：{}", the_long);
+
+    // 多输入无&self，多周期
+    let string1 = String::from("short");
+    let string2 = String::from("a bit longer");
+    let string3 = String::from("the longest string of all");
+
+    let result = select_shortest(&string1, &string2, &string3);
+    println!("The shortest string is: {}", result);
+}
+
+/// # 生命周期消除：单输入引用
+fn lifetime_elision_single(s: &str) -> &str {
+    let s_bytes = s.as_bytes();
+    for (i, &item) in s_bytes.iter().enumerate() {
+        if item == b' ' {
+            return &s[0..i];
+        }
+    }
+
+    &s[..]
+}
+
+///  # 生命周期消除：多输入引用无&self
+/// ## 生命周期不统一
+/// ```rust
+/// fn lifetime_elision_multi<'a, 'b>(s1: &'a str, s2: &'b str) -> &'a str {
+///     if s1.len() > s2.len() {
+///         s1
+///     } else {
+///         s2
+///     }
+/// }
+/// ```
+///
+/// ## 解决方案：统一生命周期
+/// ```rust
+/// fn lifetime_elision_multi<'a>(s1: &'a str, s2: &'a str) -> &'a str {
+///     if s1.len() > s2.len() {
+///         s1
+///     } else {
+///         s2
+///     }
+/// }
+/// ```
+///
+
+fn lifetime_elision_multi<'a>(s1: &'a str, s2: &'a str) -> &'a str {
+    if s1.len() > s2.len() {
+        s1
+    } else {
+        s2
+    }
+}
+
+/// # 命周期消除：多输入引用无&self，对齐到最短
+/// 在这个例子中：
+/// 1. `select_shortest` 函数接受三个字符串引用，分别具有生命周期 `'a, 'b, 和 'c`。
+/// 2. 通过对齐最短的生命周期，我们确保返回的引用是安全的。
+/// 3. 使用 `Cow` 类型，如果返回的引用不是最短生命周期的引用，我们会将其克隆为 `Cow::Owned`，以确保返回值的生命周期 'a 足够长。
+fn select_shortest<'a, 'b, 'c>(s1: &'a str, s2: &'b str, s3: &'c str) -> Cow<'a, str>
+    where
+        'b: 'a,
+        'c: 'a,
+{
+    let shortest = if s1.len() < s2.len() {
+        if s1.len() < s3.len() {
+            s1
+        } else {
+            s3
+        }
+    } else {
+        if s2.len() < s3.len() {
+            s2
+        } else {
+            s3
+        }
+    };
+
+    // If the shortest string does not have the shortest lifetime, we need to clone it.
+    if shortest == s1 {
+        Cow::Borrowed(s1)
+    } else {
+        Cow::Owned(shortest.to_string())
+    }
+}
