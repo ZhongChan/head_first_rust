@@ -6,6 +6,7 @@ fn main() {
         ("悬垂引用和生命周期", Box::new(|| dangle_ref_lifetime())),
         ("函数中的生命周期", Box::new(|| function_lifetime())),
         ("生命周期标注语法", Box::new(|| lifetime_tag())),
+        ("结构体中的生命周期", Box::new(|| struct_lifetime())),
     ];
 
     for (name, function) in functions.into_iter() {
@@ -270,4 +271,22 @@ fn lifetime_dangle() {
 
 fn longest_from_string<'a>(_x: &str, _y: &str) -> String {
     "really long string".to_string()
+}
+
+/// # 结构体中的生命周期
+fn struct_lifetime() {
+    struct_lifetime_base();
+}
+
+fn struct_lifetime_base() {
+    let novel = "Call me Ishmael. Some years ago...".to_string();
+    let first_sentence = novel.split('.').next().expect("Could not found a '.'");
+    let i = ImportantExcerpt {
+        part: first_sentence,
+    };
+    println!("{}", i.part);
+}
+
+struct ImportantExcerpt<'a> {
+    part: &'a str,
 }
