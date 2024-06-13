@@ -548,6 +548,10 @@ impl<'a> ImportantExcerpt<'a> {
 /// - [`示例 3: 使用 Box::leak`](box_leak_example)
 /// - [`示例 4: lazy_static 宏`](lazy_static_example)
 /// - [`示例 5: 静态生命周期参数`](static_lifetime_parameter_example)
+///
+/// 总结如下：
+/// * 生命周期 `'static` 意味着能和程序活得一样久，例如字符串字面量和特征对象
+/// * 实在遇到解决不了的生命周期标注问题，可以尝试 `T: 'static`，有时候它会给你奇迹
 fn lifetime_static() {
     static_str_literal();
     static_constant();
@@ -557,7 +561,7 @@ fn lifetime_static() {
 }
 
 
-/// 示例 1: 字符串字面量
+/// # 示例 1: 字符串字面量
 /// * 字符串字面量具有 'static 生命周期，因为它们在整个程序的生命周期内都是有效的。
 fn static_str_literal() {
     let s: &'static str = "Hello,world!";
@@ -566,12 +570,14 @@ fn static_str_literal() {
 
 const GREETING: &'static str = "Hello, world!";
 
-/// 示例 2: 常量
+/// # 示例 2: 常量
+/// * 常量也具有 'static 生命周期，因为它们在编译时确定，并且在程序运行期间一直有效。
 fn static_constant() {
     println!("Static constant: {}", GREETING);
 }
 
-/// 示例 3: 使用 Box::leak
+/// # 示例 3: 使用 Box::leak
+/// * 通过 Box::leak，我们可以将堆上的数据转变为具有 'static 生命周期的引用。
 fn box_leak_example() {
     let s: &'static str = Box::leak(Box::new(String::from("Hello, world!")));
     println!("Box::leak example: {}", s);
@@ -591,7 +597,8 @@ lazy_static! {
     };
 }
 
-// 示例 4: lazy_static 宏
+/// # 示例 4: lazy_static 宏
+/// * 在 Rust 中，可以使用 lazy_static 宏来创建具有 'static 生命周期的全局变量。
 fn lazy_static_example() {
     println!("lazy_static example: {:?}", *HASHMAP);
 }
@@ -601,7 +608,8 @@ fn print_static_str(s: &'static str) {
     println!("Static lifetime parameter: {}", s);
 }
 
-// 示例 5: 静态生命周期参数
+/// # 示例 5: 静态生命周期参数
+/// * 在函数中使用静态生命周期参数，可以确保传入的数据在整个程序运行期间有效。
 fn static_lifetime_parameter_example() {
     let s: &'static str = "Hello, world!";
     print_static_str(s);
