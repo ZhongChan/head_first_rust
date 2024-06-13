@@ -1,25 +1,17 @@
 use std::borrow::Cow;
 use std::ptr;
+use head_first_rust::generate_main;
 
-fn main() {
-    let functions: Vec<(&str, Box<dyn Fn()>)> = vec![
-        ("基本示例", Box::new(|| basic())),
-        ("悬垂引用和生命周期", Box::new(|| dangle_ref_lifetime())),
-        ("函数中的生命周期", Box::new(|| function_lifetime())),
-        ("生命周期标注语法", Box::new(|| lifetime_tag())),
-        ("结构体中的生命周期", Box::new(|| struct_lifetime())),
-        ("生命周期消除", Box::new(|| lifetime_elision())),
-        ("静态生命周期", Box::new(|| lifetime_static())),
-        ("综合示例", Box::new(|| summary())),
-    ];
-
-    for (name, function) in functions.into_iter() {
-        println!();
-        println!(">>>>>>>>>>开始执行：{}", name);
-        function();
-        println!("{}: 执行结束<<<<<<<<<<", name);
-    }
-}
+generate_main!(
+    ("基本示例", basic),
+    ("悬垂引用和生命周期", dangle_ref_lifetime),
+    ("函数中的生命周期", function_lifetime),
+    ("生命周期标注语法", lifetime_tag),
+    ("结构体中的生命周期", struct_lifetime),
+    ("生命周期消除", lifetime_elision),
+    ("静态生命周期", lifetime_static),
+    ("综合示例", summary)
+);
 
 
 /// 在 Rust 中，“引用”和“借用”是密切相关的概念，但它们并不完全是同一个意思。以下是对这两个术语的解释：

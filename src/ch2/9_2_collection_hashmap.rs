@@ -1,20 +1,12 @@
 use std::collections::HashMap;
+use head_first_rust::generate_main;
 
-fn main() {
-    let functions: Vec<(&str, Box<dyn Fn()>)> = vec![
-        ("基本示例", Box::new(|| basic())),
-        ("所有权转移", Box::new(|| owner_ship())),
-        ("查询", Box::new(|| query())),
-        ("更新", Box::new(|| update())),
-    ];
-
-    for (name, function) in functions.into_iter() {
-        println!();
-        println!(">>>>>>>>>>开始执行：{}", name);
-        function();
-        println!("{}: 执行结束<<<<<<<<<<", name);
-    }
-}
+generate_main!(
+        ("基本示例", basic),
+        ("所有权转移", owner_ship),
+        ("查询", query),
+        ("更新",  update)
+);
 
 fn basic() {
     // 基本创建
