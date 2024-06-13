@@ -1,10 +1,11 @@
-use std::{ptr};
+use std::{ptr, result};
 
 fn main() {
     let functions: Vec<(&str, Box<dyn Fn()>)> = vec![
         ("基本示例", Box::new(|| basic())),
         ("悬垂引用和生命周期", Box::new(|| dangle_ref_lifetime())),
         ("函数中的生命周期", Box::new(|| function_lifetime())),
+        ("生命周期标注语法", Box::new(|| lifetime_tag())),
     ];
 
     for (name, function) in functions.into_iter() {
@@ -66,7 +67,8 @@ fn dangle_ref_lifetime() {
 fn function_lifetime() {
     let s1 = String::from("Lifetime");
     let s2 = "Rust";
-    let result = longest_dangle(s1.as_str(), s2);
+    // let result = longest_dangle(s1.as_str(), s2); //Process finished with exit code 139 (interrupted by signal 11:SIGSEGV) 访问被释放的内存
+    let result = longest(s1.as_str(), s2);
     println!("The longest string is {}", result);
 }
 
@@ -75,7 +77,6 @@ fn function_lifetime() {
 /// * 我们在 longest 函数中添加了生命周期参数 'a，
 /// * 这表示 s1 和 s2 的引用必须在同一个生命周期内，
 /// * 并且返回的引用也将具有相同的生命周期。
-#[allow(dead_code)]
 fn longest<'a>(s1: &'a str, s2: &'a str) -> &'a str {
     if s1.len() > s2.len() {
         s1
@@ -91,6 +92,7 @@ fn longest<'a>(s1: &'a str, s2: &'a str) -> &'a str {
 /// 3. 指针转换：将 s1 转换为一个原始指针 *const str。
 /// 4. 手动释放：通过 ptr::drop_in_place 手动释放 s1 所指向的 Box<String>，这会使 s1 成为悬垂引用。
 /// 5. 悬垂引用：尝试通过原始指针 s1_ptr 访问已经被释放的内存。
+#[allow(dead_code)]
 fn longest_dangle<'a>(s1: &'a str, s2: &'a str) -> &'a str {
     unsafe {
         // 将 s1 转换为一个原始指针
@@ -106,5 +108,67 @@ fn longest_dangle<'a>(s1: &'a str, s2: &'a str) -> &'a str {
         } else {
             s2
         }
+    }
+}
+
+/// # 生命周期标注语法
+/// `生命周期标注并不会改变任何引用的实际作用域`
+///
+fn lifetime_tag() {
+    lifetime_the_little();
+}
+
+/// ## 返回参会生命周期等于请求参数中较小那个
+fn lifetime_the_little() {
+    let long = "long string is long".to_string();
+    {
+        let short = "short".to_string();
+        let result = longest(long.as_str(), short.as_str());
+        println!("The longest string is: {}", result);
+    }
+}
+
+/// ## 返回参会生命周期等于请求参数中较小那个
+/// ## 错误示例
+/// ```rust
+/// fn lifetime_the_little_wrong() {
+///     let long = "long string is long".to_string();
+///     let result;
+///     {
+///         let short = "short".to_string();
+///         result = longest(long.as_str(), short.as_str());
+///     } //     `short` dropped here while still borrowed
+///     println!("The longest string is: {}", result);
+/// }
+/// ```
+///
+/// ## 编译时报错：
+/// ```text
+///error[E0597]: `short` does not live long enough
+///    --> src/ch2/10_0_lifetime.rs:156:41
+///     |
+/// 155 |         let short = "short".to_string();
+///     |             ----- binding `short` declared here
+/// 156 |         result = longest(long.as_str(), short.as_str());
+///     |                                         ^^^^^ borrowed value does not live long enough
+/// 157 |     } //     `short` dropped here while still borrowed
+///     |     - `short` dropped here while still borrowed
+/// 158 |     println!("The longest string is: {}", result);
+///     |                                           ------ borrow later used here
+/// ```
+///
+/// ## 错误原因
+/// 1. *生命周期参数* `'a：longest` 函数的生命周期参数 `'a` 表示返回值的生命周期必须与两个输入引用的生命周期中较短的那个相同。
+/// 2. *编译器无法判断*：在 `longest` 函数内部，编译器无法判断 `result` 引用的是 `long` 还是 `short`。因此，为了安全起见，编译器假设 `result` 的生命周期与 `short` 一样长。
+/// 3. *块作用域*：`short` 在块结束时被释放，而 `result` 可能引用了 `short`，这就导致了潜在的悬垂引用。
+///
+///
+fn lifetime_the_little_wrong() {
+    let long = "long string is long".to_string();
+    let result;
+    {
+        let short = "short".to_string();
+        result = longest(long.as_str(), short.as_str());
+        println!("The longest string is: {}", result);
     }
 }
