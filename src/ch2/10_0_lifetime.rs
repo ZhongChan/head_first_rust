@@ -10,6 +10,7 @@ fn main() {
         ("结构体中的生命周期", Box::new(|| struct_lifetime())),
         ("生命周期消除", Box::new(|| lifetime_elision())),
         ("静态生命周期", Box::new(|| lifetime_static())),
+        ("综合示例", Box::new(|| summary())),
     ];
 
     for (name, function) in functions.into_iter() {
@@ -587,6 +588,7 @@ fn box_leak_example() {
 extern crate lazy_static;
 
 use std::collections::HashMap;
+use std::fmt::Display;
 
 lazy_static! {
     static ref HASHMAP: HashMap<i32, &'static str> = {
@@ -613,4 +615,24 @@ fn print_static_str(s: &'static str) {
 fn static_lifetime_parameter_example() {
     let s: &'static str = "Hello, world!";
     print_static_str(s);
+}
+
+fn summary() {
+    let long = "The long string".to_string();
+    let short = "Short".to_string();
+    // let announcement = [1, 2, 3]; //Trait `Display` is not implemented for `[i32; 3]` [E0277]
+    let announcement = 3;
+    let result = longest_with_an_announcement(long.as_str(), short.as_str(), announcement);
+    println!("Result: {}", result);
+}
+
+fn longest_with_an_announcement<'a, T>(x: &'a str, y: &'a str, ann: T) -> &'a str
+    where T: Display
+{
+    println!("Announcement! {}", ann);
+    if x.len() > y.len() {
+        x
+    } else {
+        y
+    }
 }
