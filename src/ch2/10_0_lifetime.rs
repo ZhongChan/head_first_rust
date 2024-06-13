@@ -278,6 +278,17 @@ fn struct_lifetime() {
     struct_lifetime_base();
 }
 
+/// # 结构体生命周期：基础示例
+/// ```rust
+/// struct ImportantExcerpt {
+///     part: &str, //Missing lifetime specifier [E0106]
+/// }
+/// ```
+///
+/// * `ImportantExcerpt` 结构体中有一个引用类型的字段 `part`，因此需要为它标注上生命周期。
+/// * 结构体的生命周期标注语法跟泛型参数语法很像，需要对生命周期参数进行声明 `<'a>`。
+/// * 该生命周期标注说明，结构体 `ImportantExcerpt` 所引用的字符串 `str` 必须比该结构体活得更久。
+///
 fn struct_lifetime_base() {
     let novel = "Call me Ishmael. Some years ago...".to_string();
     let first_sentence = novel.split('.').next().expect("Could not found a '.'");
