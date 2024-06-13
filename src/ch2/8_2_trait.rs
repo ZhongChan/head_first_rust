@@ -23,8 +23,8 @@ fn basic() {
     println!("{}", weibo.something()); //覆盖默认实现
 }
 
-/// # 孤儿规则（Orphan Rule）
-/// * 如果你想要为类型 A 实现特征 T，那么 A 或者 T 至少有一个是在当前作用域中定义的！
+/// # 孤儿规则（`Orphan Rule`）
+/// * 如果你想要为类型 `A` 实现特征 `T`，那么 `A` 或者 `T` 至少有一个是在当前作用域中定义的！
 fn orphan_rule() {
     let post = Post::new("Head first Rust".to_string(), "Zhong".to_string(), "一本介绍Rust的书籍".to_string());
     println!("{}", post);
@@ -61,7 +61,7 @@ impl Summary for Post {
     }
 }
 
-/// 为 Post 实现 Display 特征
+/// 为 `Post` 实现 `Display` 特征
 impl Display for Post {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         write!(
@@ -140,7 +140,7 @@ pub fn notify2<T: Summary>(item1: &T, item2: &T) {
     println!("{} {}", item1.summarize(), item2.summarize());
 }
 
-/// 没有类型限制，只需要实现 Summary Trait
+/// 没有类型限制，只需要实现 `Summary Trait`
 pub fn notify3(item1: &impl Summary, item2: &impl Summary) {
     println!("{} {}", item1.summarize(), item2.summarize());
 }
@@ -152,7 +152,7 @@ pub fn notify4(item: &(impl Summary + Display)) {
 }
 
 
-/// 多重约束 : 类型T + 泛型 Summary 和 Display
+/// 多重约束 : 类型 `T` + 泛型 `Summary` 和 `Display`
 pub fn notify5<T: Summary + Display>(item: &T) {
     println!("{}", item.summarize()); //Summary 特征方法
     println!("{}", item); // Display 格式化输出 fmt
@@ -216,13 +216,13 @@ impl<T: Display + PartialOrd> Pair<T> {
     }
 }
 
-/// # 函数返回中的 impl Trait
+/// # 函数返回中的 `impl Trait`
 fn return_impl_trait() {
     println!("{}", returns_summarize().summarize());
     // println!("{}", returns_summarizable(true).summarize()); //error[E0308]: `if` and `else` have incompatible types
 }
 
-/// 虽然是返回的 Trait 。但是对类型是有要求的，必须是同一个类型
+/// 虽然是返回的 `Trait` 。但是对类型是有要求的，必须是同一个类型
 fn returns_summarize() -> impl Summary {
     Weibo {
         username: "重".to_string(),
@@ -264,7 +264,7 @@ fn returns_summarizable(switch: bool) -> impl Summary {
 /// impl<T> Display for Vec<T> {
 /// } 
 /// ``` 
-/// 可以使用newtype 绕过这个限制 
+/// 可以使用`new type` 绕过这个限制
 ///
 fn new_type() {
     let w = Wrapper(vec!["hello".to_string(), "tuple struct".to_string()]);

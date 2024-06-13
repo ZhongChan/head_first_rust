@@ -57,7 +57,7 @@ impl Rectangle {
 
 
 /// # 多个 impl 方便文件分块
-/// new 只能有一个
+/// `new` 只能有一个
 /// 关联函数、方法 都不支持重载
 impl Rectangle {
     fn anther(&self) {
@@ -66,9 +66,9 @@ impl Rectangle {
 }
 
 /// # self 依然有所有权的概念：
-/// * ```self``` 表示所有权转移到该方法中，这种形式用的较少
-/// * ```&self``` 表示该方法对实例的不可变借用
-/// * ```&mut self``` 表示可变借用
+/// * `self` 表示所有权转移到该方法中，这种形式用的较少
+/// * `&self` 表示该方法对实例的不可变借用
+/// * `&mut self` 表示可变借用
 fn owner_ship() {
     let inst1 = Example::new("hello".to_string());
     inst1.consume();
@@ -129,8 +129,9 @@ impl Point {
     }
 }
 
-/// # 自动引用 (Auto-Referencing)
-/// 当你调用一个对象的方法时，Rust 会自动根据方法签名添加 & 或 &mut。
+
+/// # 自动引用 (`Auto-Referencing`)
+/// 当你调用一个对象的方法时，Rust 会自动根据方法签名添加 `&` 或 `&mut`。
 /// 这意味着即使你有一个值，而方法期望一个引用，你不需要显式地引用这个值；Rust 会为你处理这个引用。
 fn auto_referencing() {
     let mut p = Point { x: 0, y: 0 };
@@ -139,8 +140,8 @@ fn auto_referencing() {
     println!("Point move to:({}, {})", p.x, p.y);
 }
 
-/// # 自动解引用 (Auto-Dereferencing)
-/// 当你调用一个方法时，如果该方法是在一个引用的类型上定义的（如 Box, &, Rc, 等），
+/// # 自动解引用 (`Auto-Dereferencing`)
+/// 当你调用一个方法时，如果该方法是在一个引用的类型上定义的（如 `Box`, `&`, `Rc`, 等），
 /// Rust 将自动解引用这个引用以匹配方法。这意味着你可以在一个类型的引用上调用直接定义在该类型上的方法。
 fn auto_dereferencing() {
     let p = Point { x: 20, y: 30 };

@@ -106,9 +106,9 @@ fn while_loop() {
 }
 
 
-/// # loop 不要轻易使用
-/// break 可以单独使用，也可以带一个返回值，有些类似 return
-/// loop 是一个表达式，因此可以返回一个值
+/// # `loop` 不要轻易使用
+/// `break` 可以单独使用，也可以带一个返回值，有些类似 `return`
+/// `loop` 是一个表达式，因此可以返回一个值
 fn the_loop() {
     let mut counter = 0;
     let result = loop {

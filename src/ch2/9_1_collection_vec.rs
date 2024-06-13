@@ -50,7 +50,7 @@ fn multi_borrow() {
     println!("the first element is: {first}"); // immutable borrow later used here
 }
 
-/// 存储不能类型元素
+/// # 存储不同类型元素
 fn diff_element() {
     let ips = vec![IpAddr::V4("127.0.0.1".to_string()), IpAddr::V6("::1".to_string())];
     for x in ips {
@@ -178,7 +178,7 @@ fn f32_no_nan() {
 }
 
 /// # 浮点数 有 NAN 排序
-/// 自定义排序
+/// * 自定义排序
 fn f32_nan() {
     let mut nan_v = vec![1.0, 5.6, 10.3, 2.0, 15.0, f32::NAN, 3.3, f32::NAN];
     nan_v.sort_unstable_by(|a, b| {
@@ -192,7 +192,7 @@ fn f32_nan() {
     println!("{:?}", nan_v); //NAN 通常在开头或末尾
 }
 
-/// # 稳定排序和非稳定排序
+/// # `稳定排序`和`非稳定排序`
 fn unstable_stable() {
     let items = vec![
         Item { value: 5, original_index: 1 },
@@ -224,7 +224,7 @@ fn struct_sort() {
     println!("{:?}", people)
 }
 
-/// 结构体使用默认 Trait 排序
+/// # 结构体使用默认 Trait 排序
 fn struct_default_sort() {
     let mut animals = vec![
         Animal::new("Dog".to_string(), 1),

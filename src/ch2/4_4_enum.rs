@@ -93,10 +93,10 @@ fn print_suit(card: PokerSuit) {
 
 /// # Option 枚举处理空值
 /// * 空值表示当前时刻变量的值是缺失的。
-/// * 有鉴于此，Rust 吸取了众多教训，
-/// * 决定抛弃 null，而改为使用 Option 枚举变量来表述这种结果。
-/// * ```Option``` 枚举包含两个成员，一个成员表示含有值：
-/// * ```Some(T)```, 另一个表示没有值：```None``` ，定义如下：
+/// * 有鉴于此，`Rust` 吸取了众多教训，
+/// * 决定抛弃 `null`，而改为使用 `Option` 枚举变量来表述这种结果。
+/// * `Option` 枚举包含两个成员，一个成员表示含有值：
+/// * `Some(T)`，另一个表示没有值：`None`，定义如下：
 ///
 /// # Example
 /// ```
@@ -105,8 +105,6 @@ fn print_suit(card: PokerSuit) {
 ///     None,
 /// }
 /// ```
-///
-///
 fn enum_option() {
     let some_number = Some(5);
     dbg!(some_number.is_none());

@@ -36,9 +36,9 @@ fn owner_ship() {
     ref_lifetime_with_map();
 }
 
-/// ```HashMap``` 的所有权规则与其它 ```Rust``` 类型没有区别：
-/// * 若类型实现 ```Copy``` 特征，该类型会被复制进 ```HashMap```，因此无所谓所有权
-/// * 若没实现 ```Copy``` 特征，所有权将被转移给 ```HashMap``` 中
+/// `HashMap` 的所有权规则与其它 `Rust` 类型没有区别：
+/// * 若类型实现 `Copy` 特征，该类型会被复制进 `HashMap`，因此无所谓所有权
+/// * 若没实现 `Copy` 特征，所有权将被转移给 `HashMap` 中
 fn string_no_copy() {
     let name = String::from("Zzz"); //move occurs because `name` has type `String`, which does not implement the `Copy` trait
     let age = 18;
@@ -50,7 +50,7 @@ fn string_no_copy() {
     println!("{}", age); // 基本类型，实现了 Copy ，只是借用
 }
 
-/// 使用引用类型放入 ```Map``` 需要确保引用类型生命周期比 ```Map``` 长
+/// 使用引用类型放入 `Map` 需要确保引用类型生命周期比 `Map` 长
 fn ref_lifetime_with_map() {
     let name = String::from("Zzz");
     let age = 18;
@@ -65,7 +65,7 @@ fn ref_lifetime_with_map() {
     println!("{}", age);
 }
 
-/// # 查询```HashMap```
+/// # 查询`HashMap`
 fn query() {
     let mut score_map = HashMap::new();
     score_map.insert("Yellow".to_string(), 100);
@@ -110,7 +110,7 @@ fn query_foreach(score_map: &HashMap<String, i32>) {
     }
 }
 
-/// # 更新 ```HashMap``` 中的值
+/// # 更新 `HashMap` 中的值
 fn update() {
     update_basic();
     update_when_exist();
@@ -139,10 +139,10 @@ fn update_basic() {
 
 
 /// # 在已有值上进行更新
-/// ```or_insert``` 方法会返回一个可变引用 (```&mut V```) 指向插入或已存在的值。这使得你可以直接通过这个引用来修改值。
-/// 具体来说，```or_insert``` 的行为如下：
-/// * 如果键已经存在于 ```HashMap``` 中，```or_insert``` 会返回该键对应值的可变引用。
-/// * 如果键不存在于 ```HashMap``` 中，```or_insert``` 会插入一个给定的默认值，并返回该值的可变引用。
+/// `or_insert` 方法会返回一个可变引用 (`&mut V`) 指向插入或已存在的值。这使得你可以直接通过这个引用来修改值。
+/// 具体来说，`or_insert` 的行为如下：
+/// * 如果键已经存在于 `HashMap` 中，`or_insert` 会返回该键对应值的可变引用。
+/// * 如果键不存在于 `HashMap` 中，`or_insert` 会插入一个给定的默认值，并返回该值的可变引用。
 fn update_when_exist() {
     let text = "Hello world wonderful world";
     let mut words_map = HashMap::new();

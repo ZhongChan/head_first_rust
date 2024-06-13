@@ -36,3 +36,17 @@ fn basic() {
 
     println!("Still running");
 }
+
+
+use std::net::IpAddr;
+
+/// # 如何使用 `panic!`
+/// ## 如下代码：
+/// * `parse` 方法试图将字符串 `"127.0.0.1"` 解析为一个 IP 地址类型 `IpAddr`。
+/// * 它返回一个 `Result<IpAddr, E>` 类型。
+/// * 如果解析成功，则把 `Ok(IpAddr)` 中的值赋给 `home`，如果失败，则不处理 `Err(E)`，而是直接 `panic`。
+
+fn handle_panic() {
+    let home: IpAddr = "127.0.0.1".parse().unwrap();
+    println!("{:?}", home);
+}

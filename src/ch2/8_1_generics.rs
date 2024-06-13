@@ -87,7 +87,7 @@ struct Point2<T> {
 
 /// # 枚举中使用泛型
 /// 两个最常用的枚举泛型:
-/// null 和 错误处理
+/// `null` 和 错误处理
 /// ```
 /// enum Option<T> {
 ///      Some(T),

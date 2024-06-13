@@ -22,11 +22,11 @@ enum Direction {
     South,
 }
 
-/// # match
-/// match 中用三个匹配分支来完全覆盖枚举变量 Direction 的所有成员类型，有以下几点值得注意：
-/// * match 的匹配必须要穷举出所有可能，因此这里用 _ 来代表未列出的所有可能性
-/// * match 的每一个分支都必须是一个表达式，且所有分支的表达式最终返回值的类型必须相同
-/// * X | Y，类似逻辑运算符 或，代表该分支可以匹配 X 也可以匹配 Y，只要满足一个即可
+/// # `match`
+/// `match` 中用三个匹配分支来完全覆盖枚举变量 `Direction` 的所有成员类型，有以下几点值得注意：
+/// * `match` 的匹配必须要穷举出所有可能，因此这里用 `_` 来代表未列出的所有可能性
+/// * `match` 的每一个分支都必须是一个表达式，且所有分支的表达式最终返回值的类型必须相同
+/// * `X | Y`，类似逻辑运算符 或，代表该分支可以匹配 `X` 也可以匹配 `Y`，只要满足一个即可
 fn basic() {
     let dire = Direction::West;
     match dire {
@@ -137,7 +137,7 @@ fn match_binding() {
 
 /// # 穷尽匹配
 /// 使用通配符或者变量
-/// 有点类似 switch 的 default 分支。
+/// 有点类似 `switch` 的 `default` 分支。
 fn match_exhaustive() {
     let dire = Direction::West;
     match dire {
@@ -175,7 +175,7 @@ fn match_exhaustive() {
     }
 }
 
-/// # 当你只要匹配一个条件，且忽略其他条件时就用 if let ，否则都用 match。
+/// # 当你只要匹配一个条件，且忽略其他条件时就用 `if let`，否则都用 `match`。
 fn if_let() {
     // 使用 match  需要穷尽匹配
     let v = Some(3u8);
@@ -199,14 +199,14 @@ enum MyEnum {
     Bar,
 }
 
-/// # matches! 宏
-/// Rust 标准库中提供了一个非常实用的宏：matches!，
-/// 它可以将一个表达式跟模式进行匹配，然后返回匹配的结果 true or false。
+/// # `matches!` 宏
+/// Rust 标准库中提供了一个非常实用的宏：`matches!`，
+/// 它可以将一个表达式跟模式进行匹配，然后返回匹配的结果 `true` 或 `false`。
 ///
 /// ```matches!(expression, pattern)```
 ///
-/// * expression：这是要匹配的表达式，它的类型是任意的，但通常是一些变量或值。
-/// * pattern：这是一个模式，用于与表达式进行匹配。这个模式可以是字面值、结构体、枚举变体或其他复合数据类型的匹配模式。
+/// * `expression`：这是要匹配的表达式，它的类型是任意的，但通常是一些变量或值。
+/// * `pattern`：这是一个模式，用于与表达式进行匹配。这个模式可以是字面值、结构体、枚举变体或其他复合数据类型的匹配模式。
 ///
 /// # Example
 /// ```
@@ -221,10 +221,8 @@ enum MyEnum {
 /// if matches!(value, MyEnum::Foo(x) if x > 40) {
 ///     println!("It's a Foo variant with a value greater than 40.");
 /// }
-///
 /// ```
-/// 在这个例子中，matches! 宏检查 value 是否是 __MyEnum::Foo__ 变体，并且其内部的值大于 40。
-///
+/// 在这个例子中，`matches!` 宏检查 `value` 是否是 `MyEnum::Foo` 变体，并且其内部的值大于 `40`。
 fn matches_macro() {
     let v = vec![MyEnum::Foo, MyEnum::Bar, MyEnum::Foo];
     let filtered: Vec<_> = v.iter().filter(|x| **x == MyEnum::Foo).collect();

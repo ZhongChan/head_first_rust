@@ -6,8 +6,8 @@ extern crate head_first_rust;
 /// * 从代码设计角度来看，关于文件操作的类型和函数应该组织在一起，
 /// * 散落得到处都是，是难以管理和使用的。
 ///
-/// * 而且通过 open(&mut f1) 进行调用，
-/// * 也远没有使用 f1.open() 来调用好，
+/// * 而且通过 `open(&mut f1)` 进行调用，
+/// * 也远没有使用 `f1.open()` 来调用好，
 /// * 这就体现出了只使用基本类型的局限性：无法从更高的抽象层次去简化代码。
 type File = String;
 
@@ -20,11 +20,11 @@ fn close(f: &mut File) -> bool {
 }
 
 /// # 发散函数
-/// * unimplemented!() 告诉编译器该函数尚未实现，
-/// * unimplemented!() 标记通常意味着我们期望快速完成主要代码，
-/// * 回头再通过搜索这些标记来完成次要代码，类似的标记还有 todo!()，
+/// * `unimplemented!()` 告诉编译器该函数尚未实现，
+/// * `unimplemented!()` 标记通常意味着我们期望快速完成主要代码，
+/// * 回头再通过搜索这些标记来完成次要代码，类似的标记还有 `todo!()`，
 /// * 当代码执行到这种未实现的地方时，程序会直接报错。
-/// * 你可以反注释 read(&mut f1, &mut vec![]); 这行，然后再观察下结果。
+/// * 你可以反注释 `read(&mut f1, &mut vec![]);` 这行，然后再观察下结果。
 #[allow(dead_code)]
 fn read(f: &mut File, save_to: &mut Vec<u8>) -> ! {
     unimplemented!()
@@ -96,8 +96,8 @@ fn string_basic() {
 }
 
 /// # String 与 &str 转换
-/// * ```&str``` 硬编码进可执行文件、utf-8编码
-/// * ```String``` 可变长度、utf-8编码、所有权
+/// * `&str` 硬编码进可执行文件、`utf-8` 编码
+/// * `String` 可变长度、`utf-8` 编码、所有权
 fn string_str() {
     let s = String::from("hello,rust");
     say_hello(&s); //不可变引用
@@ -109,7 +109,7 @@ fn say_hello(s: &str) {
     println!("{}", s);
 }
 
-/// String 和 &str 变长 ，按index取出来也没有意义
+/// `String` 和 `&str` 变长 ，按 `index` 取出来也没有意义
 fn string_index() {
     let s = "你好，rust";//您好，9字节+4字节
     // let h = s[0]; //The type `str` cannot be indexed by `{integer}` [E0277]

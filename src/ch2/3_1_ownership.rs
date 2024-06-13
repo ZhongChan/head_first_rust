@@ -10,10 +10,10 @@ generate_main!(
 
 
 
-/// 所有权原则
-/// 1. Rust 中每一个值都被一个变量拥有，该变量被称为值的所有者
-/// 2. 一个值同时只能被一个变量所拥有，或者说一个值只能拥有一个所有者
-/// 3. 当所有者（变量）离开作用域范围时，这个值将被丢弃(drop)
+/// # 所有权原则
+/// 1. Rust 中每一个值都被一个变量拥有，该变量被称为值的所有者。
+/// 2. 一个值同时只能被一个变量所拥有，或者说一个值只能拥有一个所有者。
+/// 3. 当所有者（变量）离开作用域范围时，这个值将被丢弃（`drop`）。
 fn ownership_principle() {
     demo_of_string();
     borrow_of_moved_value();
@@ -49,12 +49,12 @@ fn val_binding() {
 }
 
 /// # 预防优于治疗
-/// * Rust 没有类似于 Go 的 panic 和 recover 机制。
+/// * Rust 没有类似于 Go 的 `panic` 和 `recover` 机制。
 /// * Rust 的错误处理哲学是“预防优于治疗”，
 /// * 它鼓励开发者通过编译时检查来预防错误，
 /// * 而不是在运行时捕获它们。
-/// * Rust 的错误处理主要依赖于返回 Result 或 Option 类型，
-/// * 以及使用 match 语句或 if let 表达式来处理这些类型。
+/// * Rust 的错误处理主要依赖于返回 `Result` 或 `Option` 类型，
+/// * 以及使用 `match` 语句或 `if let` 表达式来处理这些类型。
 fn borrow_of_moved_value() {
     let s1 = String::from("hello");
     let s2 = s1;

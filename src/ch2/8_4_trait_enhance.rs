@@ -8,18 +8,18 @@ generate_main!(
     ("关联类型", associated_types),
     ("默认泛型类型参数", default_generic_params),
     ("同名方法调用", same_method),
-    ("同名关联函数", same_assoicated_function),
+    ("同名关联函数", same_associated_function),
     ("特征定义中的特征约束", trait_bounds)
 );
 
 
 /// # 关联类型
-/// * 关联类型在 trait 中定义。
-/// * trait 可以成为泛型的一部分
+/// * 关联类型在 `trait` 中定义。
+/// * `trait` 可以成为泛型的一部分。
 ///
 /// ## 基本用法
-/// * trait 在引用一些类型时，这些类型与 trait 的实现具体相关；
-/// * 关联类型通常用于定义共享行为的 trait 中。
+/// * `trait` 在引用一些类型时，这些类型与 `trait` 的实现具体相关；
+/// * 关联类型通常用于定义共享行为的 `trait` 中。
 fn associated_types() {
     // 关联类型 实现邻接矩阵
     let mut graph = AdjacencyMatrix {
@@ -189,9 +189,9 @@ impl Iterator for Counter {
 }
 
 /// # 默认泛型参数
-/// 在 Rust 中，"RHS" 通常指的是 "right-hand side"，即在表达式中等号右侧的部分。
+/// 在 `Rust` 中，`"RHS"` 通常指的是 `"right-hand side"`，即在表达式中等号右侧的部分。
 /// 这个术语通常用于讨论赋值、比较或其他二元操作符的上下文中。
-/// 在 Rust 编程中，理解 RHS 是理解表达式求值和类型推断的关键部分。
+/// 在 `Rust` 编程中，理解 `RHS` 是理解表达式求值和类型推断的关键部分。
 fn default_generic_params() {
     dbg!(Point { x: 1, y: 0 } + Point { x: 3, y: 3 });
     dbg!(Millimeters(1) + Meters(2));
@@ -203,7 +203,7 @@ struct Point {
     y: i32,
 }
 
-// 模拟 运算符重载
+/// # 模拟`运算符重载`
 impl Add for Point {
     type Output = Point;
 
@@ -266,10 +266,10 @@ impl Human {
     }
 }
 
-/// # 同名 关联函数
-/// * 完全限定语法
+/// # 同名`关联函数`
+/// * `完全限定语法`
 /// ```<Type as Trait>::function()```
-fn same_assoicated_function() {
+fn same_associated_function() {
     println!("A baby dog called a {}", Dog::baby_name());
     println!("A baby dog called a {}", <Dog as Animal>::baby_name()); //完全限定语法
 }
@@ -292,7 +292,7 @@ impl Animal for Dog {
     }
 }
 
-/// # 特征定义中的特征约束
+/// # 特征定义中的`特征约束`
 fn trait_bounds() {
     let button = Button {
         label: "normal".to_string(),
