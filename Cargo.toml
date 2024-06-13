@@ -110,3 +110,7 @@ path = "src/ch2/9_2_collection_hashmap.rs"
 [[bin]]
 name = "ch2_10_0"
 path = "src/ch2/10_0_lifetime.rs"
+
+[[bin]]
+name = "ch2_11_1"
+path = "src/ch2/11_1_error_panic.rs"
