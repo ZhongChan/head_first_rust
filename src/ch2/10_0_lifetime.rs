@@ -409,13 +409,16 @@ fn lifetime_elision() {
     let the_long = lifetime_elision_multi(long.as_str(), short.as_str());
     println!("多输入引用无&self：{}", the_long);
 
-    // 多输入无&self，多周期
+    // 多输入无&self，多生命周期（对齐最短生命周期）
     let string1 = String::from("short");
     let string2 = String::from("a bit longer");
     let string3 = String::from("the longest string of all");
 
     let result = select_shortest(&string1, &string2, &string3);
     println!("The shortest string is: {}", result);
+
+    // 多输入有&self
+    lifetime_elision_multi_self();
 }
 
 /// # 生命周期消除：单输入引用
@@ -491,5 +494,43 @@ fn select_shortest<'a, 'b, 'c>(s1: &'a str, s2: &'b str, s3: &'c str) -> Cow<'a,
         Cow::Borrowed(s1)
     } else {
         Cow::Owned(shortest.to_string())
+    }
+}
+
+
+///  # 生命周期消除：多输入引用有&self
+fn lifetime_elision_multi_self() {
+    let novel = "Call me Ishmael. Some years ago...".to_string();
+    let first_sentence = novel.split('.').next().expect("Could not found a '.'");
+    let i = ImportantExcerpt {
+        part: first_sentence,
+    };
+    println!("{}", i.announce_and_return_part("编译器默认生命周期"));
+    println!("{:?}", i.announce_and_return_either("手动指定多生命周期True", true));
+    println!("{:?}", i.announce_and_return_either("手动指定多生命周期False", false));
+}
+
+#[derive(Debug)]
+#[allow(dead_code)]
+enum Either<'a, 'b> {
+    Part(&'a str),
+    Announcement(&'b str),
+}
+
+impl<'a> ImportantExcerpt<'a> {
+    fn announce_and_return_part(&self, announcement: &str) -> &str {
+        println!("Attention please: {}", announcement);
+        self.part
+    }
+
+    /// # 按情况返回多生命周期
+    /// * 一个常见的解决方案是将返回值封装在一个枚举中，这样可以返回不同的类型，同时确保生命周期的安全性。
+    fn announce_and_return_either<'b>(&'a self, announcement: &'b str, return_part: bool) -> Either<'a, 'b> {
+        println!("Attention please: {}", announcement);
+        if return_part {
+            Either::Part(self.part)
+        } else {
+            Either::Announcement(announcement)
+        }
     }
 }
