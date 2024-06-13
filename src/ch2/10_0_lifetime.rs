@@ -1,4 +1,4 @@
-use std::{ptr, result};
+use std::ptr;
 
 fn main() {
     let functions: Vec<(&str, Box<dyn Fn()>)> = vec![
@@ -114,8 +114,11 @@ fn longest_dangle<'a>(s1: &'a str, s2: &'a str) -> &'a str {
 /// # 生命周期标注语法
 /// `生命周期标注并不会改变任何引用的实际作用域`
 ///
-fn lifetime_tag() {
+pub fn lifetime_tag() {
     lifetime_the_little();
+    lifetime_the_little_wrong();
+    lifetime_one_params();
+    lifetime_dangle();
 }
 
 /// ## 返回参会生命周期等于请求参数中较小那个
@@ -171,4 +174,100 @@ fn lifetime_the_little_wrong() {
         result = longest(long.as_str(), short.as_str());
         println!("The longest string is: {}", result);
     }
+}
+
+/// # 返回参数只和单一参数相关
+/// ## 错误示例
+/// ```rust
+/// fn lifetime_one_params() {
+///     let long = "long string is long".to_string();
+///     let result;
+///     {
+///         let short = "short".to_string();
+///         result = longest_one(short.as_str(), long.as_str());
+///     }
+///     println!("The longest string is: {}", result);
+/// }
+///
+///
+/// fn longest_one<'a>(s1: &'a str, _s2: &str) -> &'a str {
+///     s1
+/// }
+/// ```
+/// ## 编译错误
+/// ```text
+/// error[E0597]: `short` does not live long enough
+///    --> src/ch2/10_0_lifetime.rs:185:30
+///     |
+/// 184 |         let short = "short".to_string();
+///     |             ----- binding `short` declared here
+/// 185 |         result = longest_one(short.as_str(), long.as_str());
+///     |                              ^^^^^ borrowed value does not live long enough
+/// 186 |     }
+///     |     - `short` dropped here while still borrowed
+/// 187 |     println!("The longest string is: {}", result);
+///     |                                           ------ borrow later used here
+/// ```
+///
+/// ## 结论
+/// 编译器推断出了谁的生命周期更长，但是这种写法相当危险。
+///
+fn lifetime_one_params() {
+    let long = "long string is long".to_string();
+    let result;
+    {
+        let short = "short".to_string();
+        // result = longest_one(short.as_str(), long.as_str()); //error[E0597]: `short` does not live long enough
+        result = longest_one(long.as_str(), short.as_str());
+    }
+    println!("The longest string is: {}", result);
+}
+
+
+fn longest_one<'a>(s1: &'a str, _s2: &str) -> &'a str {
+    s1
+}
+
+
+/// # 悬垂引用
+/// ## 错误示例
+/// ```rust
+/// fn lifetime_dangle() {
+///     let long = "long string is long".to_string();
+///     let result;
+///     {
+///         let short = "short".to_string();
+///         result = longest_from_string(long.as_str(), short.as_str());
+///         println!("The longest string is: {}", result);
+///     }
+/// }
+///
+/// fn longest_from_string<'a>(_x: &str, _y: &str) -> &'a str {
+///     let result = "really long string".to_string();
+///     result.as_str()
+/// }
+/// ```
+/// ## 编译错误
+/// ```text
+/// error[E0515]: cannot return value referencing local variable `result`
+///    --> src/ch2/10_0_lifetime.rs:230:5
+///     |
+/// 230 |     result.as_str()
+///     |     ------^^^^^^^^^
+///     |     |
+///     |     returns a value referencing data owned by the current function
+///     |     `result` is borrowed here
+/// ```
+fn lifetime_dangle() {
+    let long = "long string is long".to_string();
+    let result;
+    {
+        let short = "short".to_string();
+        result = longest_from_string(long.as_str(), short.as_str());
+        println!("The longest string is: {}", result);
+    }
+}
+
+fn longest_from_string<'a>(_x: &str, _y: &str) -> String {
+    "really long string".to_string()
 }
