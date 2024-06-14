@@ -1,4 +1,3 @@
-#[macro_use]
 use head_first_rust::generate_main;
 use head_first_rust::print_size_of_val;
 

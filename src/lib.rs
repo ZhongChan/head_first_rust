@@ -1,3 +1,4 @@
+pub mod exercism;
 #[macro_export]
 macro_rules! print_size_of_val {
     ($var:ident) => {
