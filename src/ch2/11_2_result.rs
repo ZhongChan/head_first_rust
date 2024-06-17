@@ -12,5 +12,11 @@ fn main() {
             panic!("Problem opening file: {:?}", other_err)
         }
     });
-    println!("Is File: {}", f.metadata().unwrap().is_file())
+    println!("Is File: {}", f.metadata().unwrap().is_file());
+
+    // let bar = File::open("bar.txt").unwrap();
+    // println!("Is File: {}", bar.metadata().unwrap().is_file());
+
+    let bar = File::open("bar.txt").expect("bar.txt not found");
+    println!("Is File: {}", bar.metadata().unwrap().is_file());
 }
