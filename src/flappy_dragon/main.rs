@@ -1,6 +1,10 @@
 use crate::GameMode::{End, Menu, Playing};
 use bracket_lib::prelude::*;
 
+const SCREEN_WIDTH: i32 = 80;
+const SCREEN_HEIGHT: i32 = 50;
+const FRAME_DURATION: f32 = 75.9;
+
 fn main() -> BResult<()> {
     let ctx = BTermBuilder::simple80x50()
         .with_title("Flappy Dragon")
