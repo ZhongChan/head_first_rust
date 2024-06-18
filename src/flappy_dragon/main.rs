@@ -97,3 +97,9 @@ impl Player {
         }
     }
 }
+
+impl Player {
+    fn render(&mut self, ctx: &mut BTerm) {
+        ctx.set(0, self.y, YELLOW, BLACK, to_cp437('@'));
+    }
+}
