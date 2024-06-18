@@ -165,4 +165,18 @@ impl Obstacle {
             size: i32::max(2, 20 - score),
         }
     }
+    fn render(&mut self, ctx: &mut BTerm, player_x: i32) {
+        let screen_x = self.x - player_x;
+        let half_size = self.size / 2;
+
+        //绘制障碍物上半部分
+        for y in 0..self.gap_y - half_size {
+            ctx.set(screen_x, y, RED, BLACK, to_cp437('|'));
+        }
+
+        //绘制障碍物下半部分
+        for y in self.gap_y + half_size..SCREEN_HEIGHT {
+            ctx.set(screen_x, y, RED, BLACK, to_cp437('|'));
+        }
+    }
 }
