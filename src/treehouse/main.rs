@@ -6,22 +6,26 @@ fn main() {
         let your_name = what_is_your_name();
         println!("{:?}", your_name);
 
-        let visitor_list = vec![
+        let mut visitor_list = vec![
             Visitor::new("bert", "Hello Bert, enjoy your treehouse."),
             Visitor::new("steve", "Hello Steve, your milk is in the fridge."),
             Visitor::new("fred", "Wow, who invited Fred?"),
         ];
 
-        let known_visitor = visitor_list.iter().find(|visitor| visitor.name == your_name);
+        let known_visitor = visitor_list
+            .iter()
+            .find(|visitor| visitor.name == your_name);
 
         match known_visitor {
             None => {
-                println!("Yor are not in the visitor list. Please leave.");
-                return;
+                if your_name.is_empty() {
+                    break; // to loop end
+                } else {
+                    println!("{} is not on the visitor list.", your_name);
+                    visitor_list.push(Visitor::new(&your_name, "New friend"));
+                }
             }
-            Some(visitor) => {
-                visitor.greet_visitor()
-            }
+            Some(visitor) => visitor.greet_visitor(),
         }
     }
 }
