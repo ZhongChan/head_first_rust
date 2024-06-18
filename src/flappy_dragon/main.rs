@@ -10,12 +10,18 @@ fn main() -> BResult<()> {
 }
 
 struct State {
+    player: Player,
+    frame_time: f32,
     mode: GameMode,
 }
 
 impl State {
     pub fn new() -> Self {
-        Self { mode: Menu }
+        Self {
+            player: Player::new(5, 25),
+            frame_time: 0.0,
+            mode: Menu,
+        }
     }
 }
 
