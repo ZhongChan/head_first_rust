@@ -6,6 +6,7 @@ edition = "2021"
 [dependencies]
 num = "0.4.0"
 lazy_static = "1.4"
+bracket-lib = "~0.8.1"
 
 
 [lib]
@@ -122,3 +123,7 @@ path = "src/ch2/11_2_result.rs"
 [[bin]]
 name = "treehouse"
 path = "src/treehouse/main.rs"
+
+[[bin]]
+name = "flappy_dragon"
+path = "src/flappy_dragon/main.rs"
