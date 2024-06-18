@@ -3,7 +3,7 @@ use crate::VisitorAction::{Accept, AcceptWithNote, Probation, Refuse};
 
 fn main() {
     let mut visitor_list = vec![
-        Visitor::new("bert", "Hello Bert, enjoy your treehouse.", Accept, 19),
+        Visitor::new("bert", "Hello Bert, enjoy your treehouse.", Accept, 22),
         Visitor::new("steve", "Hello Steve, your milk is in the fridge.", AcceptWithNote {
             note: "Lactose-free milk in the fridge".to_string()
         }, 15),
@@ -29,16 +29,8 @@ fn main() {
                     visitor_list.push(Visitor::new(&your_name, "New friend", Probation, 20));
                 }
             }
-            Some(visitor) => match &visitor.action {
-                Accept => {
-                    println!("Welcome to the treehouse!");
-                    visitor.greet_visitor()
-                }
-                AcceptWithNote { note } => { println!("{}", note) }
-                Probation => {
-                    println!("todo!")
-                }
-                _ => { println!("Go away!") }
+            Some(visitor) => {
+                visitor.greet_visitor()
             }
         }
     }
@@ -63,7 +55,22 @@ impl Visitor {
     }
 
     fn greet_visitor(&self) {
-        println!("{}", self.greeting)
+        match &self.action {
+            Accept => {
+                println!("Welcome to the treehouse: {},{}", self.name, self.greeting)
+            }
+            AcceptWithNote { note } => {
+                println!("Welcome to the treehouse: {},{}", self.name, self.greeting);
+                println!("{}", note);
+                if self.age < 21 {
+                    println!("Do not serve alcohol to {}", self.name);
+                }
+            }
+            Probation => {
+                println!("{} is now a probationary member,{}", self.name, self.greeting)
+            }
+            _ => println!("Go away!")
+        }
     }
 }
 
