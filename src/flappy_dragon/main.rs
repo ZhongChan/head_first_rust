@@ -149,3 +149,20 @@ impl Player {
         self.velocity = -2.0
     }
 }
+
+struct Obstacle {
+    x: i32,
+    gap_y: i32,
+    size: i32,
+}
+
+impl Obstacle {
+    pub fn new(x: i32, score: i32) -> Self {
+        let mut generator = RandomNumberGenerator::new();
+        Self {
+            x,
+            gap_y: generator.range(10, 40),
+            size: i32::max(2, 20 - score),
+        }
+    }
+}
