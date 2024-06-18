@@ -1,5 +1,5 @@
-use bracket_lib::prelude::*;
 use crate::GameMode::{End, Menu, Playing};
+use bracket_lib::prelude::*;
 
 fn main() -> BResult<()> {
     let ctx = BTermBuilder::simple80x50()
@@ -19,13 +19,12 @@ impl State {
     }
 }
 
-
 impl GameState for State {
     fn tick(&mut self, ctx: &mut BTerm) {
         match self.mode {
-            Menu => { self.main_menu(ctx) }
-            Playing => { self.play(ctx) }
-            End => { self.dead(ctx) }
+            Menu => self.main_menu(ctx),
+            Playing => self.play(ctx),
+            End => self.dead(ctx),
         }
     }
 }
@@ -58,7 +57,7 @@ impl State {
 
         if let Some(key) = ctx.key {
             match key {
-                VirtualKeyCode::P => self.restart(), //重启
+                VirtualKeyCode::P => self.restart(),      //重启
                 VirtualKeyCode::Q => ctx.quitting = true, //退出
                 _ => {}
             }
@@ -70,7 +69,6 @@ impl State {
     }
 }
 
-
 /// # 游戏模态
 /// * GameMode 是一个枚举
 /// * 要么显示菜单、要么在进行游戏、要么游戏结束
@@ -78,4 +76,24 @@ enum GameMode {
     Menu,
     Playing,
     End,
+}
+
+/// # 玩家
+/// * x 坐标，世界坐标系
+/// * y 子啊世界坐标系下竖直方向的位置
+/// * velocity 竖直方向的速度
+struct Player {
+    x: i32,
+    y: i32,
+    velocity: f32,
+}
+
+impl Player {
+    pub fn new(x: i32, y: i32) -> Self {
+        Self {
+            x,
+            y,
+            velocity: 0.0,
+        }
+    }
 }
