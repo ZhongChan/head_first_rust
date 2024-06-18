@@ -50,6 +50,7 @@ impl Rectangle {
         self.width * self.height
     }
 
+    #[warn(clippy::needless_arbitrary_self_type)]
     fn perimeter(self: &Self) -> f64 {
         (self.width + self.height) * 2f64
     }

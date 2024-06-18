@@ -26,7 +26,7 @@ fn close(f: &mut File) -> bool {
 /// * 当代码执行到这种未实现的地方时，程序会直接报错。
 /// * 你可以反注释 `read(&mut f1, &mut vec![]);` 这行，然后再观察下结果。
 #[allow(dead_code)]
-fn read(f: &mut File, save_to: &mut Vec<u8>) -> ! {
+fn read(f: &mut File, save_to: &mut [u8]) -> ! {
     unimplemented!()
 }
 

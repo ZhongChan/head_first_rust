@@ -87,7 +87,8 @@ fn number_nan() {
     }
 }
 
-//四则运算
+/// # 四则运算
+#[warn(clippy::inconsistent_digit_grouping)]
 fn four_operations() {
     //基础示例 ： 基本类型一致才能运算
     println!("{}", 5 + 10);

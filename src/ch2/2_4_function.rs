@@ -53,6 +53,7 @@ fn report<T: Debug>(item: T) {
 }
 
 /// # 显示返回 unit type
+#[allow(clippy::unused_unit)]
 fn clear(text: &mut String) -> () {
     *text = String::from("")
 }
@@ -66,9 +67,10 @@ fn dead_end() -> ! {
     panic!("wrong!")
 }
 
+#[deny(clippy::never_loop)]
 fn forever() {
     loop {
-        println!("{}", "Hello");
+        println!("Hello");
         panic!()
     }
 }

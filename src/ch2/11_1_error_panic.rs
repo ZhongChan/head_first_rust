@@ -16,6 +16,8 @@ generate_main!(
 /// `Rust` 没有异常，但是 `Rust` 也有自己的卧龙凤雏：
 /// * `Result<T, E>` 用于可恢复错误，
 /// * `panic!` 用于不可恢复错误。
+#[warn(clippy::unnecessary_operation)]
+#[warn(clippy::useless_vec)]
 fn basic() {
     let result = panic::catch_unwind(|| {
         let v = vec![1, 2, 3];

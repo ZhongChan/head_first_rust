@@ -77,7 +77,7 @@ fn while_loop() {
     let mut n = 0;
     while n < 5 {
         println!("{}!", n);
-        n = n + 1;
+        n += 1;
     }
     println!("我从 while 出来了啦！");
 
@@ -95,7 +95,7 @@ fn while_loop() {
     let mut index = 0;
     while index < a.len() {
         println!("the value is : {}", a[index]);
-        index = index + 1;
+        index += 1;
     }
 
     println!("while ending!");

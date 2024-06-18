@@ -63,7 +63,7 @@ fn while_let() {
 /// # `for` 循环
 /// 这里使用 `enumerate` 方法产生一个迭代器，该迭代器每次迭代会返回一个 `(索引, 值)` 形式的元组，然后用 `(index, value)` 来匹配。
 fn for_loop() {
-    let v = vec!['a', 'b', 'c'];
+    let v = ['a', 'b', 'c'];
     for (index, value) in v.iter().enumerate() {
         println!("{} is at index {}", value, index);
     }

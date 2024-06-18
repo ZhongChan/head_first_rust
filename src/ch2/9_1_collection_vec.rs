@@ -147,7 +147,7 @@ fn common_usage() {
     assert_eq!(v7, [33, 44]);
 
     //数组切片
-    let v8 = vec![11, 22, 33, 44, 55];
+    let v8 = [11, 22, 33, 44, 55];
     let v8_slice = &v8[1..=3]; //从 index 取 size 个元素
     assert_eq!(v8_slice, [22, 33, 44]);
 }

@@ -52,6 +52,7 @@ fn array_slice() {
     dbg!(slice);
 }
 
+#[warn(clippy::needless_range_loop)]
 fn summary() {
     // 编译器自动推导类型
     let one = [1, 2, 3];
@@ -80,7 +81,7 @@ fn summary() {
         let mut sum = 0;
         // 0..x.len() 语法糖，快速生成 x数组的下标
         for i in 0..x.len() {
-            sum = sum + x[i];
+            sum += x[i];
         }
         dbg!(sum);
     }

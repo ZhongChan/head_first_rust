@@ -20,6 +20,7 @@ generate_main!(
 /// ## 基本用法
 /// * `trait` 在引用一些类型时，这些类型与 `trait` 的实现具体相关；
 /// * 关联类型通常用于定义共享行为的 `trait` 中。
+#[warn(clippy::while_let_on_iterator)]
 fn associated_types() {
     // 关联类型 实现邻接矩阵
     let mut graph = AdjacencyMatrix {

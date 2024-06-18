@@ -176,6 +176,7 @@ fn match_exhaustive() {
 }
 
 /// # 当你只要匹配一个条件，且忽略其他条件时就用 `if let`，否则都用 `match`。
+#[warn(clippy::single_match)]
 fn if_let() {
     // 使用 match  需要穷尽匹配
     let v = Some(3u8);
@@ -224,7 +225,7 @@ enum MyEnum {
 /// ```
 /// 在这个例子中，`matches!` 宏检查 `value` 是否是 `MyEnum::Foo` 变体，并且其内部的值大于 `40`。
 fn matches_macro() {
-    let v = vec![MyEnum::Foo, MyEnum::Bar, MyEnum::Foo];
+    let v = [MyEnum::Foo, MyEnum::Bar, MyEnum::Foo];
     let filtered: Vec<_> = v.iter().filter(|x| **x == MyEnum::Foo).collect();
     dbg!(filtered);
 
@@ -233,8 +234,8 @@ fn matches_macro() {
     let filtered2: Vec<_> = v2.iter().filter(|x| matches!(x,MyEnum::Foo)).collect();
     dbg!(filtered2);
 
-    let foo = 'f';
-    assert!(matches!(foo,'A'..='Z' | 'a'..='z'));
+    let f = 'f';
+    assert!(matches!(f,'A'..='Z' | 'a'..='z'));
 
     let bar = Some(4);
     assert!(matches!(bar,Some(x) if x > 2))

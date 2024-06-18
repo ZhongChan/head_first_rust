@@ -265,7 +265,7 @@ fn lifetime_dangle() {
     }
 }
 
-fn longest_from_string<'a>(_x: &str, _y: &str) -> String {
+fn longest_from_string(_x: &str, _y: &str) -> String {
     "really long string".to_string()
 }
 
@@ -416,6 +416,7 @@ fn lifetime_elision() {
 }
 
 /// # 生命周期消除：单输入引用
+#[warn(clippy::redundant_slicing)]
 fn lifetime_elision_single(s: &str) -> &str {
     let s_bytes = s.as_bytes();
     for (i, &item) in s_bytes.iter().enumerate() {
@@ -475,12 +476,10 @@ fn select_shortest<'a, 'b, 'c>(s1: &'a str, s2: &'b str, s3: &'c str) -> Cow<'a,
         } else {
             s3
         }
+    } else if s2.len() < s3.len() {
+        s2
     } else {
-        if s2.len() < s3.len() {
-            s2
-        } else {
-            s3
-        }
+        s3
     };
 
     // If the shortest string does not have the shortest lifetime, we need to clone it.
@@ -561,10 +560,12 @@ fn static_str_literal() {
     println!("Static string literal: {}", s);
 }
 
+#[warn(clippy::redundant_static_lifetimes)]
 const GREETING: &'static str = "Hello, world!";
 
 /// # 示例 2: 常量
 /// * 常量也具有 'static 生命周期，因为它们在编译时确定，并且在程序运行期间一直有效。
+#[warn(clippy::redundant_static_lifetimes)]
 fn static_constant() {
     println!("Static constant: {}", GREETING);
 }

@@ -42,7 +42,7 @@ fn demo_of_string() {
 fn val_binding() {
     let x = 5;
     let mut y = x;
-    y = y + 1;
+    y += 1;
     println!("{}", x);
     println!("{}", y);
 }
@@ -135,8 +135,7 @@ fn makes_copy(x: i32) {
 }
 
 fn gives_ownership() -> String {
-    let some_string = String::from("hello");
-    some_string
+    String::from("hello")
 }
 
 fn takes_and_give_back(a_string: String) -> String {

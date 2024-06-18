@@ -23,7 +23,7 @@ fn not_mut_ref() {
     println!("{} length is {}", s1, l)
 }
 
-fn cal_len(some_string: &String) -> usize {
+fn cal_len(some_string: &str) -> usize {
     some_string.len()
 }
 
@@ -109,6 +109,5 @@ pub fn dangle_ref() {
 }
 
 fn no_dangle() -> String {
-    let s = String::from("hello");
-    s
+    String::from("hello")
 }

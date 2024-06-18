@@ -208,7 +208,7 @@ struct Duck;
 
 impl Appearance for Duck {
     fn skin(&self) -> Self {
-        return self.clone();
+        self.clone()
     }
 }
 
