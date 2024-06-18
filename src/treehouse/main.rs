@@ -1,24 +1,27 @@
 use std::io::stdin;
 
 fn main() {
-    println!("Hello, what's your name?");
-    let your_name = what_is_your_name();
-    println!("{:?}", your_name);
+    loop {
+        println!("Hello, what's your name? (Leave empty and press ENTER to quit)");
+        let your_name = what_is_your_name();
+        println!("{:?}", your_name);
 
-    let visitor_list = vec![
-        Visitor::new("bert", "Hello Bert, enjoy your treehouse."),
-        Visitor::new("steve", "Hello Steve, your milk is in the fridge."),
-        Visitor::new("fred", "Wow, who invited Fred?"),
-    ];
+        let visitor_list = vec![
+            Visitor::new("bert", "Hello Bert, enjoy your treehouse."),
+            Visitor::new("steve", "Hello Steve, your milk is in the fridge."),
+            Visitor::new("fred", "Wow, who invited Fred?"),
+        ];
 
-    let known_visitor = visitor_list.iter().find(|visitor| visitor.name == your_name);
+        let known_visitor = visitor_list.iter().find(|visitor| visitor.name == your_name);
 
-    match known_visitor {
-        None => {
-            println!("Yor are not in the visitor list. Please leave.")
-        }
-        Some(visitor) => {
-            visitor.greet_visitor()
+        match known_visitor {
+            None => {
+                println!("Yor are not in the visitor list. Please leave.");
+                return;
+            }
+            Some(visitor) => {
+                visitor.greet_visitor()
+            }
         }
     }
 }
