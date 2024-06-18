@@ -179,4 +179,12 @@ impl Obstacle {
             ctx.set(screen_x, y, RED, BLACK, to_cp437('|'));
         }
     }
+
+    fn hit_obstacle(&mut self, player: &Player) -> bool {
+        let half_size = self.size / 2;
+        let dose_x_match = player.x == self.x;
+        let player_above_gap = player.y < self.gap_y - half_size;
+        let player_bellow_gap = player.y > self.gap_y + half_size;
+        dose_x_match && (player_above_gap || player_bellow_gap)
+    }
 }
