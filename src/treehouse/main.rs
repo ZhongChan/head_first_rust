@@ -1,10 +1,11 @@
 use std::io::stdin;
+use crate::VisitorAction::{Accept, Refuse};
 
 fn main() {
     let mut visitor_list = vec![
-        Visitor::new("bert", "Hello Bert, enjoy your treehouse."),
-        Visitor::new("steve", "Hello Steve, your milk is in the fridge."),
-        Visitor::new("fred", "Wow, who invited Fred?"),
+        Visitor::new("bert", "Hello Bert, enjoy your treehouse.", Accept, 19),
+        Visitor::new("steve", "Hello Steve, your milk is in the fridge.", Accept, 20),
+        Visitor::new("fred", "Wow, who invited Fred?", Accept, 21),
     ];
 
     loop {
@@ -23,7 +24,7 @@ fn main() {
                     break; // to loop end
                 } else {
                     println!("{} is not on the visitor list.", your_name);
-                    visitor_list.push(Visitor::new(&your_name, "New friend"));
+                    visitor_list.push(Visitor::new(&your_name, "New friend", Refuse, 20));
                 }
             }
             Some(visitor) => visitor.greet_visitor(),
@@ -35,19 +36,31 @@ fn main() {
 struct Visitor {
     name: String,
     greeting: String,
+    action: VisitorAction,
+    age: u8,
 }
 
 impl Visitor {
-    pub fn new(name: &str, greeting: &str) -> Self {
+    pub fn new(name: &str, greeting: &str, action: VisitorAction, age: u8) -> Self {
         Self {
             name: name.to_lowercase(),
             greeting: greeting.to_string(),
+            action,
+            age,
         }
     }
 
     fn greet_visitor(&self) {
         println!("{}", self.greeting)
     }
+}
+
+#[derive(Debug)]
+enum VisitorAction {
+    Accept,
+    AcceptWithNote { note: String },
+    Refuse,
+    Probation,
 }
 
 fn what_is_your_name() -> String {
