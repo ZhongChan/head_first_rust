@@ -1,17 +1,16 @@
 use std::io::stdin;
 
 fn main() {
+    let mut visitor_list = vec![
+        Visitor::new("bert", "Hello Bert, enjoy your treehouse."),
+        Visitor::new("steve", "Hello Steve, your milk is in the fridge."),
+        Visitor::new("fred", "Wow, who invited Fred?"),
+    ];
+
     loop {
         println!("Hello, what's your name? (Leave empty and press ENTER to quit)");
         let your_name = what_is_your_name();
         println!("{:?}", your_name);
-
-        let mut visitor_list = vec![
-            Visitor::new("bert", "Hello Bert, enjoy your treehouse."),
-            Visitor::new("steve", "Hello Steve, your milk is in the fridge."),
-            Visitor::new("fred", "Wow, who invited Fred?"),
-        ];
-
         let known_visitor = visitor_list
             .iter()
             .find(|visitor| visitor.name == your_name);
@@ -19,6 +18,8 @@ fn main() {
         match known_visitor {
             None => {
                 if your_name.is_empty() {
+                    println!("The final list of visitors:");
+                    println!("{:#?}", visitor_list);
                     break; // to loop end
                 } else {
                     println!("{} is not on the visitor list.", your_name);
@@ -30,6 +31,7 @@ fn main() {
     }
 }
 
+#[derive(Debug)]
 struct Visitor {
     name: String,
     greeting: String,
