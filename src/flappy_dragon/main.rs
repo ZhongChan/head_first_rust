@@ -71,7 +71,9 @@ impl State {
     }
 
     fn restart(&mut self) {
-        self.mode = Menu
+        self.player = Player::new(5, 25);
+        self.frame_time = 0.0;
+        self.mode = Playing;
     }
 }
 
