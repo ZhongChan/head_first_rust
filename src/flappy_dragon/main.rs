@@ -39,7 +39,7 @@ impl State {
 
         if let Some(key) = ctx.key {
             match key {
-                VirtualKeyCode::P => self.restart(), //重启
+                VirtualKeyCode::P => self.play(ctx),
                 VirtualKeyCode::Q => ctx.quitting = true, //退出
                 _ => {}
             }
@@ -47,12 +47,10 @@ impl State {
     }
 
     fn play(&mut self, ctx: &mut BTerm) {
-        // TODO
-        self.mode = Playing
+        self.mode = End
     }
 
     fn dead(&mut self, ctx: &mut BTerm) {
-        self.mode = Menu;
         ctx.cls();
         ctx.print_centered(5, "You are dead!");
         ctx.print_centered(8, "(P) Play Again");
@@ -68,8 +66,7 @@ impl State {
     }
 
     fn restart(&mut self) {
-        // TODO
-        self.mode = Playing
+        self.mode = Menu
     }
 }
 
