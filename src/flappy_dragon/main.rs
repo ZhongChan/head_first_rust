@@ -1,5 +1,5 @@
 use bracket_lib::prelude::*;
-use crate::GameMode::Menu;
+use crate::GameMode::{End, Menu, Playing};
 
 fn main() -> BResult<()> {
     let ctx = BTermBuilder::simple80x50()
@@ -22,13 +22,28 @@ impl State {
 
 impl GameState for State {
     fn tick(&mut self, ctx: &mut BTerm) {
-        // ctx.cls();
-        // ctx.print(1, 1, "Hello, Bracket Terminal!");
         match self.mode {
             Menu => { self.main_menu(ctx) }
-            GameMode::Playing => { self.play(ctx) }
-            GameMode::End => { self.dead(ctx) }
+            Playing => { self.play(ctx) }
+            End => { self.dead(ctx) }
         }
+    }
+}
+
+impl State {
+    fn main_menu(&mut self, ctx: &mut BTerm) {
+        // TODO
+        self.mode = End
+    }
+
+    fn play(&mut self, ctx: &mut BTerm) {
+        // TODO
+        self.mode = Playing
+    }
+
+    fn end(&mut self, ctx: &mut BTerm) {
+        // TODO
+        self.mode = Menu
     }
 }
 
