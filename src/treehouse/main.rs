@@ -1,11 +1,13 @@
 use std::io::stdin;
-use crate::VisitorAction::{Accept, Refuse};
+use crate::VisitorAction::{Accept, AcceptWithNote, Probation, Refuse};
 
 fn main() {
     let mut visitor_list = vec![
         Visitor::new("bert", "Hello Bert, enjoy your treehouse.", Accept, 19),
-        Visitor::new("steve", "Hello Steve, your milk is in the fridge.", Accept, 20),
-        Visitor::new("fred", "Wow, who invited Fred?", Accept, 21),
+        Visitor::new("steve", "Hello Steve, your milk is in the fridge.", AcceptWithNote {
+            note: "Lactose-free milk in the fridge".to_string()
+        }, 15),
+        Visitor::new("fred", "Wow, who invited Fred?", Refuse, 21),
     ];
 
     loop {
@@ -24,10 +26,20 @@ fn main() {
                     break; // to loop end
                 } else {
                     println!("{} is not on the visitor list.", your_name);
-                    visitor_list.push(Visitor::new(&your_name, "New friend", Refuse, 20));
+                    visitor_list.push(Visitor::new(&your_name, "New friend", Probation, 20));
                 }
             }
-            Some(visitor) => visitor.greet_visitor(),
+            Some(visitor) => match &visitor.action {
+                Accept => {
+                    println!("Welcome to the treehouse!");
+                    visitor.greet_visitor()
+                }
+                AcceptWithNote { note } => { println!("{}", note) }
+                Probation => {
+                    println!("todo!")
+                }
+                _ => { println!("Go away!") }
+            }
         }
     }
 }
