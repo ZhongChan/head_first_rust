@@ -74,7 +74,17 @@ impl State {
 
         self.player.render(ctx);
         ctx.print(0, 0, "Press SPACE to flap.");
-        if self.player.y > SCREEN_HEIGHT {
+
+        //得分
+        ctx.print(0, 1, &format!("Score: {}", self.score));
+        self.obstacle.render(ctx, self.player.x);
+        if self.player.x > self.obstacle.x {
+            self.score += 1;
+            self.obstacle = Obstacle::new(self.player.x + SCREEN_WIDTH, self.score);
+        }
+
+        //超出屏幕或者碰撞障碍物
+        if self.player.y > SCREEN_HEIGHT || self.obstacle.hit_obstacle(&self.player) {
             self.mode = End;
         }
     }
@@ -82,6 +92,7 @@ impl State {
     fn dead(&mut self, ctx: &mut BTerm) {
         ctx.cls();
         ctx.print_centered(5, "You are dead!");
+        ctx.print_centered(6, &format!("You earn points: {}", self.score));
         ctx.print_centered(8, "(P) Play Again");
         ctx.print_centered(9, "(Q) Quit Game");
 
@@ -97,6 +108,8 @@ impl State {
     fn restart(&mut self) {
         self.player = Player::new(5, 25);
         self.frame_time = 0.0;
+        self.score = 0;
+        self.obstacle = Obstacle::new(SCREEN_WIDTH, 0);
         self.mode = Playing;
     }
 }
