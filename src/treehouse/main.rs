@@ -11,20 +11,15 @@ fn main() {
         Visitor::new("fred", "Wow, who invited Fred?"),
     ];
 
-    let mut allow_the_in = false;
-    let mut your = Visitor::new("", "");
-    for visitor in visitor_list {
-        if your_name == visitor.name {
-            allow_the_in = true;
-            your = visitor;
-            break;
-        }
-    }
+    let known_visitor = visitor_list.iter().find(|visitor| visitor.name == your_name);
 
-    if allow_the_in {
-        your.greet_visitor();
-    } else {
-        println!("Sorry,yor are not in the list");
+    match known_visitor {
+        None => {
+            println!("Yor are not in the visitor list. Please leave.")
+        }
+        Some(visitor) => {
+            visitor.greet_visitor()
+        }
     }
 }
 
