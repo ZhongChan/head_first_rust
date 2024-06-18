@@ -5,7 +5,7 @@ fn main() {
     let your_name = what_is_your_name();
     println!("{:?}", your_name);
 
-    let visitor_list = [
+    let visitor_list = vec![
         Visitor::new("bert", "Hello Bert, enjoy your treehouse."),
         Visitor::new("steve", "Hello Steve, your milk is in the fridge."),
         Visitor::new("fred", "Wow, who invited Fred?"),
