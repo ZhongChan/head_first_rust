@@ -3,7 +3,7 @@ use bracket_lib::prelude::*;
 
 const SCREEN_WIDTH: i32 = 80;
 const SCREEN_HEIGHT: i32 = 50;
-const FRAME_DURATION: f32 = 75.9;
+const FRAME_DURATION: f32 = 75.0;
 
 fn main() -> BResult<()> {
     let ctx = BTermBuilder::simple80x50()
@@ -56,7 +56,23 @@ impl State {
     }
 
     fn play(&mut self, ctx: &mut BTerm) {
-        self.mode = End
+        self.mode = Playing;
+        ctx.cls_bg(NAVY);
+        self.frame_time += ctx.frame_time_ms;
+        if self.frame_time > FRAME_DURATION {
+            self.frame_time = 0.0;
+            self.player.gravity_and_move();
+        }
+
+        if let Some(VirtualKeyCode::Space) = ctx.key {
+            self.player.flap();
+        }
+
+        self.player.render(ctx);
+        ctx.print(0, 0, "Press SPACE to flap.");
+        if self.player.y > SCREEN_HEIGHT {
+            self.mode = End;
+        }
     }
 
     fn dead(&mut self, ctx: &mut BTerm) {
