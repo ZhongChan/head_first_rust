@@ -22,6 +22,10 @@ mod prelude {
 use prelude::*;
 
 fn main() -> BResult<()> {
+    // 添加调试输出以确认当前工作目录和资源路径
+    println!("Current working directory: {:?}", std::env::current_dir()?);
+    println!("Expected resource path: resources/dungeonfont.png");
+
     // 创建了一个终端窗口
     // 包含两个控制图层：一个用来绘制地图，一个用来绘制角色。
     let context = BTermBuilder::simple80x50()
