@@ -2,6 +2,7 @@ mod map;
 mod map_builder;
 mod camera;
 mod components;
+mod spawner;
 
 /// # 使用其他模块
 /// 模块之间是通过树形结构来组织的，使用 `use` 关键字导入时：
@@ -22,6 +23,7 @@ mod prelude {
     pub use crate::map_builder::*;
     pub use crate::camera::*;
     pub use crate::components::*;
+    pub use crate::spawner::*;
 }
 
 use prelude::*;
@@ -58,6 +60,7 @@ impl State {
         let mut resources = Resources::default();
         let mut rng = RandomNumberGenerator::new();
         let map_builder = MapBuilder::new(&mut rng);
+        spawner_player(&mut ecs, map_builder.player_start);
 
         // 地图和摄像机都是资源
         resources.insert(map_builder.map);
