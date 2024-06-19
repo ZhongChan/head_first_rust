@@ -1,4 +1,4 @@
-use crate::map::TileType::Floor;
+use crate::map::TileType::{Floor, Wall};
 use crate::prelude::*;
 
 /// 房间数量
@@ -8,6 +8,22 @@ pub struct MapBuilder {
     pub map: Map,
     pub rooms: Vec<Rect>, //Rect 处理矩形相关运算
     pub player_start: Point, //玩家初始位置
+}
+
+impl MapBuilder {
+    pub fn new(rng: &mut RandomNumberGenerator) -> Self {
+        let mut mb = MapBuilder {
+            map: Map::new(),
+            rooms: vec![],
+            player_start: Point::zero(),
+        };
+
+        mb.fill(Wall);
+        mb.build_random_roms(rng);
+        mb.build_corridors(rng);
+        mb.player_start = mb.rooms[0].center();
+        mb
+    }
 }
 
 impl MapBuilder {
@@ -71,7 +87,7 @@ impl MapBuilder {
         }
     }
 
-    pub fn build_corridors(&mut self, rng: RandomNumberGenerator) {
+    pub fn build_corridors(&mut self, rng: &mut RandomNumberGenerator) {
         let mut rooms = self.rooms.clone();
         rooms.sort_by(|a, b| a.center().x.cmp(&b.center().x));
 
