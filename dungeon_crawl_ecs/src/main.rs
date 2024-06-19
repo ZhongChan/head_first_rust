@@ -1,6 +1,7 @@
 mod map;
 mod map_builder;
 mod camera;
+mod components;
 
 /// # 使用其他模块
 /// 模块之间是通过树形结构来组织的，使用 `use` 关键字导入时：
@@ -20,6 +21,7 @@ mod prelude {
     pub use crate::map::*;
     pub use crate::map_builder::*;
     pub use crate::camera::*;
+    pub use crate::components::*;
 }
 
 use prelude::*;
