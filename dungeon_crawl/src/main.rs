@@ -16,6 +16,24 @@ mod prelude {
 
 use prelude::*;
 
-fn main() {
-    println!("Hello, world!");
+fn main() -> BResult<()> {
+    let context = BTermBuilder::simple80x50().with_title("Dungeon Crawl").with_fps_cap(30.0).build()?;
+    main_loop(context, State::new())
+}
+
+struct State {
+    map: Map,
+}
+
+impl State {
+    pub fn new() -> Self {
+        Self { map: Map::new() }
+    }
+}
+
+impl GameState for State {
+    fn tick(&mut self, ctx: &mut BTerm) {
+        ctx.cls();
+        self.map.render(ctx);
+    }
 }
