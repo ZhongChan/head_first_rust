@@ -1,6 +1,6 @@
 mod map;
-mod player;
 mod map_builder;
+mod player;
 
 /// # 使用其他模块
 /// 模块之间是通过树形结构来组织的，使用 `use` 关键字导入时：
@@ -11,10 +11,12 @@ mod prelude {
 
     pub const SCREEN_WIDTH: i32 = 80;
     pub const SCREEN_HEIGHT: i32 = 50;
+    pub const DISPLAY_WIDTH: i32 = SCREEN_WIDTH / 2;
+    pub const DISPLAY_HEIGHT: i32 = SCREEN_HEIGHT / 2;
 
     pub use crate::map::*;
-    pub use crate::player::*;
     pub use crate::map_builder::*;
+    pub use crate::player::*;
 }
 
 use prelude::*;
