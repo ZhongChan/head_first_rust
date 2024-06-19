@@ -6,13 +6,13 @@ const NUM_ROOMS: usize = 20;
 
 pub struct MapBuilder {
     pub map: Map,
-    pub roms: Vec<Rect>, //Rect 处理矩形相关运算
+    pub rooms: Vec<Rect>, //Rect 处理矩形相关运算
     pub player_start: Point, //玩家初始位置
 }
 
 impl MapBuilder {
     /// # 房屋开凿算法
-    /// * `iter_mut` 获取一个可变迭代器 
+    /// * `iter_mut` 获取一个可变迭代器
     /// * `for_each` 把每一个图块类型设置成指定类型
     /// * `t` 前面的 星号（`*`） 是`解引用`
     ///     * 迭代器传递的变量 `t`是一个可变引用，也就是 `&mut TileType`
@@ -24,7 +24,7 @@ impl MapBuilder {
     pub fn build_random_roms(&mut self, rng: &mut RandomNumberGenerator) {
 
         // 生成 NUM_ROOMS 个非相交房间
-        while self.roms.len() < NUM_ROOMS {
+        while self.rooms.len() < NUM_ROOMS {
             let room = Rect::with_size(
                 rng.range(1, SCREEN_WIDTH - 10),
                 rng.range(1, SCREEN_HEIGHT - 10),
@@ -34,7 +34,7 @@ impl MapBuilder {
 
             //是否有房间重叠在一起
             let mut overloop = false;
-            for r in self.roms.iter() {
+            for r in self.rooms.iter() {
                 if r.intersect(&room) {
                     overloop = true;
                 }
@@ -48,7 +48,42 @@ impl MapBuilder {
                         self.map.tiles[idx] = Floor
                     }
                 });
-                self.roms.push(room)
+                self.rooms.push(room)
+            }
+        }
+    }
+
+    pub fn apply_vertical_tunnel(&mut self, y1: i32, y2: i32, x: i32) {
+        use std::cmp::{min, max};
+        for y in min(y1, y2)..=max(y1, y2) {
+            if let Some(idx) = self.map.try_idx(Point::new(x, y)) {
+                self.map.tiles[idx] = Floor;
+            }
+        }
+    }
+
+    pub fn apply_horizon_tunnel(&mut self, x1: i32, x2: i32, y: i32) {
+        use std::cmp::{min, max};
+        for x in min(x1, x2)..=max(x1, x2) {
+            if let Some(idx) = self.map.try_idx(Point::new(x, y)) {
+                self.map.tiles[idx] = Floor;
+            }
+        }
+    }
+
+    pub fn build_corridors(&mut self, rng: RandomNumberGenerator) {
+        let mut rooms = self.rooms.clone();
+        rooms.sort_by(|a, b| a.center().x.cmp(&b.center().x));
+
+        for (i, room) in rooms.iter().enumerate().skip(1) {
+            let prev = rooms[i - 1].center();
+            let new = room.center();
+            if rng.range(0, 2) == 1 {
+                self.apply_horizon_tunnel(prev.x, new.x, prev.y);
+                self.apply_vertical_tunnel(prev.y, new.y, new.x);
+            } else {
+                self.apply_vertical_tunnel(prev.y, new.y, prev.x);
+                self.apply_horizon_tunnel(prev.x, new.x, new.y);
             }
         }
     }
