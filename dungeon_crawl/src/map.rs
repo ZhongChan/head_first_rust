@@ -49,7 +49,7 @@ impl Map {
                             ctx.set(
                                 x - camera.left_x,
                                 y - camera.top_y,
-                                GREEN,
+                                WHITE,
                                 BLACK,
                                 to_cp437('#'),
                             );
@@ -58,7 +58,7 @@ impl Map {
                             ctx.set(
                                 x - camera.left_x,
                                 y - camera.top_y,
-                                YELLOW,
+                                WHITE,
                                 BLACK,
                                 to_cp437('.'),
                             );
