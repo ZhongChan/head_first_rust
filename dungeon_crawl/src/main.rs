@@ -9,6 +9,9 @@ mod camera;
 /// * `crate::` 访问位于树根的模块，也就是 `main.rs`。
 mod prelude {
     pub use bracket_lib::prelude::*;
+    pub use legion::*;
+    pub use legion::world::SubWorld;
+    pub use legion::systems::CommandBuffer;
 
     pub const SCREEN_WIDTH: i32 = 80;
     pub const SCREEN_HEIGHT: i32 = 50;
