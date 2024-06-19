@@ -1,6 +1,5 @@
 mod map;
 mod map_builder;
-mod player;
 mod camera;
 
 /// # 使用其他模块
@@ -20,7 +19,6 @@ mod prelude {
 
     pub use crate::map::*;
     pub use crate::map_builder::*;
-    pub use crate::player::*;
     pub use crate::camera::*;
 }
 
@@ -48,7 +46,6 @@ fn main() -> BResult<()> {
 
 struct State {
     map: Map,
-    player: Player,
     camera: Camera,
 }
 
@@ -58,7 +55,6 @@ impl State {
         let mp = MapBuilder::new(&mut rng);
         Self {
             map: mp.map,
-            player: Player::new(mp.player_start),
             camera: Camera::new(mp.player_start),
         }
     }
@@ -72,8 +68,7 @@ impl GameState for State {
         ctx.set_active_console(1);
         ctx.cls();
 
-        self.player.update(ctx, &self.map, &mut self.camera);
-        self.map.render(ctx, &self.camera);
-        self.player.render(ctx, &self.camera);
+        // TODO: Execute Systems
+        // TODO: Render Draw Buffer
     }
 }
