@@ -33,6 +33,27 @@ impl Map {
     }
 }
 
+impl Map {
+    /// # 渲染地图
+    /// * `地板`：黄色 `.`
+    /// * `墙壁`：绿色 `#`
+    pub fn render(&self, ctx: &mut BTerm) {
+        for y in 0..SCREEN_HEIGHT {
+            for x in 0..SCREEN_WIDTH {
+                let idx = map_idx(x, y);
+                match self.tiles[idx] {
+                    TileType::Wall => {
+                        ctx.set(x, y, GREEN, BLACK, to_cp437('#'));
+                    }
+                    Floor => {
+                        ctx.set(x, y, YELLOW, BLACK, to_cp437('.'));
+                    }
+                }
+            }
+        }
+    }
+}
+
 /// # 为地图创建索引
 /// 使用行优先的编码方式，通过坐标获取地图索引
 pub fn map_idx(x: i32, y: i32) -> usize {
