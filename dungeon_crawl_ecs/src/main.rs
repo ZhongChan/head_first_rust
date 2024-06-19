@@ -3,6 +3,7 @@ mod map_builder;
 mod camera;
 mod components;
 mod spawner;
+mod systems;
 
 /// # 使用其他模块
 /// 模块之间是通过树形结构来组织的，使用 `use` 关键字导入时：
@@ -24,6 +25,7 @@ mod prelude {
     pub use crate::camera::*;
     pub use crate::components::*;
     pub use crate::spawner::*;
+    pub use crate::systems::*;
 }
 
 use prelude::*;
