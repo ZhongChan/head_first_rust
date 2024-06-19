@@ -32,3 +32,18 @@ impl Map {
         }
     }
 }
+
+/// # 为地图创建索引
+/// 使用行优先的编码方式，通过坐标获取地图索引
+pub fn map_idx(x: i32, y: i32) -> usize {
+    ((y * SCREEN_WIDTH) + x) as usize
+}
+
+/// 通过索引反算坐标
+pub fn map_x(idx: usize) -> i32 {
+    (idx as i32) % SCREEN_WIDTH
+}
+
+pub fn map_y(idx: usize) -> i32 {
+    (idx as i32) / SCREEN_WIDTH
+}
