@@ -3,5 +3,7 @@ members = [
     "rust_course",
     "exercism",
     "flappy_dragon",
-    "treehouse"
-, "dungeon_crawl"]
+    "treehouse",
+    "dungeon_crawl",
+    "dungeon_crawl_esc"
+]

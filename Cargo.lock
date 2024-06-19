@@ -599,6 +599,13 @@ name = "dungeon_crawl"
 version = "0.1.0"
 dependencies = [
  "bracket-lib",
+]
+
+[[package]]
+name = "dungeon_crawl_esc"
+version = "0.1.0"
+dependencies = [
+ "bracket-lib",
  "legion",
 ]
 
