@@ -4,4 +4,4 @@ members = [
     "exercism",
     "flappy_dragon",
     "treehouse"
-]
+, "dungeon_crawl"]
