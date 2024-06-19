@@ -5,5 +5,5 @@ members = [
     "flappy_dragon",
     "treehouse",
     "dungeon_crawl",
-    "dungeon_crawl_esc"
+    "dungeon_crawl_ecs"
 ]

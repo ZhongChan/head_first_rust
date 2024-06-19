@@ -45,17 +45,25 @@ fn main() -> BResult<()> {
 }
 
 struct State {
-    map: Map,
-    camera: Camera,
+    ecs: World,
+    resources: Resources,
+    systems: Schedule,
 }
 
 impl State {
     pub fn new() -> Self {
+        let mut ecs = World::default();
+        let mut resources = Resources::default();
         let mut rng = RandomNumberGenerator::new();
-        let mp = MapBuilder::new(&mut rng);
+        let map_builder = MapBuilder::new(&mut rng);
+
+        // 地图和摄像机都是资源
+        resources.insert(map_builder.map);
+        resources.insert(Camera::new(map_builder.player_start));
         Self {
-            map: mp.map,
-            camera: Camera::new(mp.player_start),
+            ecs,
+            resources,
+            systems: build_schedule(),
         }
     }
 }
