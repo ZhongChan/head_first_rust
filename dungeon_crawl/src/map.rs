@@ -1,3 +1,4 @@
+use crate::map::TileType::Floor;
 use crate::prelude::*;
 
 /// # 地图中图块（tile）数量常量
@@ -7,7 +8,7 @@ const NUM_TILES: usize = (SCREEN_WIDTH * SCREEN_HEIGHT) as usize;
 /// # 图块枚举
 /// * 墙壁
 /// * 地板
-/// * 。。。 
+/// * 。。。
 ///
 /// `derive` 派生说明：
 /// * `Clone`: 使用 my_title.clone() 会创建深拷贝。
@@ -17,4 +18,17 @@ const NUM_TILES: usize = (SCREEN_WIDTH * SCREEN_HEIGHT) as usize;
 pub enum TileType {
     Wall,
     Floor,
+}
+
+pub struct Map {
+    pub tiles: Vec<TileType>,
+}
+
+impl Map {
+    ///  构造一个全地板地图
+    pub fn new() -> Self {
+        Self {
+            tiles: vec![Floor; NUM_TILES],
+        }
+    }
 }
