@@ -9,3 +9,15 @@ impl Player {
         Self { position }
     }
 }
+
+impl Player {
+    pub fn render(&self, ctx: &mut BTerm) {
+        ctx.set(
+            self.position.x,
+            self.position.y,
+            WHITE,
+            BLACK,
+            to_cp437('@'),
+        )
+    }
+}
