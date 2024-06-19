@@ -83,7 +83,11 @@ impl GameState for State {
         ctx.set_active_console(1);
         ctx.cls();
 
-        // TODO: Execute Systems
+        // 资源：键盘输入
+        self.resources.insert(ctx.key);
+        // Execute Systems
+        self.systems.execute(&mut self.ecs, &mut self.resources);
+
         // TODO: Render Draw Buffer
     }
 }
