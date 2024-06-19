@@ -52,6 +52,26 @@ impl Map {
             }
         }
     }
+
+    /// 是否在地图内
+    pub fn in_bounds(&self, point: Point) -> bool {
+        point.x >= 0 && point.x < SCREEN_WIDTH && point.y >= 0 && point.y < SCREEN_HEIGHT
+    }
+
+    /// 能否进入图块
+    /// 在地图内，且图块是地板
+    pub fn can_enter_tile(&self, point: Point) -> bool {
+        self.in_bounds(point) && self.tiles[map_idx(point.x, point.y)] == Floor
+    }
+
+    /// 尝试获取图块
+    pub fn try_idx(&self, point: Point) -> Option<usize> {
+        if !self.in_bounds(point) {
+            None
+        } else {
+            Some(map_idx(point.x, point.y))
+        }
+    }
 }
 
 /// # 为地图创建索引
