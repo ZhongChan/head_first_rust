@@ -22,9 +22,17 @@ mod prelude {
 use prelude::*;
 
 fn main() -> BResult<()> {
+    // 创建了一个终端窗口
+    // 包含两个控制图层：一个用来绘制地图，一个用来绘制角色。
     let context = BTermBuilder::simple80x50()
         .with_title("Dungeon Crawl")
         .with_fps_cap(30.0)
+        .with_dimensions(DISPLAY_WIDTH, DISPLAY_HEIGHT) //控制台尺寸
+        .with_tile_dimensions(32, 32) //图块尺寸
+        .with_resource_path("resources/") //资源
+        .with_font("dungeonfont.png", 32, 32) //要加载的字体文件，尺寸和图块尺寸保持一致 (高级用法可以不一致)
+        .with_simple_console(DISPLAY_WIDTH, DISPLAY_HEIGHT, "dungeonfont.png") //增加一个新的控制台图层
+        .with_simple_console_no_bg(DISPLAY_WIDTH, DISPLAY_HEIGHT, "dungeonfont.png") //新增的控制台图层，没有背景色
         .build()?;
     main_loop(context, State::new())
 }
