@@ -11,6 +11,7 @@ pub struct MapBuilder {
 }
 
 impl MapBuilder {
+    /// 建造房间并放置玩家
     pub fn new(rng: &mut RandomNumberGenerator) -> Self {
         let mut mb = MapBuilder {
             map: Map::new(),
