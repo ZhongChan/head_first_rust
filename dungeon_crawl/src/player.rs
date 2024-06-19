@@ -36,7 +36,6 @@ impl Player {
             };
 
             // 当前坐标 + 增量
-
             let new_position = self.position + delta;
             if map.can_enter_tile(new_position) {
                 self.position = new_position
