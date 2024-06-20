@@ -55,7 +55,9 @@ fn main() -> BResult<()> {
 struct State {
     ecs: World,
     resources: Resources,
-    systems: Schedule,
+    input_system: Schedule,
+    player_system: Schedule,
+    monster_systems: Schedule,
 }
 
 impl State {
@@ -81,7 +83,9 @@ impl State {
         Self {
             ecs,
             resources,
-            systems: build_schedule(),
+            input_system: build_input_schedule(),
+            player_system: build_player_schedule(),
+            monster_systems: build_monster_schedule(),
         }
     }
 }
@@ -97,7 +101,18 @@ impl GameState for State {
         // 资源：键盘输入
         self.resources.insert(ctx.key);
         // Execute Systems
-        self.systems.execute(&mut self.ecs, &mut self.resources);
+        let current_state = self.resources.get::<TrunState>().unwrap().clone();
+        match current_state {
+            TrunState::AwaitingInput => self
+                .input_system
+                .execute(&mut self.ecs, &mut self.resources),
+            TrunState::PlayerTurn => self
+                .player_system
+                .execute(&mut self.ecs, &mut self.resources),
+            TrunState::MonsterTurn => self
+                .monster_systems
+                .execute(&mut self.ecs, &mut self.resources),
+        }
 
         // Render Draw Buffer
         render_draw_buffer(ctx).expect("Render error")
