@@ -19,8 +19,7 @@ pub fn player_input(
         };
 
         if delta.x != 0 || delta.y != 0 {
-            let mut players = <&mut Point>::query()
-                .filter(component::<Player>());
+            let mut players = <&mut Point>::query().filter(component::<Player>());
             players.iter_mut(ecs).for_each(|pos| {
                 let destination = *pos + delta;
                 if map.can_enter_tile(destination) {

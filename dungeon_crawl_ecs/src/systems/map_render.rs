@@ -12,15 +12,11 @@ pub fn map_render(#[resource] map: &Map, #[resource] camera: &Camera) {
             if map.in_bounds(pt) {
                 let idx = map_idx(x, y);
                 let glyph = match map.tiles[idx] {
-                    TileType::Wall => { to_cp437('#') }
-                    TileType::Floor => { to_cp437('.') }
+                    TileType::Wall => to_cp437('#'),
+                    TileType::Floor => to_cp437('.'),
                 };
 
-                draw_batch.set(
-                    pt - offset,
-                    ColorPair::new(WHITE, BLACK),
-                    glyph,
-                );
+                draw_batch.set(pt - offset, ColorPair::new(WHITE, BLACK), glyph);
             }
         }
     }

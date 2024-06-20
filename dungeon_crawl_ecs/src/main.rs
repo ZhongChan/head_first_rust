@@ -1,7 +1,7 @@
-mod map;
-mod map_builder;
 mod camera;
 mod components;
+mod map;
+mod map_builder;
 mod spawner;
 mod systems;
 
@@ -11,19 +11,19 @@ mod systems;
 /// * `crate::` 访问位于树根的模块，也就是 `main.rs`。
 mod prelude {
     pub use bracket_lib::prelude::*;
-    pub use legion::*;
-    pub use legion::world::SubWorld;
     pub use legion::systems::CommandBuffer;
+    pub use legion::world::SubWorld;
+    pub use legion::*;
 
     pub const SCREEN_WIDTH: i32 = 80;
     pub const SCREEN_HEIGHT: i32 = 50;
     pub const DISPLAY_WIDTH: i32 = SCREEN_WIDTH / 2;
     pub const DISPLAY_HEIGHT: i32 = SCREEN_HEIGHT / 2;
 
-    pub use crate::map::*;
-    pub use crate::map_builder::*;
     pub use crate::camera::*;
     pub use crate::components::*;
+    pub use crate::map::*;
+    pub use crate::map_builder::*;
     pub use crate::spawner::*;
     pub use crate::systems::*;
 }
@@ -65,11 +65,12 @@ impl State {
         spawner_player(&mut ecs, map_builder.player_start);
 
         // spawner one monster per room
-        map_builder.rooms
-        .iter()
-        .skip(1) //跳过第一个房间
-        .map(|r| r.center()) //transformer each entry from a room to result of `center` (a `Point`) use `map()`
-        .for_each(|pos| spaner_monster(&mut ecs, &mut rng, pos));
+        map_builder
+            .rooms
+            .iter()
+            .skip(1) //跳过第一个房间
+            .map(|r| r.center()) //transformer each entry from a room to result of `center` (a `Point`) use `map()`
+            .for_each(|pos| spaner_monster(&mut ecs, &mut rng, pos));
 
         // 地图和摄像机都是资源
         resources.insert(map_builder.map);
