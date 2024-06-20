@@ -64,6 +64,13 @@ impl State {
         let map_builder = MapBuilder::new(&mut rng);
         spawner_player(&mut ecs, map_builder.player_start);
 
+        // spawner one monster per room
+        map_builder.rooms
+        .iter()
+        .skip(1) //跳过第一个房间
+        .map(|r| r.center()) //transformer each entry from a room to result of `center` (a `Point`) use `map()`
+        .for_each(|pos| spaner_monster(&mut ecs, &mut rng, pos));
+
         // 地图和摄像机都是资源
         resources.insert(map_builder.map);
         resources.insert(Camera::new(map_builder.player_start));
