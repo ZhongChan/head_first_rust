@@ -4,6 +4,7 @@ mod map;
 mod map_builder;
 mod spawner;
 mod systems;
+mod turn_state;
 
 /// # 使用其他模块
 /// 模块之间是通过树形结构来组织的，使用 `use` 关键字导入时：
@@ -26,6 +27,7 @@ mod prelude {
     pub use crate::map_builder::*;
     pub use crate::spawner::*;
     pub use crate::systems::*;
+    pub use crate::turn_state::*;
 }
 
 use prelude::*;
@@ -75,6 +77,7 @@ impl State {
         // 地图和摄像机都是资源
         resources.insert(map_builder.map);
         resources.insert(Camera::new(map_builder.player_start));
+        resources.insert(TrunState::AwaitingInput);
         Self {
             ecs,
             resources,
