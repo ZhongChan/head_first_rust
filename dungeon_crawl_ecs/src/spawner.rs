@@ -24,6 +24,6 @@ pub fn spaner_monster(ecs: &mut World, rng: &mut RandomNumberGenerator, pos: Poi
                 _ => to_cp437('g'),
             },
         },
-        MoveRandomly {}, // add the component to monster
+        MovingRandomly {}, // add the component to monster
     ));
 }
