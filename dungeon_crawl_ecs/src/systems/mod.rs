@@ -6,6 +6,7 @@ mod map_render;
 mod movement;
 mod player_input;
 mod random_move;
+mod tooltips;
 
 use collisions::collisions_system;
 use end_turn::end_turn_system;
