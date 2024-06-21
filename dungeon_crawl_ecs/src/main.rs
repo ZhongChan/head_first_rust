@@ -87,7 +87,7 @@ impl GameState for State {
         // 资源：键盘输入
         self.resources.insert(ctx.key);
         ctx.set_active_console(0);
-        self.resources.insert(Point::from_tuple(ctx.mouse_pos));
+        self.resources.insert(Point::from_tuple(ctx.mouse_pos()));
 
         // Execute Systems
         let current_state = self.resources.get::<TrunState>().unwrap().clone();

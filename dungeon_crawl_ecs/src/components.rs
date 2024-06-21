@@ -27,7 +27,6 @@ pub struct Health {
     pub max: i32,
 }
 
-#[derive(Clone, PartialEq)]
 /// Naming Monsters
 /// * Structs can also be `tuples`
 /// * only have one piece of infomation to store inside a struct
@@ -38,4 +37,5 @@ pub struct Health {
 ///    pub name: String,
 ///}
 /// ```
+#[derive(Clone, PartialEq)]
 pub struct Name(pub String);
