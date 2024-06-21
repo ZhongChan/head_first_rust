@@ -72,10 +72,16 @@ impl State {
 
 impl GameState for State {
     fn tick(&mut self, ctx: &mut BTerm) {
+        // map
         ctx.set_active_console(0);
         ctx.cls();
 
+        // player and monster
         ctx.set_active_console(1);
+        ctx.cls();
+
+        // health
+        ctx.set_active_console(2);
         ctx.cls();
 
         // 资源：键盘输入
@@ -106,8 +112,6 @@ fn main() -> BResult<()> {
     println!("Current working directory: {:?}", std::env::current_dir()?);
     println!("Expected resource path: resources/dungeonfont.png");
 
-    // 创建了一个终端窗口
-    // 包含两个控制图层：一个用来绘制地图，一个用来绘制角色。
     let context = BTermBuilder::new()
         .with_title("Dungeon Crawl")
         .with_fps_cap(30.0)
@@ -115,8 +119,10 @@ fn main() -> BResult<()> {
         .with_tile_dimensions(32, 32) //图块尺寸
         .with_resource_path("resources/") //资源
         .with_font("dungeonfont.png", 32, 32) //要加载的字体文件，尺寸和图块尺寸保持一致 (高级用法可以不一致)
-        .with_simple_console(DISPLAY_WIDTH, DISPLAY_HEIGHT, "dungeonfont.png") //增加一个新的控制台图层
-        .with_simple_console_no_bg(DISPLAY_WIDTH, DISPLAY_HEIGHT, "dungeonfont.png") //新增的控制台图层，没有背景色
+        .with_font("terminal8x8.png", 8, 8)
+        .with_simple_console(DISPLAY_WIDTH, DISPLAY_HEIGHT, "dungeonfont.png") //增加一个新的控制台图层 map
+        .with_simple_console_no_bg(DISPLAY_WIDTH, DISPLAY_HEIGHT, "dungeonfont.png") //新增的控制台图层，没有背景色 player and monster
+        .with_simple_console_no_bg(SCREEN_WIDTH * 2, SCREEN_HEIGHT * 2, "terminal8x8.png") //health
         .build()?;
     main_loop(context, State::new())
 }
