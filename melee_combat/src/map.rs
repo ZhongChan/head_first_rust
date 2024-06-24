@@ -104,7 +104,10 @@ impl BaseMap for Map {
         exits
     }
 
-    fn get_pathing_distance(&self, _idx1: usize, _idx2: usize) -> f32 {
-        1.0
+    fn get_pathing_distance(&self, idx1: usize, idx2: usize) -> f32 {
+        DistanceAlg::Pythagoras.distance2d(
+            self.index_to_point2d(idx1), // (1)
+            self.index_to_point2d(idx2), // (2)
+        )
     }
 }
