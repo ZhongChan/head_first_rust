@@ -28,7 +28,7 @@ pub fn spaner_monster(ecs: &mut World, rng: &mut RandomNumberGenerator, pos: Poi
             color: ColorPair::new(WHITE, BLACK),
             glyph: glyph,
         },
-        MovingRandomly {},
+        ChasingPlayer {},
         Health {
             current: hp,
             max: hp,
