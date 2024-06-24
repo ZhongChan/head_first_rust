@@ -53,6 +53,20 @@ impl Map {
             Some(map_idx(point.x, point.y))
         }
     }
+
+    pub fn valid_exit(&self, loc: Point, delta: Point) -> Option<usize> {
+        let destination = loc + delta;
+        if self.in_bounds(destination) {
+            if self.can_enter_tile(destination) {
+                let idx = self.point2d_to_index(destination);
+                Some(idx)
+            } else {
+                None
+            }
+        } else {
+            None
+        }
+    }
 }
 
 /// # 为地图创建索引
@@ -60,3 +74,15 @@ impl Map {
 pub fn map_idx(x: i32, y: i32) -> usize {
     ((y * SCREEN_WIDTH) + x) as usize
 }
+
+impl Algorithm2D for Map {
+    fn dimensions(&self) -> Point {
+        Point::new(SCREEN_HEIGHT, SCREEN_HEIGHT)
+    }
+
+    fn in_bounds(&self, pos: Point) -> bool {
+        self.in_bounds(pos)
+    }
+}
+
+impl BaseMap for Map {}
