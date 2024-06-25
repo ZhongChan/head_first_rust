@@ -9,6 +9,7 @@ mod player_input;
 mod random_move;
 mod tooltips;
 
+use chasing::chasing_system;
 use combat::combat_system;
 use end_turn::end_turn_system;
 use entity_render::entity_render_system;
@@ -48,6 +49,7 @@ pub fn build_player_schedule() -> Schedule {
 pub fn build_monster_schedule() -> Schedule {
     Schedule::builder()
         .add_system(random_move_system())
+        .add_system(chasing_system())
         .flush()
         .add_system(combat_system())
         .flush()

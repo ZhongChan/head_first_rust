@@ -22,12 +22,15 @@ pub fn chasing(#[resource] map: &Map, ecs: &SubWorld, commands: &mut CommandBuff
         map,             // (4)
         1024.0,          // (5)
     );
+    println!("search_targets:{:?}", search_targets);
 
     // monsters flow the map towards the player
     movers.iter(ecs).for_each(|(entity, pos, _)| {
         let idx = map_idx(pos.x, pos.y);
         if let Some(destisnation) = DijkstraMap::find_lowest_exit(&dijkstra_map, idx, map) {
             let distance = DistanceAlg::Pythagoras.distance2d(*pos, *player_pos);
+            println!("distance:{}", distance);
+
             let destination = if distance > 1.2 {
                 map.index_to_point2d(destisnation)
             } else {
@@ -52,11 +55,11 @@ pub fn chasing(#[resource] map: &Map, ecs: &SubWorld, commands: &mut CommandBuff
                                 victim: *victim,
                             },
                         ));
-
-                        attacked = true;
                     }
+                    attacked = true;
                 });
 
+            println!("attacked:{}", attacked);
             if !attacked {
                 commands.push((
                     (),
