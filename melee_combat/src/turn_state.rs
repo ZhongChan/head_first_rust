@@ -3,4 +3,5 @@ pub enum TrunState {
     AwaitingInput,
     PlayerTurn,
     MonsterTurn,
+    GameOver,
 }
