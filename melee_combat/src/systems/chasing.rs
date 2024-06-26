@@ -10,7 +10,7 @@ pub fn chasing(#[resource] map: &Map, ecs: &SubWorld, commands: &mut CommandBuff
     let mut positions = <(Entity, &Point, &Health)>::query();
     let mut player = <(&Point, &Player)>::query();
 
-    let mut player_pos = player.iter(ecs).nth(0).unwrap().0;
+    let player_pos = player.iter(ecs).nth(0).unwrap().0;
     let player_idx = map_idx(player_pos.x, player_pos.y);
 
     //dijkstra map
@@ -22,17 +22,16 @@ pub fn chasing(#[resource] map: &Map, ecs: &SubWorld, commands: &mut CommandBuff
         map,             // (4)
         1024.0,          // (5)
     );
-    println!("search_targets:{:?}", search_targets);
+
+    println!("{}", movers.iter(ecs).count());
 
     // monsters flow the map towards the player
     movers.iter(ecs).for_each(|(entity, pos, _)| {
         let idx = map_idx(pos.x, pos.y);
-        if let Some(destisnation) = DijkstraMap::find_lowest_exit(&dijkstra_map, idx, map) {
+        if let Some(destination) = DijkstraMap::find_lowest_exit(&dijkstra_map, idx, map) {
             let distance = DistanceAlg::Pythagoras.distance2d(*pos, *player_pos);
-            println!("distance:{}", distance);
-
             let destination = if distance > 1.2 {
-                map.index_to_point2d(destisnation)
+                map.index_to_point2d(destination)
             } else {
                 *player_pos
             };
@@ -59,7 +58,6 @@ pub fn chasing(#[resource] map: &Map, ecs: &SubWorld, commands: &mut CommandBuff
                     attacked = true;
                 });
 
-            println!("attacked:{}", attacked);
             if !attacked {
                 commands.push((
                     (),
