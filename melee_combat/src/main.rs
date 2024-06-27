@@ -150,6 +150,7 @@ impl GameState for State {
                 .monster_systems
                 .execute(&mut self.ecs, &mut self.resources),
             TrunState::GameOver => self.game_over(ctx),
+            TrunState::Victory => println!("Victory"),
         }
 
         // Render Draw Buffer
