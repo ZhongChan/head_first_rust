@@ -47,6 +47,7 @@ impl State {
         let mut rng = RandomNumberGenerator::new();
         let map_builder = MapBuilder::new(&mut rng);
         spawner_player(&mut ecs, map_builder.player_start);
+        spawner_amulet_of_yala(&mut ecs, map_builder.amulet_start);
 
         // spawner one monster per room
         map_builder
