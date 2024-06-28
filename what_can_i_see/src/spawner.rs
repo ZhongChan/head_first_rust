@@ -12,6 +12,7 @@ pub fn spawner_player(ecs: &mut World, pos: Point) {
             current: 100,
             max: 100,
         },
+        FiledOfView::new(8)
     ));
 }
 
