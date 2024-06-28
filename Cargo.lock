@@ -2070,6 +2070,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "what_can_i_see"
+version = "0.1.0"
+dependencies = [
+ "bracket-lib",
+ "legion",
+]
+
+[[package]]
 name = "wide"
 version = "0.7.24"
 source = "registry+https://github.com/rust-lang/crates.io-index"
