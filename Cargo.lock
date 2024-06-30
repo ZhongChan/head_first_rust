@@ -1099,6 +1099,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "more_instresting_dungeon"
+version = "0.1.0"
+dependencies = [
+ "bracket-lib",
+ "legion",
+]
+
+[[package]]
 name = "ndk"
 version = "0.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"

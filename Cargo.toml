@@ -7,5 +7,6 @@ members = [
     "dungeon_crawl",
     "dungeon_crawl_ecs",
     "melee_combat",
-    "what_can_i_see"
+    "what_can_i_see",
+    "more_instresting_dungeons"
 ]
