@@ -18,15 +18,25 @@ pub fn map_render(
         for x in camera.left_x..camera.right_x {
             let pt = Point::new(x, y);
             let offset = Point::new(camera.left_x, camera.top_y);
+            let idx = map_idx(x, y);
             // in map and player can see the field
-            if map.in_bounds(pt) && player_fov.visible_tiles.contains(&pt) {
-                let idx = map_idx(x, y);
-                let glyph = match map.tiles[idx] {
-                    TileType::Wall => to_cp437('#'),
-                    TileType::Floor => to_cp437('.'),
+            if map.in_bounds(pt)
+                && (player_fov.visible_tiles.contains(&pt) | map.revealed_titles[idx])
+            {
+                let tint = if player_fov.visible_tiles.contains(&pt) {
+                    WHITE
+                } else {
+                    DARK_GRAY
                 };
 
-                draw_batch.set(pt - offset, ColorPair::new(WHITE, BLACK), glyph);
+                match map.tiles[idx] {
+                    TileType::Wall => {
+                        draw_batch.set(pt - offset, ColorPair::new(tint, BLACK), to_cp437('#'));
+                    }
+                    TileType::Floor => {
+                        draw_batch.set(pt - offset, ColorPair::new(tint, BLACK), to_cp437('.'));
+                    }
+                }
             }
         }
     }
