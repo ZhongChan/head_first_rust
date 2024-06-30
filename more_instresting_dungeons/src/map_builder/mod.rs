@@ -1,9 +1,9 @@
 use crate::map::TileType::Floor;
 use crate::prelude::*;
 use std::vec;
+mod automata;
 mod empty;
 mod rooms;
-use empty::EmptyArchitect;
 use rooms::RoomsArchitect;
 
 /// 房间数量
