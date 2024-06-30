@@ -2,7 +2,9 @@ use crate::map::TileType::Floor;
 use crate::prelude::*;
 use std::vec;
 mod empty;
+mod rooms;
 use empty::EmptyArchitect;
+use rooms::RoomsArchitect;
 
 /// 房间数量
 const NUM_ROOMS: usize = 20;
@@ -22,7 +24,7 @@ pub struct MapBuilder {
 impl MapBuilder {
     /// 建造房间并放置玩家
     pub fn new(rng: &mut RandomNumberGenerator) -> Self {
-        let mut architect = EmptyArchitect {};
+        let mut architect = RoomsArchitect {};
         architect.new(rng)
     }
 }
