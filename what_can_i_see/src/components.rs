@@ -1,5 +1,5 @@
-use std::collections::HashSet;
 use crate::prelude::*;
+use std::collections::HashSet;
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Render {
@@ -57,13 +57,13 @@ pub struct Item;
 pub struct AmuletOfYala;
 
 #[derive(Clone, Debug, PartialEq)]
-pub struct FiledOfView {
+pub struct FieldOfView {
     pub visible_tiles: HashSet<Point>,
     pub radius: i32,
     pub is_dirty: bool,
 }
 
-impl FiledOfView {
+impl FieldOfView {
     pub fn new(radius: i32) -> Self {
         Self {
             visible_tiles: HashSet::new(),
