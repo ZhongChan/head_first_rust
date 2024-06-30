@@ -14,6 +14,7 @@ use chasing::chasing_system;
 use combat::combat_system;
 use end_turn::end_turn_system;
 use entity_render::entity_render_system;
+use fov::fov_system;
 use hud::hud_system;
 use map_render::map_render_system;
 use movement::movement_system;
@@ -26,6 +27,7 @@ use crate::prelude::*;
 pub fn build_input_schedule() -> Schedule {
     Schedule::builder()
         .add_system(player_input_system())
+        .add_system(fov_system())
         .flush()
         .add_system(map_render_system())
         .add_system(entity_render_system())
@@ -39,6 +41,8 @@ pub fn build_player_schedule() -> Schedule {
         .add_system(combat_system())
         .flush()
         .add_system(movement_system())
+        .flush()
+        .add_system(fov_system())
         .flush()
         .add_system(map_render_system())
         .add_system(entity_render_system())
@@ -55,6 +59,8 @@ pub fn build_monster_schedule() -> Schedule {
         .add_system(combat_system())
         .flush()
         .add_system(movement_system())
+        .flush()
+        .add_system(fov_system())
         .flush()
         .add_system(map_render_system())
         .add_system(entity_render_system())
