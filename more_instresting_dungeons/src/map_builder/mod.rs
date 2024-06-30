@@ -1,54 +1,29 @@
-use std::vec;
-
-use crate::map::TileType::{Floor, Wall};
+use crate::map::TileType::Floor;
 use crate::prelude::*;
+use std::vec;
+mod empty;
+use empty::EmptyArchitect;
 
 /// 房间数量
 const NUM_ROOMS: usize = 20;
+
+trait MapArchitect {
+    fn new(&mut self, rng: &mut RandomNumberGenerator) -> MapBuilder;
+}
 
 pub struct MapBuilder {
     pub map: Map,
     pub rooms: Vec<Rect>,    //Rect 处理矩形相关运算
     pub player_start: Point, //玩家初始位置
     pub amulet_start: Point,
+    pub monster_spawns: Vec<Point>,
 }
 
 impl MapBuilder {
     /// 建造房间并放置玩家
     pub fn new(rng: &mut RandomNumberGenerator) -> Self {
-        let mut mb = MapBuilder {
-            map: Map::new(),
-            rooms: vec![],
-            player_start: Point::zero(),
-            amulet_start: Point::zero(),
-        };
-
-        mb.fill(Wall);
-        mb.build_random_roms(rng);
-        mb.build_corridors(rng);
-        mb.player_start = mb.rooms[0].center();
-
-        let dijkstra_map = DijkstraMap::new(
-            SCREEN_WIDTH,
-            SCREEN_HEIGHT,
-            &vec![mb.map.point2d_to_index(mb.player_start)],
-            &mb.map,
-            1024.0,
-        );
-
-        const UNREACHABLE: &f32 = &f32::MAX;
-        mb.amulet_start = mb.map.index_to_point2d(
-            dijkstra_map
-                .map
-                .iter()
-                .enumerate()
-                .filter(|(_, dist)| *dist < UNREACHABLE)
-                .max_by(|a, b| a.1.partial_cmp(b.1).unwrap())
-                .unwrap()
-                .0,
-        );
-
-        mb
+        let mut architect = EmptyArchitect {};
+        architect.new(rng)
     }
 }
 
@@ -61,6 +36,28 @@ impl MapBuilder {
     ///     * `解引用`表示开发者想修改被引用的变量，而不是修改引用本身
     pub fn fill(&mut self, tile_type: TileType) {
         self.map.tiles.iter_mut().for_each(|t| *t = tile_type);
+    }
+
+    pub fn find_most_distant(&self) -> Point {
+        let dijkstra_map = DijkstraMap::new(
+            SCREEN_WIDTH,
+            SCREEN_HEIGHT,
+            &vec![self.map.point2d_to_index(self.player_start)],
+            &self.map,
+            1024.0,
+        );
+
+        const UNREACHABLE: &f32 = &f32::MAX;
+        self.map.index_to_point2d(
+            dijkstra_map
+                .map
+                .iter()
+                .enumerate()
+                .filter(|(_, dist)| *dist < UNREACHABLE)
+                .max_by(|a, b| a.1.partial_cmp(b.1).unwrap())
+                .unwrap()
+                .0,
+        )
     }
 
     pub fn build_random_roms(&mut self, rng: &mut RandomNumberGenerator) {
