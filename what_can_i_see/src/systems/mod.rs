@@ -2,6 +2,7 @@ mod chasing;
 mod combat;
 mod end_turn;
 mod entity_render;
+mod fov;
 mod hud;
 mod map_render;
 mod movement;
