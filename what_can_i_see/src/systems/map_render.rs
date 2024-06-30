@@ -1,7 +1,16 @@
 use crate::prelude::*;
 
 #[system]
-pub fn map_render(#[resource] map: &Map, #[resource] camera: &Camera) {
+#[read_component(Player)]
+#[read_component(FieldOfView)]
+pub fn map_render(
+    ecs: &SubWorld,              // (1)
+    #[resource] map: &Map,       // (2)
+    #[resource] camera: &Camera, // (3)
+) {
+    let mut fov = <&FieldOfView>::query().filter(component::<Player>());
+    let player_fov = fov.iter(ecs).nth(0).unwrap();
+
     let mut draw_batch = DrawBatch::new();
     draw_batch.target(0);
 
@@ -9,7 +18,8 @@ pub fn map_render(#[resource] map: &Map, #[resource] camera: &Camera) {
         for x in camera.left_x..camera.right_x {
             let pt = Point::new(x, y);
             let offset = Point::new(camera.left_x, camera.top_y);
-            if map.in_bounds(pt) {
+            // in map and player can see the field
+            if map.in_bounds(pt) && player_fov.visible_tiles.contains(&pt) {
                 let idx = map_idx(x, y);
                 let glyph = match map.tiles[idx] {
                     TileType::Wall => to_cp437('#'),
