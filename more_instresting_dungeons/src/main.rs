@@ -48,14 +48,10 @@ impl State {
         let map_builder = MapBuilder::new(&mut rng);
         spawner_player(&mut ecs, map_builder.player_start);
         spawner_amulet_of_yala(&mut ecs, map_builder.amulet_start);
-
-        // spawner one monster per room
         map_builder
-            .rooms
+            .monster_spawns
             .iter()
-            .skip(1) //跳过第一个房间
-            .map(|r| r.center()) //transformer each entry from a room to result of `center` (a `Point`) use `map()`
-            .for_each(|pos| spawner_monster(&mut ecs, &mut rng, pos));
+            .for_each(|pos| spawner_monster(&mut ecs, &mut rng, *pos));
 
         // 地图和摄像机都是资源
         resources.insert(map_builder.map);
@@ -128,14 +124,10 @@ impl State {
         let map_builder = MapBuilder::new(&mut rng);
 
         spawner_player(&mut self.ecs, map_builder.player_start);
-        map_builder
-            .rooms
-            .iter()
-            .skip(1)
-            .map(|r| r.center())
-            .for_each(|pos| {
-                spawner_monster(&mut self.ecs, &mut rng, pos);
-            });
+        map_builder.monster_spawns.iter().for_each(|pos| {
+            spawner_monster(&mut self.ecs, &mut rng, *pos);
+        });
+
         self.resources.insert(map_builder.map);
         self.resources.insert(Camera::new(map_builder.player_start));
         self.resources.insert(TrunState::AwaitingInput);
