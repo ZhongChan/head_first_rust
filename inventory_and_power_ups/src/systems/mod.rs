@@ -9,6 +9,7 @@ mod movement;
 mod player_input;
 mod random_move;
 mod tooltips;
+mod use_items;
 
 use chasing::chasing_system;
 use combat::combat_system;
