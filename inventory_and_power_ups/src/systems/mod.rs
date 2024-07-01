@@ -22,6 +22,7 @@ use movement::movement_system;
 use player_input::player_input_system;
 use random_move::random_move_system;
 use tooltips::tooltips_system;
+use use_items::use_items_system;
 
 use crate::prelude::*;
 
@@ -39,6 +40,7 @@ pub fn build_input_schedule() -> Schedule {
 
 pub fn build_player_schedule() -> Schedule {
     Schedule::builder()
+        .add_system(use_items_system())
         .add_system(combat_system())
         .flush()
         .add_system(movement_system())
@@ -57,6 +59,7 @@ pub fn build_monster_schedule() -> Schedule {
         .add_system(random_move_system())
         .add_system(chasing_system())
         .flush()
+        .add_system(use_items_system())
         .add_system(combat_system())
         .flush()
         .add_system(movement_system())
