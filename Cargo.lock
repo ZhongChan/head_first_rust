@@ -908,6 +908,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "inventory_and_power_ups"
+version = "0.1.0"
+dependencies = [
+ "bracket-lib",
+ "legion",
+]
+
+[[package]]
 name = "itertools"
 version = "0.10.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
