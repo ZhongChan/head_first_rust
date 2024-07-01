@@ -91,3 +91,9 @@ pub struct ProvidesDungeonMap; // empty strcut ,just as tag
 
 #[derive(Clone, PartialEq)]
 pub struct Carried(pub Entity);
+
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub struct ActivateItem {
+    pub used_by: Entity,
+    pub item: Entity,
+}

@@ -109,7 +109,6 @@ impl BaseMap for Map {
             exits.push((idx, 1.0))
         };
 
-        println!("get_available_exits:{:?}", exits);
         exits
     }
 
