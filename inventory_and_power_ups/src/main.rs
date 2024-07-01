@@ -51,7 +51,7 @@ impl State {
         map_builder
             .monster_spawns
             .iter()
-            .for_each(|pos| spawner_monster(&mut ecs, &mut rng, *pos));
+            .for_each(|pos| spawner_entity(&mut ecs, &mut rng, *pos));
 
         // 地图和摄像机都是资源
         resources.insert(map_builder.map);
@@ -125,7 +125,7 @@ impl State {
 
         spawner_player(&mut self.ecs, map_builder.player_start);
         map_builder.monster_spawns.iter().for_each(|pos| {
-            spawner_monster(&mut self.ecs, &mut rng, *pos);
+            spawner_entity(&mut self.ecs, &mut rng, *pos);
         });
 
         self.resources.insert(map_builder.map);
