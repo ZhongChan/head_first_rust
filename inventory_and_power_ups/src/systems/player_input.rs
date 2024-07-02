@@ -58,7 +58,6 @@ pub fn player_input(
         // query enimies
         let mut enemies = <(Entity, &Point)>::query().filter(component::<Enemy>());
 
-        let mut did_something = false;
         if delta.x != 0 || delta.y != 0 {
             let mut hit_something = false;
             enemies
@@ -66,7 +65,6 @@ pub fn player_input(
                 .filter(|(_, pos)| **pos == destination)
                 .for_each(|(entity, _)| {
                     hit_something = true;
-                    did_something = true;
                     commands.push((
                         (),
                         WantsToAttact {
@@ -77,7 +75,6 @@ pub fn player_input(
                 });
 
             if !hit_something {
-                did_something = true;
                 commands.push((
                     (),
                     WantsToMove {
