@@ -1,10 +1,12 @@
 use crate::map::TileType::Floor;
 use crate::prelude::*;
+use automata::CellularAutomataArchitect;
 use std::vec;
+
 mod automata;
 mod empty;
+mod map_builder;
 mod rooms;
-use automata::CellularAutomataArchitect;
 
 /// 房间数量
 const NUM_ROOMS: usize = 20;

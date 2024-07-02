@@ -36,6 +36,9 @@ pub fn map_render(
                     TileType::Floor => {
                         draw_batch.set(pt - offset, ColorPair::new(tint, BLACK), to_cp437('.'));
                     }
+                    TileType::Exit => {
+                        todo!()
+                    }
                 }
             }
         }
