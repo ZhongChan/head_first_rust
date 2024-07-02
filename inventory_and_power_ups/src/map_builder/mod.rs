@@ -5,8 +5,8 @@ use std::vec;
 
 mod automata;
 mod empty;
-mod map_builder;
 mod rooms;
+mod themes;
 
 /// 房间数量
 const NUM_ROOMS: usize = 20;
@@ -154,4 +154,8 @@ impl MapBuilder {
         }
         spawns
     }
+}
+
+pub trait MapTheme: Sync + Send {
+    fn tile_to_render(&self, tile_type: TileType) -> FontCharType;
 }
