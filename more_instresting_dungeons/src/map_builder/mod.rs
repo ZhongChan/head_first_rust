@@ -1,10 +1,14 @@
 use crate::map::TileType::Floor;
 use crate::prelude::*;
+use automata::CellularAutomataArchitect;
+use drunkard::DrunkardsWalkArchitect;
+use rooms::RoomsArchitect;
 use std::vec;
+
 mod automata;
+mod drunkard;
 mod empty;
 mod rooms;
-use automata::CellularAutomataArchitect;
 
 /// 房间数量
 const NUM_ROOMS: usize = 20;
@@ -24,7 +28,11 @@ pub struct MapBuilder {
 impl MapBuilder {
     /// 建造房间并放置玩家
     pub fn new(rng: &mut RandomNumberGenerator) -> Self {
-        let mut architect = CellularAutomataArchitect {};
+        let mut architect: Box<dyn MapArchitect> = match rng.range(0, 3) {
+            0 => Box::new(DrunkardsWalkArchitect {}),
+            1 => Box::new(RoomsArchitect {}),
+            _ => Box::new(CellularAutomataArchitect {}),
+        };
         architect.new(rng)
     }
 }
