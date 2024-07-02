@@ -574,6 +574,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "deeper_dungeons"
+version = "0.1.0"
+dependencies = [
+ "bracket-lib",
+ "legion",
+]
+
+[[package]]
 name = "dispatch"
 version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
