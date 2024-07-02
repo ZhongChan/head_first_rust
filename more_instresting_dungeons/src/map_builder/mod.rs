@@ -1,13 +1,16 @@
 use crate::map::TileType::Floor;
 use crate::prelude::*;
+
 use automata::CellularAutomataArchitect;
 use drunkard::DrunkardsWalkArchitect;
+use prefab::apply_prefab;
 use rooms::RoomsArchitect;
 use std::vec;
 
 mod automata;
 mod drunkard;
 mod empty;
+mod prefab;
 mod rooms;
 
 /// 房间数量
@@ -33,7 +36,9 @@ impl MapBuilder {
             1 => Box::new(RoomsArchitect {}),
             _ => Box::new(CellularAutomataArchitect {}),
         };
-        architect.new(rng)
+        let mut mb = architect.new(rng);
+        apply_prefab(&mut mb, rng);
+        mb
     }
 }
 
