@@ -106,7 +106,7 @@ impl Templates {
         if let Some(damage) = &tpl.base_damage {
             cb.add_component(entity, Damage(*damage));
             if tpl.entity_type == EntityType::Item {
-                cb.add_component(entity, Wepon {});
+                cb.add_component(entity, Weapon {});
             }
         }
     }

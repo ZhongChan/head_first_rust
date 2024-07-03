@@ -5,7 +5,7 @@ use crate::prelude::*;
 #[read_component(Player)]
 #[write_component(Health)]
 #[read_component(Damage)]
-#[read_component(Wepon)]
+#[read_component(Weapon)]
 pub fn combat(ecs: &mut SubWorld, commands: &mut CommandBuffer) {
     let mut attacters = <(Entity, &WantsToAttact)>::query();
     let victims: Vec<(Entity, Entity, Entity)> = attacters

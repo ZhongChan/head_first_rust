@@ -104,4 +104,4 @@ pub struct ActivateItem {
 pub struct Damage(pub i32);
 
 #[derive(Clone, Copy, Debug, PartialEq)]
-pub struct Wepon;
+pub struct Weapon;
