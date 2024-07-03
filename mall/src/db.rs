@@ -1,14 +1,10 @@
 use actix::Addr;
 use actix_redis::RedisActor;
-use diesel::prelude::*;
-use diesel::r2d2::{self, ConnectionManager};
+use sqlx::mysql::MySqlPool;
 
-pub type MysqlPool = r2d2::Pool<ConnectionManager<MysqlConnection>>;
-
-pub fn init_mysql_pool(database_url: &str) -> MysqlPool {
-    let manager = ConnectionManager::<MysqlConnection>::new(database_url);
-    r2d2::Pool::builder()
-        .build(manager)
+pub async fn init_mysql_pool(database_url: &str) -> MySqlPool {
+    MySqlPool::connect(database_url)
+        .await
         .expect("Failed to create MySQL pool.")
 }
 

@@ -10,7 +10,7 @@ actix-rt = "2.5"
 actix-identity = "0.3"
 actix-session = "0.5"
 actix-redis = "0.10"
-diesel = { version = "2.0", features = ["mysql", "r2d2"] }
+sqlx = { version = "0.6", features = ["mysql", "runtime-tokio-native-tls", "macros"] }
 r2d2 = "0.8"
 tera = "1.10"
 jsonwebtoken = "8.0"
