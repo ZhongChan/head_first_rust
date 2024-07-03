@@ -137,6 +137,10 @@ impl State {
         self.resources.insert(TrunState::AwaitingInput);
         self.resources.insert(map_builder.theme);
     }
+
+    fn advance_level(&mut self) {
+        todo!()
+    }
 }
 
 impl GameState for State {
@@ -174,6 +178,7 @@ impl GameState for State {
                 .execute(&mut self.ecs, &mut self.resources),
             TrunState::GameOver => self.game_over(ctx),
             TrunState::Victory => self.victory(ctx),
+            TrunState::NextLevel => self.advance_level(),
         }
 
         // Render Draw Buffer
