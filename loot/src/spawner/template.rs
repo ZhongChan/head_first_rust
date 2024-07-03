@@ -60,7 +60,7 @@ impl Templates {
     }
 
     fn spawn_entity(&self, pt: &Point, tpl: &Template, cb: &mut CommandBuffer) {
-        cb.push((
+        let entity = cb.push((
             pt.clone(),
             Render {
                 color: ColorPair::new(WHITE, BLACK),
@@ -68,5 +68,35 @@ impl Templates {
             },
             Name(tpl.name.clone()),
         ));
+
+        match tpl.entity_type {
+            EntityType::Enemy => {
+                cb.add_component(entity, Item {});
+            }
+            EntityType::Item => {
+                cb.add_component(entity, Enemy {});
+                cb.add_component(entity, FieldOfView::new(6));
+                cb.add_component(entity, ChasingPlayer {});
+                cb.add_component(
+                    entity,
+                    Health {
+                        current: tpl.hp.unwrap(),
+                        max: tpl.hp.unwrap(),
+                    },
+                );
+            }
+        }
+
+        if let Some(effects) = &tpl.provides {
+            effects
+                .iter()
+                .for_each(|(provide, n)| match provide.as_str() {
+                    "Healing" => cb.add_component(entity, ProvidesHealing { amount: *n }),
+                    "MagiceMap" => cb.add_component(entity, ProvidesDungeonMap {}),
+                    _ => {
+                        println!("Warning: we don't know how to provide {}", provide)
+                    }
+                });
+        }
     }
 }
