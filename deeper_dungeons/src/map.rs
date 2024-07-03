@@ -1,4 +1,4 @@
-use crate::map::TileType::Floor;
+use crate::map::TileType::*;
 use crate::prelude::*;
 
 /// # 地图中图块（tile）数量常量
@@ -18,6 +18,7 @@ const NUM_TILES: usize = (SCREEN_WIDTH * SCREEN_HEIGHT) as usize;
 pub enum TileType {
     Wall,
     Floor,
+    Exit,
 }
 
 pub struct Map {
@@ -44,7 +45,8 @@ impl Map {
     /// 能否进入图块
     /// 在地图内，且图块是地板
     pub fn can_enter_tile(&self, point: Point) -> bool {
-        self.in_bounds(point) && self.tiles[map_idx(point.x, point.y)] == Floor
+        let title = self.tiles[map_idx(point.x, point.y)];
+        self.in_bounds(point) && (title == Floor || title == Exit)
     }
 
     /// 尝试获取图块
