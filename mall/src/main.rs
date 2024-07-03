@@ -1,6 +1,5 @@
-use actix::Addr;
 use actix_redis::RedisSession;
-use actix_session::{CookieSession, Session};
+use actix_session::CookieSession;
 use actix_web::{web, App, HttpServer};
 
 mod config;
