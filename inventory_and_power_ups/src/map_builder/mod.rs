@@ -6,6 +6,7 @@ use drunkard::DrunkardsWalkArchitect;
 use prefab::apply_prefab;
 use rooms::RoomsArchitect;
 use std::vec;
+use themes::*;
 
 mod automata;
 mod drunkard;
@@ -27,6 +28,7 @@ pub struct MapBuilder {
     pub player_start: Point, //玩家初始位置
     pub amulet_start: Point,
     pub monster_spawns: Vec<Point>,
+    pub theme: Box<dyn MapTheme>,
 }
 
 impl MapBuilder {
@@ -39,6 +41,12 @@ impl MapBuilder {
         };
         let mut mb = architect.new(rng);
         apply_prefab(&mut mb, rng);
+
+        mb.theme = match rng.range(0, 2) {
+            0 => DungeonTheme::new(),
+            _ => ForestTheme::new(),
+        };
+
         mb
     }
 }

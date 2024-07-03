@@ -45,11 +45,9 @@ impl State {
         let mut ecs = World::default();
         let mut resources = Resources::default();
         let mut rng = RandomNumberGenerator::new();
-        let mut map_builder = MapBuilder::new(&mut rng);
+        let map_builder = MapBuilder::new(&mut rng);
         spawner_player(&mut ecs, map_builder.player_start);
-        // spawner_amulet_of_yala(&mut ecs, map_builder.amulet_start);
-        let exit_idx = map_builder.map.point2d_to_index(map_builder.amulet_start);
-        map_builder.map.tiles[exit_idx] = TileType::Exit;
+        spawner_amulet_of_yala(&mut ecs, map_builder.amulet_start);
 
         map_builder
             .monster_spawns
@@ -60,6 +58,7 @@ impl State {
         resources.insert(map_builder.map);
         resources.insert(Camera::new(map_builder.player_start));
         resources.insert(TrunState::AwaitingInput);
+        resources.insert(map_builder.theme);
         Self {
             ecs,
             resources,
@@ -134,6 +133,7 @@ impl State {
         self.resources.insert(map_builder.map);
         self.resources.insert(Camera::new(map_builder.player_start));
         self.resources.insert(TrunState::AwaitingInput);
+        self.resources.insert(map_builder.theme);
     }
 }
 

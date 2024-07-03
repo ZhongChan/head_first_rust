@@ -18,7 +18,6 @@ const NUM_TILES: usize = (SCREEN_WIDTH * SCREEN_HEIGHT) as usize;
 pub enum TileType {
     Wall,
     Floor,
-    Exit,
 }
 
 pub struct Map {
@@ -45,9 +44,7 @@ impl Map {
     /// 能否进入图块
     /// 在地图内，且图块是地板
     pub fn can_enter_tile(&self, point: Point) -> bool {
-        self.in_bounds(point)
-            && (self.tiles[map_idx(point.x, point.y)] == Floor
-                || self.tiles[map_idx(point.x, point.y)] == TileType::Exit)
+        self.in_bounds(point) && (self.tiles[map_idx(point.x, point.y)] == Floor)
     }
 
     /// 尝试获取图块
