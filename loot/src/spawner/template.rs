@@ -28,7 +28,9 @@ pub struct Templates {
 
 impl Templates {
     pub fn load() -> Self {
-        let file = File::open("").expect("Failed opening file");
+        let file =
+            File::open("/Users/SM1701/rust-workspace/head_first_rust/loot/resources/template.ron")
+                .expect("Failed opening file");
         from_reader(file).expect("Unable to load templates")
     }
 
@@ -68,12 +70,13 @@ impl Templates {
             },
             Name(tpl.name.clone()),
         ));
+        println!("{:?}", tpl);
 
         match tpl.entity_type {
-            EntityType::Enemy => {
+            EntityType::Item => {
                 cb.add_component(entity, Item {});
             }
-            EntityType::Item => {
+            EntityType::Enemy => {
                 cb.add_component(entity, Enemy {});
                 cb.add_component(entity, FieldOfView::new(6));
                 cb.add_component(entity, ChasingPlayer {});
