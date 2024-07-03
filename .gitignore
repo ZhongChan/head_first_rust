@@ -1,3 +1,4 @@
 /target
 *.txt
 .DS_Store
+.idea
