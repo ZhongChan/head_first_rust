@@ -13,6 +13,7 @@ pub struct Template {
     pub glyph: char,
     pub provides: Option<Vec<(String, i32)>>,
     pub hp: Option<i32>,
+    pub base_damage: Option<i32>,
 }
 
 #[derive(Clone, Deserialize, Debug, PartialEq)]
@@ -70,7 +71,6 @@ impl Templates {
             },
             Name(tpl.name.clone()),
         ));
-        println!("{:?}", tpl);
 
         match tpl.entity_type {
             EntityType::Item => {
@@ -95,11 +95,19 @@ impl Templates {
                 .iter()
                 .for_each(|(provide, n)| match provide.as_str() {
                     "Healing" => cb.add_component(entity, ProvidesHealing { amount: *n }),
-                    "MagiceMap" => cb.add_component(entity, ProvidesDungeonMap {}),
+                    "MagicMap" => cb.add_component(entity, ProvidesDungeonMap {}),
                     _ => {
                         println!("Warning: we don't know how to provide {}", provide)
                     }
                 });
+        }
+
+        //damge
+        if let Some(damage) = &tpl.base_damage {
+            cb.add_component(entity, Damage(*damage));
+            if tpl.entity_type == EntityType::Item {
+                cb.add_component(entity, Wepon {});
+            }
         }
     }
 }
