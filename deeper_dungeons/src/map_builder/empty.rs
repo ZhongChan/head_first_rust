@@ -11,6 +11,7 @@ impl MapArchitect for EmptyArchitect {
             player_start: Point::zero(),
             amulet_start: Point::zero(),
             monster_spawns: Vec::new(),
+            theme: super::themes::DungeonTheme::new(),
         };
 
         mb.fill(TileType::Floor);

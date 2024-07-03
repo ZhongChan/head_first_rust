@@ -1,10 +1,19 @@
 use crate::map::TileType::Floor;
 use crate::prelude::*;
-use std::vec;
-mod automata;
-mod empty;
-mod rooms;
+
 use automata::CellularAutomataArchitect;
+use drunkard::DrunkardsWalkArchitect;
+use prefab::apply_prefab;
+use rooms::RoomsArchitect;
+use std::vec;
+use themes::*;
+
+mod automata;
+mod drunkard;
+mod empty;
+mod prefab;
+mod rooms;
+mod themes;
 
 /// 房间数量
 const NUM_ROOMS: usize = 20;
@@ -19,13 +28,26 @@ pub struct MapBuilder {
     pub player_start: Point, //玩家初始位置
     pub amulet_start: Point,
     pub monster_spawns: Vec<Point>,
+    pub theme: Box<dyn MapTheme>,
 }
 
 impl MapBuilder {
     /// 建造房间并放置玩家
     pub fn new(rng: &mut RandomNumberGenerator) -> Self {
-        let mut architect = CellularAutomataArchitect {};
-        architect.new(rng)
+        let mut architect: Box<dyn MapArchitect> = match rng.range(0, 3) {
+            0 => Box::new(DrunkardsWalkArchitect {}),
+            1 => Box::new(RoomsArchitect {}),
+            _ => Box::new(CellularAutomataArchitect {}),
+        };
+        let mut mb = architect.new(rng);
+        apply_prefab(&mut mb, rng);
+
+        mb.theme = match rng.range(0, 2) {
+            0 => DungeonTheme::new(),
+            _ => ForestTheme::new(),
+        };
+
+        mb
     }
 }
 
@@ -152,4 +174,8 @@ impl MapBuilder {
         }
         spawns
     }
+}
+
+pub trait MapTheme: Sync + Send {
+    fn tile_to_render(&self, tile_type: TileType) -> FontCharType;
 }
