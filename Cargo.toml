@@ -12,3 +12,5 @@ members = [
     "inventory_and_power_ups",
     "deeper_dungeons"
 ]
+
+resolver = "2"
