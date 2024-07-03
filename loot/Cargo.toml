@@ -6,3 +6,5 @@ edition = "2021"
 [dependencies]
 bracket-lib = "~0.8.1"
 legion = "0.4.0"
+serde = {version = "1.0.203"}
+ron = "0.9.0-alpha.0"
