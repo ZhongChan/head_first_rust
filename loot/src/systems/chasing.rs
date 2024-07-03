@@ -24,8 +24,6 @@ pub fn chasing(#[resource] map: &Map, ecs: &SubWorld, commands: &mut CommandBuff
         1024.0,          // (5)
     );
 
-    println!("{}", movers.iter(ecs).count());
-
     // monsters flow the map towards the player
     movers.iter(ecs).for_each(|(entity, pos, _, fov)| {
         if !fov.visible_tiles.contains(&player_pos) {

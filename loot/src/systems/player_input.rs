@@ -116,7 +116,6 @@ fn use_item(n: usize, ecs: &mut SubWorld, commands: &mut CommandBuffer) -> Point
         .find_map(|(_, (item_entity, _, _))| Some(*item_entity));
 
     if let Some(item_entity) = item_entity {
-        println!("use item:{:?}", item_entity);
         commands.push((
             (),
             ActivateItem {

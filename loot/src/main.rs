@@ -247,10 +247,6 @@ impl GameState for State {
 }
 
 fn main() -> BResult<()> {
-    // 添加调试输出以确认当前工作目录和资源路径
-    println!("Current working directory: {:?}", std::env::current_dir()?);
-    println!("Expected resource path: resources/dungeonfont.png");
-
     let context = BTermBuilder::new()
         .with_title("Dungeon Crawl")
         .with_fps_cap(30.0)
