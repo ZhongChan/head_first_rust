@@ -1,4 +1,5 @@
 use crate::prelude::*;
+mod template;
 
 pub fn spawner_player(ecs: &mut World, pos: Point) {
     ecs.push((
