@@ -35,11 +35,19 @@ pub fn hud(ecs: &mut SubWorld) {
         ColorPair::new(WHITE, RED),
     );
 
-    // displaying inventory
-    let player = <(Entity, &Player)>::query()
+    let (player, map_level) = <(Entity, &Player)>::query()
         .iter(ecs)
-        .find_map(|(entity, _player)| Some(*entity))
+        .find_map(|(entity, player)| Some((*entity, player.map_level)))
         .unwrap();
+
+    // display map level
+    draw_batch.print_color_right(
+        Point::new(SCREEN_WIDTH * 2, 1), // (7)
+        format!("Dungenon level: {}", map_level),
+        ColorPair::new(YELLOW, BLACK),
+    );
+
+    // displaying inventory
     let mut item_query = <(&Item, &Name, &Carried)>::query();
     let mut y = 3;
     item_query
