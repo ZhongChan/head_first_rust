@@ -11,8 +11,7 @@ members = [
     "more_instresting_dungeons",
     "inventory_and_power_ups",
     "deeper_dungeons",
-    "loot", 
-    "mall"
+    "loot"
 ]
 
 resolver = "2"
