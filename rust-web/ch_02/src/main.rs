@@ -1,4 +1,6 @@
-#[derive(Debug, Clone)]
+use std::{fmt::*, io::Error, str::FromStr};
+
+#[derive(Clone)]
 struct Question {
     id: QuestionId,
     title: String,
@@ -6,7 +8,7 @@ struct Question {
     tags: Option<Vec<String>>,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Clone)]
 struct QuestionId(String);
 
 impl Question {
@@ -29,6 +31,36 @@ impl Question {
     }
 }
 
+impl Display for Question {
+    fn fmt(&self, f: &mut Formatter) -> Result {
+        write!(
+            f,
+            "{}, title: {}, content: {}, tags: {:?}",
+            self.id, self.title, self.conent, self.tags
+        )
+    }
+}
+
+impl Display for QuestionId {
+    fn fmt(&self, f: &mut Formatter) -> Result {
+        write!(f, "id: {}", self.0)
+    }
+}
+
+impl FromStr for QuestionId {
+    type Err = std::io::Error;
+
+    fn from_str(id: &str) -> std::result::Result<Self, Self::Err> {
+        match id.is_empty() {
+            false => Ok(QuestionId(id.to_string())),
+            true => Err(Error::new(
+                std::io::ErrorKind::InvalidInput,
+                "No id provieded",
+            )),
+        }
+    }
+}
+
 /// # `String` and `&str`
 /// A quick summary:
 /// * If you need own and modify the text,create a `String` type.
@@ -38,13 +70,13 @@ impl Question {
 
 fn main() {
     let question = Question::new(
-        QuestionId("1".to_string()),
+        QuestionId::from_str("1").unwrap(),
         "First Question".to_string(),
         "Content of question".to_string(),
         Some(vec!["faq".to_string()]),
     );
-    println!("{:?}", question);
+    println!("{}", question);
 
     let question = question.update_title("better_title".to_string());
-    println!("{:?}", question);
+    println!("{}", question);
 }
