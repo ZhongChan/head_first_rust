@@ -1,4 +1,6 @@
 use std::{fmt::*, io::Error, str::FromStr};
+
+use warp::Filter;
 mod tests;
 
 #[derive(Clone)]
@@ -69,15 +71,12 @@ impl FromStr for QuestionId {
 /// * When creating new data type via a struct,you typically create `String` field types.
 /// * When passing strings/text to a function,you usually use `&str`.
 
-fn main() {
-    let question = Question::new(
-        QuestionId::from_str("1").unwrap(),
-        "First Question".to_string(),
-        "Content of question".to_string(),
-        Some(vec!["faq".to_string()]),
-    );
-    println!("{}", question);
+#[tokio::main]
+async fn main() {
+    let hello = warp::get() // (1)
+        .map(|| warp::reply::html("Hello, World!"));
 
-    let question = question.update_title("better_title".to_string());
-    println!("{}", question);
+    warp::serve(hello)
+        .run(([127, 0, 0, 1], 1337)) // (2)
+        .await; // (3)
 }
