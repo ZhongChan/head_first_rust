@@ -1,4 +1,5 @@
 use std::{fmt::*, io::Error, str::FromStr};
+mod tests;
 
 #[derive(Clone)]
 struct Question {
