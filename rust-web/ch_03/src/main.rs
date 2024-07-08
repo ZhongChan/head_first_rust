@@ -2,6 +2,7 @@ use ch_02::Question;
 use ch_02::QuestionId;
 use std::str::FromStr;
 use warp::filters::cors::Builder;
+use warp::filters::cors::CorsForbidden;
 use warp::http::Method;
 use warp::http::StatusCode;
 use warp::reject::Reject;
@@ -39,7 +40,7 @@ async fn main() {
 fn get_cors() -> Builder {
     warp::cors()
         .allow_any_origin()
-        .allow_header("content-type")
+        .allow_header("not-in-the-request")
         .allow_methods(&[Method::PUT, Method::DELETE, Method::GET, Method::POST])
 }
 
@@ -58,14 +59,20 @@ async fn get_questions() -> Result<impl warp::Reply, warp::Rejection> {
 }
 
 async fn return_error(r: Rejection) -> Result<impl Reply, Rejection> {
-    if let Some(_invalid_id) = r.find::<InvalidId>() {
+    println!("{:?}", r);
+    if let Some(error) = r.find::<CorsForbidden>() {
         Ok(warp::reply::with_status(
-            "No valid ID presented",
+            error.to_string(),
+            StatusCode::FORBIDDEN,
+        ))
+    } else if let Some(_invalid_id) = r.find::<InvalidId>() {
+        Ok(warp::reply::with_status(
+            "No valid ID presented".to_string(),
             StatusCode::UNPROCESSABLE_ENTITY,
         ))
     } else {
         Ok(warp::reply::with_status(
-            "Route not found",
+            "Route not found".to_string(),
             StatusCode::NOT_FOUND,
         ))
     }
