@@ -1,12 +1,14 @@
 #[cfg(test)]
 mod tests {
-    use crate::Question;
     use std::str::FromStr;
+
+    use ch_02::Question;
+    use ch_02::QuestionId;
 
     #[test]
     fn test_question_creation() {
         let question = Question::new(
-            crate::QuestionId::from_str("1").unwrap(),
+            QuestionId::from_str("1").unwrap(),
             "First Question".to_string(),
             "Conent of question".to_string(),
             Some(vec!["faq".to_string(), "web".to_string()]),
@@ -24,7 +26,7 @@ mod tests {
     #[test]
     fn test_update_title() {
         let question = Question::new(
-            crate::QuestionId::from_str("1").unwrap(),
+            QuestionId::from_str("1").unwrap(),
             "First Question".to_string(),
             "Conent of question".to_string(),
             Some(vec!["faq".to_string(), "web".to_string()]),
