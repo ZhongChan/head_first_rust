@@ -1,0 +1,7 @@
+[workspace]
+members = ["ch_02", "ch_03"]
+resolver = "2"
+
+[workspace.dependencies]
+tokio = { version = "1.2", features = ["full"] }
+warp = "0.3"
