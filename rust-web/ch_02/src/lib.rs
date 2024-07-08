@@ -10,7 +10,7 @@ pub struct Question {
 }
 
 #[derive(Clone, Deserialize, Serialize)]
-pub struct QuestionId(String);
+pub struct QuestionId(pub String);
 
 impl Question {
     pub fn new(id: QuestionId, title: String, conent: String, tags: Option<Vec<String>>) -> Self {
