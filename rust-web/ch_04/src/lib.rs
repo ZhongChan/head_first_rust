@@ -56,7 +56,13 @@ impl Store {
 }
 
 #[derive(Debug)]
-enum Error {
+pub struct Pagination {
+    pub start: usize,
+    pub end: usize,
+}
+
+#[derive(Debug)]
+pub enum Error {
     ParseError(std::num::ParseIntError),
     MissingParameters,
 }

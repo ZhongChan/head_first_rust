@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use ch_04::{Question, Store};
+use ch_04::{Error, Pagination, Question, Store};
 use warp::filters::cors::Builder;
 use warp::filters::cors::CorsForbidden;
 use warp::http::Method;
@@ -53,23 +53,15 @@ async fn get_questions(
     params: HashMap<String, String>,
     store: Store,
 ) -> Result<impl warp::Reply, warp::Rejection> {
-    let mut start = 0;
-
-    match params.get("start") {
-        Some(start) => println!("{}", start),
-        None => println!("no start value"),
+    if !params.is_empty() {
+        let pagination = extract_pagination(params)?; // use ? get Pagination strut
+        let res: Vec<Question> = store.questions.values().cloned().collect();
+        let res = &res[pagination.start..pagination.end];
+        Ok(warp::reply::json(&res))
+    } else {
+        let res: Vec<Question> = store.questions.values().cloned().collect();
+        Ok(warp::reply::json(&res))
     }
-
-    if let Some(n) = params.get("start") {
-        println!("the start of question id: {}", n);
-        println!("{:?}", n.parse::<usize>()); // Ok(1)
-        start = n.parse::<usize>().expect("Could not parse start");
-    }
-
-    println!("{}", start);
-
-    let res: Vec<Question> = store.questions.values().cloned().collect();
-    Ok(warp::reply::json(&res))
 }
 
 async fn return_error(r: Rejection) -> Result<impl Reply, Rejection> {
@@ -85,4 +77,22 @@ async fn return_error(r: Rejection) -> Result<impl Reply, Rejection> {
             StatusCode::NOT_FOUND,
         ))
     }
+}
+
+fn extract_pagination(params: HashMap<String, String>) -> Result<Pagination, Error> {
+    if params.contains_key("start") && params.contains_key("end") {
+        return Ok(Pagination {
+            start: params
+                .get("start")
+                .unwrap()
+                .parse::<usize>()
+                .map_err(Error::ParseError)?,
+            end: params
+                .get("end")
+                .unwrap()
+                .parse::<usize>()
+                .map_err(Error::ParseError)?,
+        });
+    }
+    Err(Error::MissingParameters)
 }
