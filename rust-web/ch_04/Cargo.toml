@@ -1,0 +1,11 @@
+[package]
+name = "ch_04"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+tokio = { workspace = true }
+warp = { workspace = true }
+serde = { workspace = true} 
+serde_json =  {workspace = true}
+ch_02 ={ path = "../ch_02"}
