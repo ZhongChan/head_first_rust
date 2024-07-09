@@ -56,6 +56,7 @@ async fn get_questions(
     if !params.is_empty() {
         let pagination = extract_pagination(params)?; // use ? get Pagination strut
         let res: Vec<Question> = store.questions.values().cloned().collect();
+        // todo out of range
         let res = &res[pagination.start..pagination.end];
         Ok(warp::reply::json(&res))
     } else {
@@ -65,7 +66,14 @@ async fn get_questions(
 }
 
 async fn return_error(r: Rejection) -> Result<impl Reply, Rejection> {
-    println!("{:?}", r);
+    println!("return_error {:?}", r);
+    if let Some(error) = r.find::<Error>() {
+        return Ok(warp::reply::with_status(
+            error.to_string(),
+            StatusCode::RANGE_NOT_SATISFIABLE,
+        ));
+    }
+
     if let Some(error) = r.find::<CorsForbidden>() {
         Ok(warp::reply::with_status(
             error.to_string(),
