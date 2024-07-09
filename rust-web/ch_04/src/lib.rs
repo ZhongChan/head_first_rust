@@ -1,6 +1,7 @@
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::fmt::*;
+use warp::reject::Reject;
 
 #[derive(Clone, Deserialize, Serialize, PartialEq, Eq)]
 pub struct Question {
@@ -53,3 +54,27 @@ impl Store {
         self
     }
 }
+
+#[derive(Debug)]
+enum Error {
+    ParseError(std::num::ParseIntError),
+    MissingParameters,
+}
+
+impl Display for Error {
+    fn fmt(&self, f: &mut Formatter<'_>) -> Result {
+        match self {
+            Error::ParseError(err) => {
+                write!(f, "Cannot parse parameter: {}", err)
+            }
+            Error::MissingParameters => {
+                write!(f, "Missing Parameter")
+            }
+        }
+    }
+}
+
+/// `marker trait`
+/// `https://doc.rust-lang.org/std/marker/index.html`
+/// `https://blog.rust-lang.org/2015/05/11/traits.html`
+impl Reject for Error {}
