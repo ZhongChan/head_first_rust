@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use ch_04::{Question, Store};
 use warp::filters::cors::Builder;
 use warp::filters::cors::CorsForbidden;
@@ -20,6 +22,7 @@ async fn main() {
     let get_items = warp::get()
         .and(warp::path("questions"))
         .and(warp::path::end())
+        .and(warp::query())
         .and(store_fileter)
         .and_then(get_questions)
         .recover(return_error);
@@ -46,7 +49,11 @@ fn get_cors() -> Builder {
         .allow_methods(&[Method::PUT, Method::DELETE, Method::GET, Method::POST])
 }
 
-async fn get_questions(store: Store) -> Result<impl warp::Reply, warp::Rejection> {
+async fn get_questions(
+    params: HashMap<String, String>,
+    store: Store,
+) -> Result<impl warp::Reply, warp::Rejection> {
+    println!("{:?}", params);
     let res: Vec<Question> = store.questions.values().cloned().collect();
     Ok(warp::reply::json(&res))
 }
