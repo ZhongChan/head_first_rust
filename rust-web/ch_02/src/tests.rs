@@ -41,7 +41,7 @@ mod tests {
     #[should_panic = "value borrowed here after move"]
     fn test_ownership() {
         let x = String::from("Hello.");
-        let y = x;
+        let _y = x;
 
         // Uncommenting the next line will cause a compile error
         // println!("{}", x); // error: borrow of moved value: `x`

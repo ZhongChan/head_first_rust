@@ -97,7 +97,6 @@ dependencies = [
 name = "ch_03"
 version = "0.1.0"
 dependencies = [
- "ch_02",
  "serde",
  "serde_json",
  "tokio",
@@ -108,7 +107,6 @@ dependencies = [
 name = "ch_04"
 version = "0.1.0"
 dependencies = [
- "ch_02",
  "serde",
  "serde_json",
  "tokio",

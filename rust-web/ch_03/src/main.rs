@@ -1,11 +1,9 @@
-use ch_02::Question;
-use ch_02::QuestionId;
+use ch_03::{InvalidId, Question, QuestionId};
 use std::str::FromStr;
 use warp::filters::cors::Builder;
 use warp::filters::cors::CorsForbidden;
 use warp::http::Method;
 use warp::http::StatusCode;
-use warp::reject::Reject;
 use warp::reject::Rejection;
 use warp::reply::Reply;
 use warp::Filter;
@@ -77,7 +75,3 @@ async fn return_error(r: Rejection) -> Result<impl Reply, Rejection> {
         ))
     }
 }
-
-#[derive(Debug)]
-struct InvalidId;
-impl Reject for InvalidId {}

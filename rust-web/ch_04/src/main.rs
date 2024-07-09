@@ -1,17 +1,18 @@
-use ch_02::Question;
-use ch_02::QuestionId;
-use std::str::FromStr;
+use ch_04::{Question, Store};
 use warp::filters::cors::Builder;
 use warp::filters::cors::CorsForbidden;
 use warp::http::Method;
 use warp::http::StatusCode;
-use warp::reject::Reject;
 use warp::reject::Rejection;
 use warp::reply::Reply;
 use warp::Filter;
 
 #[tokio::main]
 async fn main() {
+    //fake database
+    let store = Store::new();
+    let store_fileter = warp::any().map(move || store.clone());
+
     // create a path Filter
     let path_hello = warp::path("hello").map(|| warp::reply::html("Hello, Wrap Filter!"));
 
@@ -19,6 +20,7 @@ async fn main() {
     let get_items = warp::get()
         .and(warp::path("questions"))
         .and(warp::path::end())
+        .and(store_fileter)
         .and_then(get_questions)
         .recover(return_error);
 
@@ -44,18 +46,9 @@ fn get_cors() -> Builder {
         .allow_methods(&[Method::PUT, Method::DELETE, Method::GET, Method::POST])
 }
 
-async fn get_questions() -> Result<impl warp::Reply, warp::Rejection> {
-    let question = Question::new(
-        QuestionId::from_str("1").expect("No id provided"),
-        "First Question".to_string(),
-        "Conent of question".to_string(),
-        Some(vec!["faq".to_string(), "web".to_string()]),
-    );
-
-    match question.id.0.parse::<i32>() {
-        Err(_) => Err(warp::reject::custom(InvalidId)),
-        Ok(_) => Ok(warp::reply::json(&question)),
-    }
+async fn get_questions(store: Store) -> Result<impl warp::Reply, warp::Rejection> {
+    let res: Vec<Question> = store.questions.values().cloned().collect();
+    Ok(warp::reply::json(&res))
 }
 
 async fn return_error(r: Rejection) -> Result<impl Reply, Rejection> {
@@ -65,11 +58,6 @@ async fn return_error(r: Rejection) -> Result<impl Reply, Rejection> {
             error.to_string(),
             StatusCode::FORBIDDEN,
         ))
-    } else if let Some(_invalid_id) = r.find::<InvalidId>() {
-        Ok(warp::reply::with_status(
-            "No valid ID presented".to_string(),
-            StatusCode::UNPROCESSABLE_ENTITY,
-        ))
     } else {
         Ok(warp::reply::with_status(
             "Route not found".to_string(),
@@ -77,7 +65,3 @@ async fn return_error(r: Rejection) -> Result<impl Reply, Rejection> {
         ))
     }
 }
-
-#[derive(Debug)]
-struct InvalidId;
-impl Reject for InvalidId {}
