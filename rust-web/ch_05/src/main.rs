@@ -1,15 +1,19 @@
-mod error;
-
 use ch_05::{Answer, AnswerId, QuestionId};
-use ch_05::{Pagination, Question, Store};
+use ch_05::{Pagination, Question};
 use error::Error;
 use std::collections::HashMap;
+use store::Store;
 use warp::filters::cors::Builder;
 use warp::http::Method;
 use warp::http::StatusCode;
 use warp::reject::Rejection;
 use warp::reply::Reply;
 use warp::Filter;
+
+mod error;
+mod routes;
+mod store;
+mod types;
 
 #[tokio::main]
 async fn main() {
