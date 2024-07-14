@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use ch_04::QuestionId;
+use ch_04::{Answer, AnswerId, QuestionId};
 use ch_04::{Error, Pagination, Question, Store};
 use warp::filters::body::BodyDeserializeError;
 use warp::filters::cors::Builder;
@@ -53,11 +53,21 @@ async fn main() {
         .and(store_fileter.clone())
         .and_then(delete_question);
 
+    // Add answer
+    let add_answer = warp::post()
+        .and(warp::path("answers"))
+        .and(warp::path::end())
+        .and(store_fileter.clone())
+        .and(warp::body::form())
+        .and_then(add_answer);
+
+    // Routes
     let routes = path_hello
         .or(get_questions)
         .or(add_question)
         .or(update_question)
         .or(delete_question)
+        .or(add_answer)
         .with(get_cors())
         .recover(return_error);
 
@@ -177,4 +187,24 @@ fn extract_pagination(params: HashMap<String, String>) -> Result<Pagination, Err
         });
     }
     Err(Error::MissingParameters)
+}
+
+/// For Anwsers
+async fn add_answer(
+    store: Store,
+    params: HashMap<String, String>,
+) -> Result<impl Reply, Rejection> {
+    let answer = Answer {
+        id: AnswerId("1".to_string()),
+        content: params.get("content").unwrap().to_string(),
+        question_id: QuestionId(params.get("questionId").unwrap().to_string()),
+    };
+
+    store
+        .answers
+        .write()
+        .await
+        .insert(answer.id.clone(), answer);
+
+    Ok(warp::reply::with_status("Answer added", StatusCode::OK))
 }

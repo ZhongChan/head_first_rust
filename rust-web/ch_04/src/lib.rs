@@ -5,6 +5,16 @@ use std::sync::Arc;
 use tokio::sync::RwLock;
 use warp::reject::Reject;
 
+#[derive(Clone, Deserialize, Serialize, PartialEq, Eq, Hash)]
+pub struct AnswerId(pub String);
+
+#[derive(Clone, Deserialize, Serialize, PartialEq, Eq)]
+pub struct Answer {
+    pub id: AnswerId,
+    pub content: String,
+    pub question_id: QuestionId,
+}
+
 #[derive(Clone, Deserialize, Serialize, PartialEq, Eq)]
 pub struct Question {
     pub id: QuestionId,
@@ -35,12 +45,14 @@ impl Display for QuestionId {
 #[derive(Clone)]
 pub struct Store {
     pub questions: Arc<RwLock<HashMap<QuestionId, Question>>>,
+    pub answers: Arc<RwLock<HashMap<AnswerId, Answer>>>,
 }
 
 impl Store {
     pub fn new() -> Self {
         Store {
             questions: Arc::new(RwLock::new(Self::init())),
+            answers: Arc::new(RwLock::new(HashMap::new())),
         }
     }
 }
