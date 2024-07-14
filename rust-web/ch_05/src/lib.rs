@@ -3,7 +3,6 @@ use std::collections::HashMap;
 use std::fmt::*;
 use std::sync::Arc;
 use tokio::sync::RwLock;
-use warp::reject::Reject;
 
 #[derive(Clone, Deserialize, Serialize, PartialEq, Eq, Hash)]
 pub struct AnswerId(pub String);
@@ -69,31 +68,3 @@ pub struct Pagination {
     pub start: usize,
     pub end: usize,
 }
-
-#[derive(Debug)]
-pub enum Error {
-    ParseError(std::num::ParseIntError),
-    MissingParameters,
-    QuestionNotFound,
-}
-
-impl Display for Error {
-    fn fmt(&self, f: &mut Formatter<'_>) -> Result {
-        match self {
-            Error::ParseError(err) => {
-                write!(f, "Cannot parse parameter: {}", err)
-            }
-            Error::MissingParameters => {
-                write!(f, "Missing Parameter")
-            }
-            Error::QuestionNotFound => {
-                write!(f, "Question not found")
-            }
-        }
-    }
-}
-
-/// `marker trait`
-/// `https://doc.rust-lang.org/std/marker/index.html`
-/// `https://blog.rust-lang.org/2015/05/11/traits.html`
-impl Reject for Error {}

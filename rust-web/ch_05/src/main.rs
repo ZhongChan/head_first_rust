@@ -1,10 +1,10 @@
-use std::collections::HashMap;
+mod error;
 
 use ch_05::{Answer, AnswerId, QuestionId};
-use ch_05::{Error, Pagination, Question, Store};
-use warp::filters::body::BodyDeserializeError;
+use ch_05::{Pagination, Question, Store};
+use error::Error;
+use std::collections::HashMap;
 use warp::filters::cors::Builder;
-use warp::filters::cors::CorsForbidden;
 use warp::http::Method;
 use warp::http::StatusCode;
 use warp::reject::Rejection;
@@ -69,7 +69,7 @@ async fn main() {
         .or(delete_question)
         .or(add_answer)
         .with(get_cors())
-        .recover(return_error);
+        .recover(error::return_error);
 
     // start the server and pass the route filter to it
     warp::serve(routes).run(([127, 0, 0, 1], 3030)).await;
@@ -139,35 +139,6 @@ async fn delete_question(id: String, store: Store) -> Result<impl Reply, Rejecti
         None => {
             return Err(warp::reject::custom(Error::QuestionNotFound));
         }
-    }
-}
-
-async fn return_error(r: Rejection) -> Result<impl Reply, Rejection> {
-    println!("return_error {:?}", r);
-    if let Some(error) = r.find::<Error>() {
-        return Ok(warp::reply::with_status(
-            error.to_string(),
-            StatusCode::RANGE_NOT_SATISFIABLE,
-        ));
-    }
-
-    if let Some(error) = r.find::<BodyDeserializeError>() {
-        return Ok(warp::reply::with_status(
-            error.to_string(),
-            StatusCode::UNPROCESSABLE_ENTITY,
-        ));
-    }
-
-    if let Some(error) = r.find::<CorsForbidden>() {
-        Ok(warp::reply::with_status(
-            error.to_string(),
-            StatusCode::FORBIDDEN,
-        ))
-    } else {
-        Ok(warp::reply::with_status(
-            "Route not found".to_string(),
-            StatusCode::NOT_FOUND,
-        ))
     }
 }
 
