@@ -19,16 +19,26 @@ async fn main() {
     let path_hello = warp::path("hello").map(|| warp::reply::html("Hello, Wrap Filter!"));
 
     // Get first JSON response
-    let get_items = warp::get()
+    let get_questions = warp::get()
         .and(warp::path("questions"))
         .and(warp::path::end())
         .and(warp::query())
-        .and(store_fileter)
-        .and_then(get_questions)
-        .recover(return_error);
+        .and(store_fileter.clone())
+        .and_then(get_questions);
 
-    let routes = path_hello.or(get_items);
-    let routes = routes.with(get_cors());
+    // Add quesiont
+    let add_question = warp::post()
+        .and(warp::path("questions"))
+        .and(warp::path::end())
+        .and(store_fileter.clone())
+        .and(warp::body::json())
+        .and_then(add_question);
+
+    let routes = path_hello
+        .or(get_questions)
+        .or(add_question)
+        .with(get_cors())
+        .recover(return_error);
 
     // start the server and pass the route filter to it
     warp::serve(routes).run(([127, 0, 0, 1], 3030)).await;
@@ -55,14 +65,27 @@ async fn get_questions(
 ) -> Result<impl warp::Reply, warp::Rejection> {
     if !params.is_empty() {
         let pagination = extract_pagination(params)?; // use ? get Pagination strut
-        let res: Vec<Question> = store.questions.values().cloned().collect();
+        let res: Vec<Question> = store.questions.read().await.values().cloned().collect();
         // todo out of range
         let res = &res[pagination.start..pagination.end];
         Ok(warp::reply::json(&res))
     } else {
-        let res: Vec<Question> = store.questions.values().cloned().collect();
+        let res: Vec<Question> = store.questions.read().await.values().cloned().collect();
         Ok(warp::reply::json(&res))
     }
+}
+
+async fn add_question(
+    store: Store,
+    question: Question,
+) -> Result<impl warp::Reply, warp::Rejection> {
+    store
+        .questions
+        .write()
+        .await
+        .insert(question.id.clone(), question);
+
+    Ok(warp::reply::with_status("Question addes", StatusCode::OK))
 }
 
 async fn return_error(r: Rejection) -> Result<impl Reply, Rejection> {
