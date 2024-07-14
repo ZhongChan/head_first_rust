@@ -1,6 +1,8 @@
 use std::collections::HashMap;
 
+use ch_04::QuestionId;
 use ch_04::{Error, Pagination, Question, Store};
+use warp::filters::body::BodyDeserializeError;
 use warp::filters::cors::Builder;
 use warp::filters::cors::CorsForbidden;
 use warp::http::Method;
@@ -26,7 +28,7 @@ async fn main() {
         .and(store_fileter.clone())
         .and_then(get_questions);
 
-    // Add quesiont
+    // Add question
     let add_question = warp::post()
         .and(warp::path("questions"))
         .and(warp::path::end())
@@ -34,9 +36,19 @@ async fn main() {
         .and(warp::body::json())
         .and_then(add_question);
 
+    // Update qestion
+    let update_question = warp::put()
+        .and(warp::path("questions"))
+        .and(warp::path::param::<String>())
+        .and(warp::path::end())
+        .and(store_fileter.clone())
+        .and(warp::body::json())
+        .and_then(update_question);
+
     let routes = path_hello
         .or(get_questions)
         .or(add_question)
+        .or(update_question)
         .with(get_cors())
         .recover(return_error);
 
@@ -55,7 +67,7 @@ async fn main() {
 fn get_cors() -> Builder {
     warp::cors()
         .allow_any_origin()
-        .allow_header("not-in-the-request")
+        .allow_header("content-type")
         .allow_methods(&[Method::PUT, Method::DELETE, Method::GET, Method::POST])
 }
 
@@ -88,12 +100,33 @@ async fn add_question(
     Ok(warp::reply::with_status("Question addes", StatusCode::OK))
 }
 
+async fn update_question(
+    id: String,
+    store: Store,
+    question: Question,
+) -> Result<impl Reply, Rejection> {
+    match store.questions.write().await.get_mut(&QuestionId(id)) {
+        Some(q) => *q = question,
+        None => {
+            return Err(warp::reject::custom(Error::QuestionNotFound));
+        }
+    }
+    Ok(warp::reply::with_status("Question updated", StatusCode::OK))
+}
+
 async fn return_error(r: Rejection) -> Result<impl Reply, Rejection> {
     println!("return_error {:?}", r);
     if let Some(error) = r.find::<Error>() {
         return Ok(warp::reply::with_status(
             error.to_string(),
             StatusCode::RANGE_NOT_SATISFIABLE,
+        ));
+    }
+
+    if let Some(error) = r.find::<BodyDeserializeError>() {
+        return Ok(warp::reply::with_status(
+            error.to_string(),
+            StatusCode::UNPROCESSABLE_ENTITY,
         ));
     }
 

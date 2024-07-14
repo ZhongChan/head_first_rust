@@ -62,6 +62,7 @@ pub struct Pagination {
 pub enum Error {
     ParseError(std::num::ParseIntError),
     MissingParameters,
+    QuestionNotFound,
 }
 
 impl Display for Error {
@@ -72,6 +73,9 @@ impl Display for Error {
             }
             Error::MissingParameters => {
                 write!(f, "Missing Parameter")
+            }
+            Error::QuestionNotFound => {
+                write!(f, "Question not found")
             }
         }
     }
