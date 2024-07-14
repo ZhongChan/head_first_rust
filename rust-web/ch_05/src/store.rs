@@ -1,7 +1,11 @@
-use ch_05::{Answer, AnswerId, Question, QuestionId};
 use std::collections::HashMap;
 use std::sync::Arc;
 use tokio::sync::RwLock;
+
+use crate::types::{
+    answer::{Answer, AnswerId},
+    question::{Question, QuestionId},
+};
 
 #[derive(Clone)]
 pub struct Store {
