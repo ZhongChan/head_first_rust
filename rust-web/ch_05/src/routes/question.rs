@@ -1,11 +1,11 @@
 use crate::{
-    error::Error,
     store::Store,
     types::{
         pagination::Pagination,
         question::{Question, QuestionId},
     },
 };
+use handle_errors::Error;
 use std::collections::HashMap;
 use warp::{http::StatusCode, reject::Rejection, reply::Reply};
 

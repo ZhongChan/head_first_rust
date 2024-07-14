@@ -1,3 +1,4 @@
+use handle_errors::return_error;
 use routes::answer::add_answer;
 use routes::question::{add_question, delete_question, get_questions, update_question};
 use store::Store;
@@ -5,7 +6,6 @@ use warp::filters::cors::Builder;
 use warp::http::Method;
 use warp::Filter;
 
-mod error;
 mod routes;
 mod store;
 mod types;
@@ -68,7 +68,7 @@ async fn main() {
         .or(delete_question)
         .or(add_answer)
         .with(get_cors())
-        .recover(error::return_error);
+        .recover(return_error);
 
     // start the server and pass the route filter to it
     warp::serve(routes).run(([127, 0, 0, 1], 3030)).await;
