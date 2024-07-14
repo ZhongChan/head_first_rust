@@ -1,3 +1,4 @@
+#![warn(clippy::all)]
 use handle_errors::return_error;
 use routes::answer::add_answer;
 use routes::question::{add_question, delete_question, get_questions, update_question};
