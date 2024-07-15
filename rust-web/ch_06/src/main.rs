@@ -13,6 +13,9 @@ mod types;
 
 #[tokio::main]
 async fn main() {
+    //log init
+    log_init();
+
     //fake database
     let store = Store::new();
     let store_fileter = warp::any().map(move || store.clone());
@@ -88,4 +91,22 @@ fn get_cors() -> Builder {
         .allow_any_origin()
         .allow_header("content-type")
         .allow_methods(&[Method::PUT, Method::DELETE, Method::GET, Method::POST])
+}
+
+/// Log init
+/// # Example 1
+/// `RUST_LOG=info cargo run`
+///
+/// # Example 2
+/// `RUST_LOG=info cargo run 2>logs.txt`
+///
+/// * `1` -> `stdout`
+/// * `2` -> `stderr`
+///
+fn log_init() {
+    env_logger::init();
+
+    log::warn!("This is a warn!");
+    log::info!("This is info!");
+    log::error!("This is an error!");
 }

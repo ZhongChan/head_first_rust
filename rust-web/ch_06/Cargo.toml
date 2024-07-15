@@ -11,3 +11,4 @@ serde_json =  {workspace = true}
 handle_errors = {path = "../handle_errors"}
 log =  {workspace = true}
 env_logger = {workspace = true}
+log4rs =  {workspace = true}
