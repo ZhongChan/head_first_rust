@@ -3,6 +3,8 @@ use handle_errors::return_error;
 use routes::answer::add_answer;
 use routes::question::{add_question, delete_question, get_questions, update_question};
 use store::Store;
+use tracing_subscriber;
+use tracing_subscriber::fmt::format::FmtSpan;
 use warp::filters::cors::Builder;
 use warp::http::Method;
 use warp::Filter;
@@ -13,9 +15,22 @@ mod types;
 
 #[tokio::main]
 async fn main() {
+    let log_filter =
+        std::env::var("RUST_LOG").unwrap_or_else(|_| "ch_06_tracing=info,warp=error".to_owned());
+
     //fake database
     let store = Store::new();
     let store_fileter = warp::any().map(move || store.clone());
+
+    // tracing
+    tracing_subscriber::fmt()
+        // Use the filter we built above to determine which traces to record.
+        .with_env_filter(log_filter)
+        // Record an event when each span cloese.
+        // This can be used to time our
+        // route's durations!
+        .with_span_events(FmtSpan::CLOSE)
+        .init();
 
     // create a path Filter
     let path_hello = warp::path("hello").map(|| warp::reply::html("Hello, Wrap Filter!"));
@@ -26,7 +41,15 @@ async fn main() {
         .and(warp::path::end())
         .and(warp::query())
         .and(store_fileter.clone())
-        .and_then(get_questions);
+        .and_then(get_questions)
+        .with(warp::trace(|info| {
+            tracing::info_span!(
+                "get_questions request",
+                method = %info.method(),
+                path = %info.path(),
+                id = %uuid::Uuid::new_v4()
+            )
+        }));
 
     // Add question
     let add_question = warp::post()
@@ -69,6 +92,7 @@ async fn main() {
         .or(delete_question)
         .or(add_answer)
         .with(get_cors())
+        .with(warp::trace::request())
         .recover(return_error);
 
     // start the server and pass the route filter to it

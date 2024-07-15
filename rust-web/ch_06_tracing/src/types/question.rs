@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 use std::fmt::*;
 
-#[derive(Clone, Deserialize, Serialize, PartialEq, Eq)]
+#[derive(Debug, Clone, Deserialize, Serialize, PartialEq, Eq)]
 pub struct Question {
     pub id: QuestionId,
     pub title: String,
@@ -9,7 +9,7 @@ pub struct Question {
     pub tags: Option<Vec<String>>,
 }
 
-#[derive(Clone, Deserialize, Serialize, PartialEq, Eq, Hash)]
+#[derive(Debug, Clone, Deserialize, Serialize, PartialEq, Eq, Hash)]
 pub struct QuestionId(pub String);
 
 impl Display for Question {
