@@ -34,7 +34,6 @@ impl std::fmt::Display for Error {
 impl Reject for Error {}
 
 pub async fn return_error(r: Rejection) -> Result<impl Reply, Rejection> {
-    println!("return_error {:?}", r);
     if let Some(error) = r.find::<Error>() {
         return Ok(warp::reply::with_status(
             error.to_string(),

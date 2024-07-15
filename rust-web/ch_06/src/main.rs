@@ -16,6 +16,20 @@ async fn main() {
     //log init
     log_init();
 
+    // wrap log custom
+    let log = warp::log::custom(|info| {
+        // Use a log macro, or slog, or println, or whatever!
+        eprintln!(
+            "{} {} {} {:?} from {} whith {:?}",
+            info.method(),
+            info.path(),
+            info.status(),
+            info.elapsed(),
+            info.remote_addr().unwrap(),
+            info.request_headers()
+        );
+    });
+
     //fake database
     let store = Store::new();
     let store_fileter = warp::any().map(move || store.clone());
@@ -72,6 +86,7 @@ async fn main() {
         .or(delete_question)
         .or(add_answer)
         .with(get_cors())
+        .with(log)
         .recover(return_error);
 
     // start the server and pass the route filter to it
