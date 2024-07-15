@@ -34,6 +34,9 @@ async fn main() {
     let store = Store::new();
     let store_fileter = warp::any().map(move || store.clone());
 
+    // request id
+    let id_filter = warp::any().map(|| uuid::Uuid::new_v4().to_string());
+
     // create a path Filter
     let path_hello = warp::path("hello").map(|| warp::reply::html("Hello, Wrap Filter!"));
 
@@ -43,6 +46,7 @@ async fn main() {
         .and(warp::path::end())
         .and(warp::query())
         .and(store_fileter.clone())
+        .and(id_filter)
         .and_then(get_questions);
 
     // Add question

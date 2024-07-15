@@ -12,3 +12,4 @@ handle_errors = {path = "../handle_errors"}
 log =  {workspace = true}
 env_logger = {workspace = true}
 log4rs =  {workspace = true}
+uuid = {workspace = true}

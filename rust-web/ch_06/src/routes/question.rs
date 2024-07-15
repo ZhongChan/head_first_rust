@@ -12,18 +12,19 @@ use warp::{http::StatusCode, reject::Rejection, reply::Reply};
 pub async fn get_questions(
     params: HashMap<String, String>,
     store: Store,
+    request_id: String,
 ) -> Result<impl warp::Reply, warp::Rejection> {
-    log::info!("Start querying questions");
+    log::info!("{} Start querying questions", request_id);
 
     if !params.is_empty() {
         let pagination = extract_pagination(params)?; // use ? get Pagination strut
-        log::info!("Pagination set {:?}", &pagination);
+        log::info!("{} Pagination set {:?}", request_id, &pagination);
         let res: Vec<Question> = store.questions.read().await.values().cloned().collect();
         // todo out of range
         let res = &res[pagination.start..pagination.end];
         Ok(warp::reply::json(&res))
     } else {
-        log::info!("No pagination used");
+        log::info!("{} No pagination used", request_id);
         let res: Vec<Question> = store.questions.read().await.values().cloned().collect();
         Ok(warp::reply::json(&res))
     }
