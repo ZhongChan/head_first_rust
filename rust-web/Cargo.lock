@@ -125,6 +125,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "ch_06"
+version = "0.1.0"
+dependencies = [
+ "handle_errors",
+ "serde",
+ "serde_json",
+ "tokio",
+ "warp",
+]
+
+[[package]]
 name = "cpufeatures"
 version = "0.2.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"

@@ -1,5 +1,5 @@
 [workspace]
-members = ["ch_02", "ch_03", "ch_04", "ch_05", "handle_errors"]
+members = ["handle_errors","ch_02", "ch_03", "ch_04", "ch_05","ch_06" ]
 resolver = "2"
 
 [workspace.dependencies]
