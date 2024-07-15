@@ -9,3 +9,5 @@ warp = { workspace = true }
 serde = { workspace = true} 
 serde_json =  {workspace = true}
 handle_errors = {path = "../handle_errors"}
+log =  {workspace = true}
+env_logger = {workspace = true}
