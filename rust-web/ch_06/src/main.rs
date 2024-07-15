@@ -104,7 +104,8 @@ fn get_cors() -> Builder {
 /// * `2` -> `stderr`
 ///
 fn log_init() {
-    env_logger::init();
+    // env_logger::init();
+    log4rs::init_file("log4rs.yaml", Default::default()).unwrap();
 
     log::warn!("This is a warn!");
     log::info!("This is info!");
