@@ -27,3 +27,10 @@ impl Display for QuestionId {
         write!(f, "id: {}", self.0)
     }
 }
+
+#[derive(Debug, Clone, Deserialize, Serialize)]
+pub struct NewQuestion {
+    pub title: String,
+    pub content: String,
+    pub tags: Option<Vec<String>>,
+}

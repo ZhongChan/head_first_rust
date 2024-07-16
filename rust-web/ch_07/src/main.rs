@@ -19,7 +19,7 @@ async fn main() {
         std::env::var("RUST_LOG").unwrap_or_else(|_| "ch_06_tracing=info,warp=error".to_owned());
 
     //fake database
-    let store = Store::new();
+    let store = Store::new("postgres://localhost:5432/rustwebdev").await;
     let store_fileter = warp::any().map(move || store.clone());
 
     // tracing
