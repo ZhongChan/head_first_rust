@@ -14,7 +14,7 @@ pub async fn add_answer(
     params: HashMap<String, i32>,
 ) -> Result<impl Reply, Rejection> {
     let answer = Answer {
-        id: AnswerId("1".to_string()),
+        id: AnswerId(1),
         content: params.get("content").unwrap().to_string(),
         question_id: QuestionId(*params.get("questionId").unwrap()),
     };
