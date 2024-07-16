@@ -12,3 +12,4 @@ handle_errors = {path = "../handle_errors"}
 uuid = {workspace = true}
 tracing = {workspace = true}
 tracing-subscriber = {workspace = true}
+sqlx = {version = "0.5",features = ["runtime-tokio-rustls","migrate","postgres"]}
