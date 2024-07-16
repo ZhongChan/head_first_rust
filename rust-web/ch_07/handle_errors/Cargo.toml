@@ -5,4 +5,4 @@ edition = "2021"
 
 [dependencies]
 warp = "0.3"
-sqlx-core = { version = "0.5"}
+sqlx = { version = "0.5"}
