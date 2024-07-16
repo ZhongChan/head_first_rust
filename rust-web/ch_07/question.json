@@ -1,6 +1,6 @@
 {
     "1": {
-        "id": "1",
+        "id": 1,
         "title": "How?",
         "content": "Plaease Help!",
         "tags": [
@@ -9,7 +9,7 @@
         ]
     },
     "2": {
-        "id": "2",
+        "id": 2,
         "title": "How to?",
         "content": "Plaease Help me!",
         "tags": [
@@ -19,7 +19,7 @@
         ]
     },
     "3": {
-        "id": "3",
+        "id": 3,
         "title": "How to use?",
         "content": "Plaease Help me!!",
         "tags": [
