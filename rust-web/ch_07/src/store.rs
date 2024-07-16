@@ -128,7 +128,7 @@ impl Store {
 
 impl Store {
    pub async fn add_answer(&self,new_answer:NewAnswer)->Result<Answer,Error>{
-        match sqlx::query("insert into answers (content, question_id) values ($1, $2)")
+        match sqlx::query("insert into answers (content, question_id) values ($1, $2) returning id,content,question_id")
                 .bind(new_answer.content)
                 .bind(new_answer.question_id.0)
                 .map(|row| {
@@ -142,7 +142,11 @@ impl Store {
                 .await {
             Ok(answer) => {Ok(answer)},
             Err(err) => {
+<<<<<<< HEAD
                 tracing::event!(tracing::Level::ERROR,"{:?}",err);
+=======
+                tracing::event!(tracing::Level::ERROR,"add_answer: {:?}",err);
+>>>>>>> 121dca6 (rust-web ch_07:)
                 Err(Error::DatabaseQueryError)
             },
         }
