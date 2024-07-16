@@ -4,5 +4,4 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-warp = { workspace = true }
-sqlx = { version = "0.5"}
+warp = "0.3"

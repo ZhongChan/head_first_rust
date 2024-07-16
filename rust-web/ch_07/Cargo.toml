@@ -4,12 +4,15 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-tokio = { workspace = true }
-warp = { workspace = true }
-serde = { workspace = true} 
-serde_json =  {workspace = true}
-handle_errors = {path = "../handle_errors"}
-uuid = {workspace = true}
-tracing = {workspace = true}
-tracing-subscriber = {workspace = true}
+tokio = { version = "1.2", features = ["full"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+warp = "0.3"
+handle_errors = {path = "handle_errors"}
+log = "0.4"
+env_logger = "0.9"
+log4rs = "1.0"
+uuid = {version = "0.8", features = ["v4"]}
+tracing = {version = "0.1.40",features = ["log"]}
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 sqlx = {version = "0.5",features = ["runtime-tokio-rustls","migrate","postgres"]}
