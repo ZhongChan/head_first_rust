@@ -3,7 +3,6 @@ use handle_errors::return_error;
 use routes::answer::add_answer;
 use routes::question::{add_question, delete_question, get_questions, update_question};
 use store::Store;
-use tracing_subscriber;
 use tracing_subscriber::fmt::format::FmtSpan;
 use warp::filters::cors::Builder;
 use warp::http::Method;
@@ -16,7 +15,7 @@ mod types;
 #[tokio::main]
 async fn main() {
     let log_filter =
-        std::env::var("RUST_LOG").unwrap_or_else(|_| "ch_06_tracing=info,warp=error".to_owned());
+        std::env::var("RUST_LOG").unwrap_or_else(|_| "ch_07=info,warp=error".to_owned());
 
     //fake database
     let store = Store::new("postgres://localhost:5432/rustwebdev").await;

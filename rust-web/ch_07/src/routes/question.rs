@@ -5,7 +5,7 @@ use crate::{
         question::{NewQuestion, Question},
     },
 };
-use handle_errors::Error;
+
 use std::collections::HashMap;
 use tracing::{event, info, instrument, Level};
 use warp::{http::StatusCode, reject::Rejection, reply::Reply};
@@ -29,7 +29,7 @@ pub async fn get_questions(
         .await
     {
         Ok(res) => res,
-        Err(err) => return Err(warp::reject::custom(Error::DatabaseQueryError(err))),
+        Err(err) => return Err(warp::reject::custom(err)),
     };
 
     Ok(warp::reply::json(&res))
@@ -40,7 +40,7 @@ pub async fn add_question(
     new_question: NewQuestion,
 ) -> Result<impl warp::Reply, warp::Rejection> {
     if let Err(err) = store.add_question(new_question).await {
-        return Err(warp::reject::custom(Error::DatabaseQueryError(err)));
+        return Err(warp::reject::custom(err));
     }
     Ok(warp::reply::with_status("Question addes", StatusCode::OK))
 }
@@ -52,7 +52,7 @@ pub async fn update_question(
 ) -> Result<impl Reply, Rejection> {
     match store.update_question(question, id).await {
         Ok(res) => Ok(warp::reply::json(&res)),
-        Err(err) => Err(warp::reject::custom(Error::DatabaseQueryError(err))),
+        Err(err) => Err(warp::reject::custom(err)),
     }
 }
 
@@ -62,6 +62,6 @@ pub async fn delete_question(id: i32, store: Store) -> Result<impl Reply, Reject
             format!("Question {} deleted", id),
             StatusCode::OK,
         )),
-        Err(err) => Err(warp::reject::custom(Error::DatabaseQueryError(err))),
+        Err(err) => Err(warp::reject::custom(err)),
     }
 }

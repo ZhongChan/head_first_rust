@@ -5,14 +5,13 @@ use warp::{
     Rejection, Reply,
 };
 
-use sqlx::error::Error as SqlxError;
+use tracing::{event, instrument, Level};
 
 #[derive(Debug)]
 pub enum Error {
     ParseError(std::num::ParseIntError),
     MissingParameters,
-    QuestionNotFound,
-    DatabaseQueryError(SqlxError),
+    DatabaseQueryError,
 }
 
 impl std::fmt::Display for Error {
@@ -24,11 +23,8 @@ impl std::fmt::Display for Error {
             Error::MissingParameters => {
                 write!(f, "Missing Parameter")
             }
-            Error::QuestionNotFound => {
-                write!(f, "Question not found")
-            }
-            Error::DatabaseQueryError(err) => {
-                write!(f, "Query could not be executed: {}", err)
+            Error::DatabaseQueryError => {
+                write!(f, "Query could not be executed")
             }
         }
     }
@@ -39,7 +35,16 @@ impl std::fmt::Display for Error {
 /// `https://blog.rust-lang.org/2015/05/11/traits.html`
 impl Reject for Error {}
 
+#[instrument]
 pub async fn return_error(r: Rejection) -> Result<impl Reply, Rejection> {
+    if let Some(Error::DatabaseQueryError) = r.find() {
+        event!(Level::ERROR, "Database query error");
+        return Ok(warp::reply::with_status(
+            Error::DatabaseQueryError.to_string(),
+            StatusCode::UNPROCESSABLE_ENTITY,
+        ));
+    }
+
     if let Some(error) = r.find::<Error>() {
         return Ok(warp::reply::with_status(
             error.to_string(),
