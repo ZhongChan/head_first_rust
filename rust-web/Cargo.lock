@@ -207,6 +207,20 @@ dependencies = [
 ]
 
 [[package]]
+name = "ch_07"
+version = "0.1.0"
+dependencies = [
+ "handle_errors",
+ "serde",
+ "serde_json",
+ "tokio",
+ "tracing",
+ "tracing-subscriber",
+ "uuid",
+ "warp",
+]
+
+[[package]]
 name = "chrono"
 version = "0.4.38"
 source = "registry+https://github.com/rust-lang/crates.io-index"
