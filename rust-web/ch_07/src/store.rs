@@ -142,11 +142,7 @@ impl Store {
                 .await {
             Ok(answer) => {Ok(answer)},
             Err(err) => {
-<<<<<<< HEAD
                 tracing::event!(tracing::Level::ERROR,"{:?}",err);
-=======
-                tracing::event!(tracing::Level::ERROR,"add_answer: {:?}",err);
->>>>>>> 121dca6 (rust-web ch_07:)
                 Err(Error::DatabaseQueryError)
             },
         }
