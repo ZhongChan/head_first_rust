@@ -49,16 +49,26 @@ pub async fn add_question(
         .body(new_question.content.clone())
         .send()
         .await
-        .map_err(|e| handle_errors::Error::ExternalAPIError(e))?
-        .text()
-        .await
         .map_err(|e| handle_errors::Error::ExternalAPIError(e))?;
-    println!("{:?}", res);
 
-    if let Err(err) = store.add_question(new_question).await {
-        return Err(warp::reject::custom(err));
+    //match api error
+    match res.error_for_status() {
+        Ok(res) => {
+            let res = res
+                .text()
+                .await
+                .map_err(|e| handle_errors::Error::ExternalAPIError(e))?;
+            println!("{}", res);
+
+            if let Err(err) = store.add_question(new_question).await {
+                return Err(warp::reject::custom(err));
+            }
+            Ok(warp::reply::with_status("Question addes", StatusCode::OK))
+        }
+        Err(err) => Err(warp::reject::custom(
+            handle_errors::Error::ExternalAPIError(err),
+        )),
     }
-    Ok(warp::reply::with_status("Question addes", StatusCode::OK))
 }
 
 pub async fn update_question(
