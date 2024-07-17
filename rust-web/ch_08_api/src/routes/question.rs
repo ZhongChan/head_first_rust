@@ -7,6 +7,7 @@ use crate::{
 };
 
 use std::collections::HashMap;
+use std::env;
 use tracing::{event, info, instrument, Level};
 use warp::{http::StatusCode, reject::Rejection, reply::Reply};
 
@@ -39,6 +40,21 @@ pub async fn add_question(
     store: Store,
     new_question: NewQuestion,
 ) -> Result<impl warp::Reply, warp::Rejection> {
+    // layerapi bad words
+    let api_key: String = env::var("APILAYER_KEY").expect("API_KEY not set");
+    let client = reqwest::Client::new();
+    let res = client
+        .post("https://api.apilayer.com/bad_words?censor_character=*")
+        .header("apikey", api_key)
+        .body(new_question.content.clone())
+        .send()
+        .await
+        .map_err(|e| handle_errors::Error::ExternalAPIError(e))?
+        .text()
+        .await
+        .map_err(|e| handle_errors::Error::ExternalAPIError(e))?;
+    println!("{:?}", res);
+
     if let Err(err) = store.add_question(new_question).await {
         return Err(warp::reject::custom(err));
     }

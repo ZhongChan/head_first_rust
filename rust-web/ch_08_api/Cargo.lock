@@ -513,6 +513,7 @@ dependencies = [
 name = "handle_errors"
 version = "0.1.0"
 dependencies = [
+ "reqwest",
  "tracing",
  "warp",
 ]

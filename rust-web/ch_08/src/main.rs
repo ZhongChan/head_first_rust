@@ -32,7 +32,7 @@ async fn hyper_request() -> Result<()> {
 }
 
 async fn reqwest_request() -> Result<()> {
-    let api_key = env::var("APILAYER_KEY").expect("API_KEY not set");
+    let api_key: String = env::var("APILAYER_KEY").expect("API_KEY not set");
 
     let client = reqwest::Client::new();
 

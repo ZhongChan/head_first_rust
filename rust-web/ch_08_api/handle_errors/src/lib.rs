@@ -5,6 +5,7 @@ use warp::{
     Rejection, Reply,
 };
 
+use reqwest::Error as ReqwestError;
 use tracing::{event, instrument, Level};
 
 #[derive(Debug)]
@@ -12,6 +13,7 @@ pub enum Error {
     ParseError(std::num::ParseIntError),
     MissingParameters,
     DatabaseQueryError,
+    ExternalAPIError(ReqwestError),
 }
 
 impl std::fmt::Display for Error {
@@ -25,6 +27,9 @@ impl std::fmt::Display for Error {
             }
             Error::DatabaseQueryError => {
                 write!(f, "Query could not be executed")
+            }
+            Error::ExternalAPIError(e) => {
+                write!(f, "Cannot execute: {}", e)
             }
         }
     }
@@ -42,6 +47,14 @@ pub async fn return_error(r: Rejection) -> Result<impl Reply, Rejection> {
         return Ok(warp::reply::with_status(
             Error::DatabaseQueryError.to_string(),
             StatusCode::UNPROCESSABLE_ENTITY,
+        ));
+    }
+
+    if let Some(Error::ExternalAPIError(e)) = r.find() {
+        event!(Level::ERROR, "{}", e);
+        return Ok(warp::reply::with_status(
+            "Internal Serever Error".to_string(),
+            StatusCode::INTERNAL_SERVER_ERROR,
         ));
     }
 
