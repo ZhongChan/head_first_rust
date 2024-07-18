@@ -8,6 +8,7 @@ use warp::filters::cors::Builder;
 use warp::http::Method;
 use warp::Filter;
 
+mod apilayer;
 mod routes;
 mod store;
 mod types;
