@@ -14,6 +14,8 @@ pub enum Error {
     MissingParameters,
     DatabaseQueryError,
     ExternalAPIError(ReqwestError),
+    ClientError(APILayerError),
+    SereverError(APILayerError),
 }
 
 impl std::fmt::Display for Error {
@@ -31,6 +33,12 @@ impl std::fmt::Display for Error {
             Error::ExternalAPIError(e) => {
                 write!(f, "Cannot execute: {}", e)
             }
+            Error::ClientError(e) => {
+                write!(f, "External Clien error: {}", e)
+            }
+            Error::SereverError(e) => {
+                write!(f, "External Server error: {}", e)
+            }
         }
     }
 }
@@ -39,6 +47,7 @@ impl std::fmt::Display for Error {
 /// `https://doc.rust-lang.org/std/marker/index.html`
 /// `https://blog.rust-lang.org/2015/05/11/traits.html`
 impl Reject for Error {}
+impl Reject for APILayerError {}
 
 #[instrument]
 pub async fn return_error(r: Rejection) -> Result<impl Reply, Rejection> {
@@ -51,6 +60,22 @@ pub async fn return_error(r: Rejection) -> Result<impl Reply, Rejection> {
     }
 
     if let Some(Error::ExternalAPIError(e)) = r.find() {
+        event!(Level::ERROR, "{}", e);
+        return Ok(warp::reply::with_status(
+            "Internal Serever Error".to_string(),
+            StatusCode::INTERNAL_SERVER_ERROR,
+        ));
+    }
+
+    if let Some(Error::ClientError(e)) = r.find() {
+        event!(Level::ERROR, "{}", e);
+        return Ok(warp::reply::with_status(
+            "Internal Serever Error".to_string(),
+            StatusCode::INTERNAL_SERVER_ERROR,
+        ));
+    }
+
+    if let Some(Error::SereverError(e)) = r.find() {
         event!(Level::ERROR, "{}", e);
         return Ok(warp::reply::with_status(
             "Internal Serever Error".to_string(),
@@ -82,5 +107,17 @@ pub async fn return_error(r: Rejection) -> Result<impl Reply, Rejection> {
             "Route not found".to_string(),
             StatusCode::NOT_FOUND,
         ))
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct APILayerError {
+    pub status: u16,
+    pub message: String,
+}
+
+impl std::fmt::Display for APILayerError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "Status: {}, Message: {}", self.status, self.message)
     }
 }

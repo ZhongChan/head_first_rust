@@ -1,6 +1,7 @@
 use crate::{
     store::Store,
     types::{
+        apilayer::{APIResponse, BadWordsResponse},
         pagination::{extract_pagination, Pagination},
         question::{NewQuestion, Question},
     },
@@ -49,25 +50,38 @@ pub async fn add_question(
         .body(new_question.content.clone())
         .send()
         .await
-        .map_err(|e| handle_errors::Error::ExternalAPIError(e))?;
+        .map_err(handle_errors::Error::ExternalAPIError)?;
 
-    //match api error
-    match res.error_for_status() {
-        Ok(res) => {
-            let res = res
-                .text()
-                .await
-                .map_err(|e| handle_errors::Error::ExternalAPIError(e))?;
-            println!("{}", res);
-
-            if let Err(err) = store.add_question(new_question).await {
-                return Err(warp::reject::custom(err));
-            }
-            Ok(warp::reply::with_status("Question addes", StatusCode::OK))
+    // transform error
+    if !res.status().is_success() {
+        if res.status().is_client_error() {
+            let err = transform_error(res).await;
+            return Err(warp::reject::custom(handle_errors::Error::ClientError(err)));
+        } else {
+            let err = transform_error(res).await;
+            return Err(warp::reject::custom(handle_errors::Error::SereverError(
+                err,
+            )));
         }
-        Err(err) => Err(warp::reject::custom(
-            handle_errors::Error::ExternalAPIError(err),
-        )),
+    }
+
+    // parse json
+    let res = res
+        .json::<BadWordsResponse>()
+        .await
+        .map_err(handle_errors::Error::ExternalAPIError)?;
+
+    let content = res.censored_content;
+    let question = NewQuestion {
+        title: new_question.title,
+        content,
+        tags: new_question.tags,
+    };
+
+    // add question
+    match store.add_question(question).await {
+        Ok(question) => Ok(warp::reply::json(&question)),
+        Err(err) => Err(warp::reject::custom(err)),
     }
 }
 
@@ -89,5 +103,12 @@ pub async fn delete_question(id: i32, store: Store) -> Result<impl Reply, Reject
             StatusCode::OK,
         )),
         Err(err) => Err(warp::reject::custom(err)),
+    }
+}
+
+async fn transform_error(resp: reqwest::Response) -> handle_errors::APILayerError {
+    handle_errors::APILayerError {
+        status: resp.status().as_u16(),
+        message: resp.json::<APIResponse>().await.unwrap().message,
     }
 }
