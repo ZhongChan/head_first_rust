@@ -91,6 +91,37 @@ pub async fn update_question(
     }
 }
 
+pub async fn update_question_tokio_spawn(
+    id: i32,
+    store: Store,
+    question: Question,
+) -> Result<impl Reply, Rejection> {
+    let content = tokio::spawn(apilayer::check_profanity(question.content));
+    let title = tokio::spawn(apilayer::check_profanity(question.title));
+
+    let (title, content) = (title.await.unwrap(), content.await.unwrap());
+
+    if title.is_err() {
+        return Err(warp::reject::custom(title.unwrap_err()));
+    }
+
+    if content.is_err() {
+        return Err(warp::reject::custom(title.unwrap_err()));
+    }
+
+    let question = Question {
+        id: question.id,
+        title: title.unwrap(),
+        content: content.unwrap(),
+        tags: question.tags,
+    };
+
+    match store.update_question(question, id).await {
+        Ok(res) => Ok(warp::reply::json(&res)),
+        Err(err) => Err(warp::reject::custom(err)),
+    }
+}
+
 pub async fn delete_question(id: i32, store: Store) -> Result<impl Reply, Rejection> {
     match store.delete_question(id).await {
         Ok(_) => Ok(warp::reply::with_status(

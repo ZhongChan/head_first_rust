@@ -1,7 +1,9 @@
 #![warn(clippy::all)]
 use handle_errors::return_error;
 use routes::answer::add_answer;
-use routes::question::{add_question, delete_question, get_questions, update_question};
+use routes::question::{
+    add_question, delete_question, get_questions, update_question, update_question_tokio_spawn,
+};
 use store::Store;
 use tracing_subscriber::fmt::format::FmtSpan;
 use warp::filters::cors::Builder;
@@ -66,7 +68,7 @@ async fn main() {
         .and(warp::path::end())
         .and(store_fileter.clone())
         .and(warp::body::json())
-        .and_then(update_question);
+        .and_then(update_question_tokio_spawn);
 
     // Delete question
     let delete_question = warp::delete()
