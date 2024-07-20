@@ -89,12 +89,14 @@ impl Store {
         &self,
         question: Question,
         question_id: i32,
+        account_id: AccountId,
     ) -> Result<Question, Error> {
-        match sqlx::query("update questions set title = $1 ,content = $2,tags = $3 where id = $4 returning id,title,content,tags")
+        match sqlx::query("update questions set title = $1 ,content = $2,tags = $3 where id = $4 and account_id = $5 returning id,title,content,tags")
                 .bind(question.title)
                 .bind(question.content)
                 .bind(question.tags)
                 .bind(question_id)
+                .bind(account_id.0)
                 .map(|row|{
                     Question{
                         id: QuestionId(row.get("id")),
@@ -197,6 +199,25 @@ impl Store {
                 email: row.get("email"),
                 password: row.get("password"),
             }),
+            Err(e) => {
+                tracing::event!(Level::ERROR, "{:?}", e);
+                Err(Error::DatabaseQueryError(e))
+            }
+        }
+    }
+
+    pub async fn is_question_owner(
+        &self,
+        question_id: i32,
+        account_id: &AccountId,
+    ) -> Result<bool, Error> {
+        match sqlx::query("select * from questions where id = $1 and account_id = $2")
+            .bind(question_id)
+            .bind(account_id.0)
+            .fetch_optional(&self.connection)
+            .await
+        {
+            Ok(question) => Ok(question.is_some()),
             Err(e) => {
                 tracing::event!(Level::ERROR, "{:?}", e);
                 Err(Error::DatabaseQueryError(e))

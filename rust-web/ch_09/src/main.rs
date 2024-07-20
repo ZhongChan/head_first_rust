@@ -65,6 +65,7 @@ async fn main() {
         .and(warp::path("questions"))
         .and(warp::path::param::<i32>())
         .and(warp::path::end())
+        .and(routes::authentications::auth())
         .and(store_fileter.clone())
         .and(warp::body::json())
         .and_then(update_question_tokio_spawn);

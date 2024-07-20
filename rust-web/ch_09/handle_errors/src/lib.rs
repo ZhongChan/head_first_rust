@@ -17,6 +17,8 @@ pub enum Error {
     ParseError(std::num::ParseIntError),
     MissingParameters,
     WrongPassword,
+    CannotDecryptToken,
+    Unauthorized,
     ArgonLibaryError(ArgonError),
     DatabaseQueryError(sqlx::Error),
     ReqwestAPIError(ReqwestError),
@@ -54,6 +56,12 @@ impl std::fmt::Display for Error {
             }
             Error::ArgonLibaryError(_) => {
                 write!(f, "Cannot verify password")
+            }
+            Error::CannotDecryptToken => {
+                write!(f, "Cannot decrypt token")
+            }
+            Error::Unauthorized => {
+                write!(f, "Unauthorized")
             }
         }
     }
