@@ -63,34 +63,6 @@ pub async fn add_question(
     }
 }
 
-#[warn(dead_code)]
-pub async fn update_question(
-    id: i32,
-    store: Store,
-    question: Question,
-) -> Result<impl Reply, Rejection> {
-    let content = match apilayer::check_profanity(question.content).await {
-        Ok(res) => res,
-        Err(err) => return Err(warp::reject::custom(err)),
-    };
-
-    let title = match apilayer::check_profanity(question.title).await {
-        Ok(res) => res,
-        Err(err) => return Err(warp::reject::custom(err)),
-    };
-
-    let question = Question {
-        id: question.id,
-        title,
-        content,
-        tags: question.tags,
-    };
-
-    match store.update_question(question, id).await {
-        Ok(res) => Ok(warp::reply::json(&res)),
-        Err(err) => Err(warp::reject::custom(err)),
-    }
-}
 
 pub async fn update_question_tokio_spawn(
     id: i32,
