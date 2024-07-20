@@ -60,6 +60,7 @@ fn verify_password(hash: &str, password: &[u8]) -> Result<bool, argon2::Error> {
 }
 
 fn issue_token(account_id: AccountId) -> String {
-    let state = serde_json::to_string(&account_id).expect("Failed to serialize') state");
-    local_paseto(&state, None, "".as_bytes()).expect("Failed to create token")
+    let state = serde_json::to_string(&account_id).expect("Failed to serialize state");
+    local_paseto(&state, None, "RANDOM WORDS WINTER MACINTOSE PC".as_bytes())
+        .expect("Failed to create token")
 }

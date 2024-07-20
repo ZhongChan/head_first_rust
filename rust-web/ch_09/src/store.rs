@@ -186,7 +186,7 @@ impl Store {
     }
 
     pub(crate) async fn get_account(&self, email: String) -> Result<Account, Error> {
-        match sqlx::query("select * from account where email = $1")
+        match sqlx::query("select * from accounts where email = $1")
             .bind(email)
             .fetch_one(&self.connection)
             .await
