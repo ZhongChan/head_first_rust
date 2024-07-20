@@ -13,7 +13,7 @@ pub struct AccountId(pub i32);
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct NewAccount {
-    pub nick_name: String,
+    pub nickname: String,
     pub email: String,
     pub password: String,
 }

@@ -1,6 +1,7 @@
 use sqlx::postgres::{PgPool, PgPoolOptions};
 use sqlx::Row;
 
+use crate::types::account::NewAccount;
 use crate::types::answer::NewAnswer;
 use crate::types::question::NewQuestion;
 use crate::types::{
@@ -94,11 +95,11 @@ impl Store {
                 .bind(question.tags)
                 .bind(question_id)
                 .map(|row|{
-                    Question{ 
-                        id: QuestionId(row.get("id")), 
-                        title: row.get("title"), 
-                        content: row.get("content"), 
-                        tags: row.get("tags") 
+                    Question{
+                        id: QuestionId(row.get("id")),
+                        title: row.get("title"),
+                        content: row.get("content"),
+                        tags: row.get("tags")
                     }
                 })
                 .fetch_one(&self.connection)
@@ -111,28 +112,28 @@ impl Store {
         }
     }
 
-    pub async fn delete_question(&self,question_id:i32)->Result<bool,Error>{
+    pub async fn delete_question(&self, question_id: i32) -> Result<bool, Error> {
         match sqlx::query("delete from questions where id = $1")
-                .bind(question_id)
-                .execute(&self.connection)
-                .await {
-            Ok(_) => {Ok(true)},
+            .bind(question_id)
+            .execute(&self.connection)
+            .await
+        {
+            Ok(_) => Ok(true),
             Err(err) => {
-                tracing::event!(tracing::Level::ERROR,"{:?}",err);
+                tracing::event!(tracing::Level::ERROR, "{:?}", err);
                 Err(Error::DatabaseQueryError)
-            },
+            }
         }
     }
 }
 
-
 impl Store {
-   pub async fn add_answer(&self,new_answer:NewAnswer)->Result<Answer,Error>{
+    pub async fn add_answer(&self, new_answer: NewAnswer) -> Result<Answer, Error> {
         match sqlx::query("insert into answers (content, question_id) values ($1, $2) returning id,content,question_id")
                 .bind(new_answer.content)
                 .bind(new_answer.question_id.0)
                 .map(|row| {
-                    Answer{ 
+                    Answer{
                         id: AnswerId(row.get("id") ),
                         content: row.get("content") ,
                         question_id: QuestionId(row.get("question_id") ),
@@ -146,5 +147,40 @@ impl Store {
                 Err(Error::DatabaseQueryError)
             },
         }
-   } 
+    }
+}
+
+impl Store {
+    pub async fn add_account(&self, account: NewAccount) -> Result<bool, Error> {
+        match sqlx::query("insert into accounts (nickname,email,password) values ($1,$2,$3)")
+            .bind(account.nickname)
+            .bind(account.email)
+            .bind(account.password)
+            .execute(&self.connection)
+            .await
+        {
+            Ok(_) => Ok(true),
+            Err(err) => {
+                let code = err
+                    .as_database_error()
+                    .unwrap()
+                    .code()
+                    .unwrap()
+                    .parse::<i32>()
+                    .unwrap();
+                let db_message = err.as_database_error().unwrap().message();
+
+                let constraint = err.as_database_error().unwrap().constraint();
+
+                tracing::event!(
+                    tracing::Level::ERROR,
+                    code = code,
+                    db_message = db_message,
+                    constraint = constraint
+                );
+
+                Err(Error::DatabaseQueryError)
+            }
+        }
+    }
 }
