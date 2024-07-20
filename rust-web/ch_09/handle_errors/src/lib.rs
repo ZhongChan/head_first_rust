@@ -9,11 +9,13 @@ use reqwest::Error as ReqwestError;
 use reqwest_middleware::Error as MiddlewareReqwestError;
 use tracing::{event, instrument, Level};
 
+const DUPLICATE_KYE: u32 = 23505;
+
 #[derive(Debug)]
 pub enum Error {
     ParseError(std::num::ParseIntError),
     MissingParameters,
-    DatabaseQueryError,
+    DatabaseQueryError(sqlx::Error),
     ReqwestAPIError(ReqwestError),
     MiddlewareReqwestAPIError(MiddlewareReqwestError),
     ClientError(APILayerError),
@@ -29,7 +31,7 @@ impl std::fmt::Display for Error {
             Error::MissingParameters => {
                 write!(f, "Missing Parameter")
             }
-            Error::DatabaseQueryError => {
+            Error::DatabaseQueryError(_) => {
                 write!(f, "Query could not be executed")
             }
             Error::ReqwestAPIError(e) => {
@@ -56,12 +58,29 @@ impl Reject for APILayerError {}
 
 #[instrument]
 pub async fn return_error(r: Rejection) -> Result<impl Reply, Rejection> {
-    if let Some(Error::DatabaseQueryError) = r.find() {
+    if let Some(Error::DatabaseQueryError(e)) = r.find() {
         event!(Level::ERROR, "Database query error");
-        return Ok(warp::reply::with_status(
-            Error::DatabaseQueryError.to_string(),
-            StatusCode::UNPROCESSABLE_ENTITY,
-        ));
+
+        match e {
+            sqlx::Error::Database(err) => {
+                if err.code().unwrap().parse::<u32>().unwrap() == DUPLICATE_KYE {
+                    return Ok(warp::reply::with_status(
+                        "Account already existsts".to_string(),
+                        StatusCode::UNPROCESSABLE_ENTITY,
+                    ));
+                }
+                return Ok(warp::reply::with_status(
+                    "Cannot update data".to_string(),
+                    StatusCode::UNPROCESSABLE_ENTITY,
+                ));
+            }
+            _ => {
+                return Ok(warp::reply::with_status(
+                    "Cannot update data".to_string(),
+                    StatusCode::UNPROCESSABLE_ENTITY,
+                ));
+            }
+        }
     }
 
     if let Some(Error::ReqwestAPIError(e)) = r.find() {
