@@ -5,6 +5,7 @@ use warp::{
     Rejection, Reply,
 };
 
+use argon2::Error as ArgonError;
 use reqwest::Error as ReqwestError;
 use reqwest_middleware::Error as MiddlewareReqwestError;
 use tracing::{event, instrument, Level};
@@ -15,6 +16,8 @@ const DUPLICATE_KYE: u32 = 23505;
 pub enum Error {
     ParseError(std::num::ParseIntError),
     MissingParameters,
+    WrongPassword,
+    ArgonLibaryError(ArgonError),
     DatabaseQueryError(sqlx::Error),
     ReqwestAPIError(ReqwestError),
     MiddlewareReqwestAPIError(MiddlewareReqwestError),
@@ -45,6 +48,12 @@ impl std::fmt::Display for Error {
             }
             Error::MiddlewareReqwestAPIError(e) => {
                 write!(f, "External API error: {}", e)
+            }
+            Error::WrongPassword => {
+                write!(f, "Wrong password")
+            }
+            Error::ArgonLibaryError(_) => {
+                write!(f, "Cannot verify password")
             }
         }
     }
@@ -81,6 +90,14 @@ pub async fn return_error(r: Rejection) -> Result<impl Reply, Rejection> {
                 ));
             }
         }
+    }
+
+    if let Some(Error::WrongPassword) = r.find() {
+        event!(Level::ERROR, "Eneterd wrong password");
+        return Ok(warp::reply::with_status(
+            "Wrong E-Mail/Password combition".to_string(),
+            StatusCode::UNAUTHORIZED,
+        ));
     }
 
     if let Some(Error::ReqwestAPIError(e)) = r.find() {

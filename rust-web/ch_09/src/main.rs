@@ -1,7 +1,7 @@
 #![warn(clippy::all)]
 use handle_errors::return_error;
 use routes::answer::add_answer;
-use routes::authentications::register;
+use routes::authentications::{login, register};
 use routes::question::{add_question, delete_question, get_questions, update_question_tokio_spawn};
 use store::Store;
 use tracing_subscriber::fmt::format::FmtSpan;
@@ -93,6 +93,14 @@ async fn main() {
         .and(warp::body::json())
         .and_then(register);
 
+    // login
+    let login = warp::post()
+        .and(warp::path("login"))
+        .and(warp::path::end())
+        .and(store_fileter.clone())
+        .and(warp::body::json())
+        .and_then(login);
+
     // Routes
     let routes = path_hello
         .or(get_questions)
@@ -101,6 +109,7 @@ async fn main() {
         .or(delete_question)
         .or(add_answer)
         .or(registration)
+        .or(login)
         .with(get_cors())
         .with(warp::trace::request())
         .recover(return_error);

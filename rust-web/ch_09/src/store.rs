@@ -1,7 +1,8 @@
 use sqlx::postgres::{PgPool, PgPoolOptions};
 use sqlx::Row;
+use tracing::Level;
 
-use crate::types::account::NewAccount;
+use crate::types::account::{Account, AccountId, NewAccount};
 use crate::types::answer::NewAnswer;
 use crate::types::question::NewQuestion;
 use crate::types::{
@@ -180,6 +181,25 @@ impl Store {
                 );
 
                 Err(Error::DatabaseQueryError(err))
+            }
+        }
+    }
+
+    pub(crate) async fn get_account(&self, email: String) -> Result<Account, Error> {
+        match sqlx::query("select * from account where email = $1")
+            .bind(email)
+            .fetch_one(&self.connection)
+            .await
+        {
+            Ok(row) => Ok(Account {
+                id: Some(AccountId(row.get("id"))),
+                nickname: row.get("nickname"),
+                email: row.get("email"),
+                password: row.get("password"),
+            }),
+            Err(e) => {
+                tracing::event!(Level::ERROR, "{:?}", e);
+                Err(Error::DatabaseQueryError(e))
             }
         }
     }

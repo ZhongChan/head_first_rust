@@ -21,6 +21,7 @@ reqwest-middleware = "0.1.1"
 reqwest-retry ="0.1.1"
 rand = "0.4"
 rust-argon2 = "1.0"
+paseto = "2.0"
 
 [profile.dev]
 incremental = true
