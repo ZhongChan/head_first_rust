@@ -68,7 +68,7 @@ fn issue_token(account_id: AccountId) -> String {
     let current_date_time = Utc::now();
     let dt = current_date_time + chrono::Duration::days(1);
 
-    let key = "RANDOM WORDS WINTER MACINTOSE PC".as_bytes();
+    let key = b"RANDOM WORDS WINTER MACINTOSH PC"; // 确保密钥长度为 32 字节
     let mut builder = paseto::tokens::PasetoBuilder::new();
     builder
         .set_encryption_key(&Vec::from(key))
@@ -80,7 +80,9 @@ fn issue_token(account_id: AccountId) -> String {
 }
 
 pub fn verify_token(token: String) -> Result<Session, handle_errors::Error> {
-    let key = "RANDOM WORDS WINTER MACINTOSE PC".as_bytes();
+    tracing::info!(token = token);
+
+    let key = b"RANDOM WORDS WINTER MACINTOSH PC"; // 确保密钥长度为 32 字节
     let token = paseto::tokens::validate_local_token(
         &token,
         None,
@@ -88,11 +90,18 @@ pub fn verify_token(token: String) -> Result<Session, handle_errors::Error> {
         &paseto::tokens::TimeBackend::Chrono,
     )
     .map_err(|e| {
-        tracing::event!(Level::ERROR, "{:?}", e);
+        tracing::event!(Level::ERROR, "Token validation failed: {:?}", e);
         handle_errors::Error::CannotDecryptToken
     })?;
 
-    serde_json::from_value::<Session>(token).map_err(|_| handle_errors::Error::CannotDecryptToken)
+    serde_json::from_value::<Session>(token).map_err(|e| {
+        tracing::event!(
+            Level::ERROR,
+            "Failed to deserialize token to Session: {:?}",
+            e
+        );
+        handle_errors::Error::CannotDecryptToken
+    })
 }
 
 pub fn auth() -> impl Filter<Extract = (Session,), Error = warp::Rejection> + Clone {
@@ -106,4 +115,74 @@ pub fn auth() -> impl Filter<Extract = (Session,), Error = warp::Rejection> + Cl
         };
         future::ready(Ok(token))
     })
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use chrono::Duration;
+    use paseto::PasetoBuilder;
+    use serde_json::json;
+    use tracing_subscriber;
+
+    #[test]
+    fn test_issue_and_verify_token() {
+        // 初始化 tracing
+        tracing_subscriber::fmt::try_init().ok();
+
+        // 示例账号 ID
+        let account_id = AccountId(4);
+
+        // 生成令牌
+        // let token = issue_token(account_id.clone());
+        let token = "v2.local.MMe87YWIAZHuCj15xYxZAbZad59Dq7YAZYKigDqWnJiBVBZKcwyceBXeWSfJMmetymIQ8kbIeK5OgQZgVMZUlzB8oDL4f1YzV-FLI9SU7Lq1sUK6crIfjFJA6lizai79Cov2W_halGpj9OOR7ArXeLlmJX7KyR86FEQ1CGP_Lr0";
+        println!("{}", token);
+
+        // 验证令牌
+        let session = verify_token(token.to_string()).expect("Failed to verify token");
+
+        // 检查生成的 session 是否正确
+        assert_eq!(session.account_id, account_id);
+    }
+
+    #[test]
+    fn test_expired_token() {
+        // 初始化 tracing
+        tracing_subscriber::fmt::try_init().ok();
+
+        // 示例账号 ID
+        let account_id = AccountId(1);
+
+        // 生成过期令牌
+        let current_date_time = Utc::now();
+        let dt = current_date_time - Duration::days(1); // 令牌过期时间设置为过去
+        let key = b"RANDOM WORDS WINTER MACINTOSH PC";
+        let mut builder = PasetoBuilder::new();
+        let token = builder
+            .set_encryption_key(&Vec::from(key))
+            .set_expiration(&dt)
+            .set_not_before(&Utc::now())
+            .set_claim("account_id", json!(account_id))
+            .build()
+            .expect("Failed to build token");
+
+        // 验证过期令牌应该失败
+        let result = verify_token(token);
+
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn test_verify_invalid_token() {
+        // 初始化 tracing
+        tracing_subscriber::fmt::try_init().ok();
+
+        // 无效的令牌
+        let invalid_token = "invalid_token".to_string();
+
+        // 验证令牌应该失败
+        let result = verify_token(invalid_token);
+
+        assert!(result.is_err());
+    }
 }
