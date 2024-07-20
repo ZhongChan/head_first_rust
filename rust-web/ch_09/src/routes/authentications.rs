@@ -4,6 +4,7 @@ use argon2::Config;
 use chrono::prelude::*;
 use rand::Rng;
 use reqwest::StatusCode;
+use tracing::Level;
 use warp::Filter;
 
 use crate::{
@@ -68,9 +69,6 @@ fn issue_token(account_id: AccountId) -> String {
     let dt = current_date_time + chrono::Duration::days(1);
 
     let key = "RANDOM WORDS WINTER MACINTOSE PC".as_bytes();
-    // local_paseto(&state, None, key)
-    //     .expect("Failed to create token")
-
     let mut builder = paseto::tokens::PasetoBuilder::new();
     builder
         .set_encryption_key(&Vec::from(key))
@@ -82,13 +80,17 @@ fn issue_token(account_id: AccountId) -> String {
 }
 
 pub fn verify_token(token: String) -> Result<Session, handle_errors::Error> {
+    let key = "RANDOM WORDS WINTER MACINTOSE PC".as_bytes();
     let token = paseto::tokens::validate_local_token(
         &token,
         None,
-        &"RANDOM WORDS WINTER MACINTOSE PC".as_bytes(),
+        &Vec::from(key),
         &paseto::tokens::TimeBackend::Chrono,
     )
-    .map_err(|_| handle_errors::Error::CannotDecryptToken)?;
+    .map_err(|e| {
+        tracing::event!(Level::ERROR, "{:?}", e);
+        handle_errors::Error::CannotDecryptToken
+    })?;
 
     serde_json::from_value::<Session>(token).map_err(|_| handle_errors::Error::CannotDecryptToken)
 }
@@ -97,7 +99,10 @@ pub fn auth() -> impl Filter<Extract = (Session,), Error = warp::Rejection> + Cl
     warp::header::<String>("Autorization").and_then(|token| {
         let token = match verify_token(token) {
             Ok(t) => t,
-            Err(_) => return future::ready(Err(warp::reject::reject())),
+            Err(e) => {
+                tracing::event!(Level::ERROR, "{:?}", e);
+                return future::ready(Err(warp::reject::reject()));
+            }
         };
         future::ready(Ok(token))
     })

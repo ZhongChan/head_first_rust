@@ -14,10 +14,13 @@ use warp::{http::StatusCode, reject::Rejection, reply::Reply};
 
 #[instrument]
 pub async fn get_questions(
+    session: Session,
     params: HashMap<String, String>,
     store: Store,
 ) -> Result<impl warp::Reply, warp::Rejection> {
-    event!(target: "ch_07",Level::INFO,"querying questions");
+    event!(target: "ch_09",Level::INFO,"querying questions");
+
+    let account_id = session.account_id;
     let mut pagination = Pagination::default();
 
     if !params.is_empty() {
@@ -27,7 +30,7 @@ pub async fn get_questions(
 
     info!(pagination = false);
     let res = match store
-        .get_questions(pagination.limit, pagination.offset)
+        .get_questions(pagination.limit, pagination.offset, account_id)
         .await
     {
         Ok(res) => res,
@@ -38,9 +41,11 @@ pub async fn get_questions(
 }
 
 pub async fn add_question(
+    session: Session,
     store: Store,
     new_question: NewQuestion,
 ) -> Result<impl warp::Reply, warp::Rejection> {
+    let account_id = session.account_id;
     let content = match apilayer::check_profanity(new_question.content).await {
         Ok(res) => res,
         Err(err) => return Err(warp::reject::custom(err)),
@@ -58,7 +63,7 @@ pub async fn add_question(
     };
 
     // add question
-    match store.add_question(question).await {
+    match store.add_question(question, account_id).await {
         Ok(question) => Ok(warp::reply::json(&question)),
         Err(err) => Err(warp::reject::custom(err)),
     }
@@ -101,8 +106,13 @@ pub async fn update_question_tokio_spawn(
     }
 }
 
-pub async fn delete_question(id: i32, store: Store) -> Result<impl Reply, Rejection> {
-    match store.delete_question(id).await {
+pub async fn delete_question(
+    id: i32,
+    session: Session,
+    store: Store,
+) -> Result<impl Reply, Rejection> {
+    let account_id = session.account_id;
+    match store.delete_question(id, account_id).await {
         Ok(_) => Ok(warp::reply::with_status(
             format!("Question {} deleted", id),
             StatusCode::OK,

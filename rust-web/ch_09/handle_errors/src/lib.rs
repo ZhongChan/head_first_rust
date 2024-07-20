@@ -61,7 +61,7 @@ impl std::fmt::Display for Error {
                 write!(f, "Cannot decrypt token")
             }
             Error::Unauthorized => {
-                write!(f, "Unauthorized")
+                write!(f, "No permission to change the underlying resource")
             }
         }
     }
@@ -75,6 +75,22 @@ impl Reject for APILayerError {}
 
 #[instrument]
 pub async fn return_error(r: Rejection) -> Result<impl Reply, Rejection> {
+    if let Some(Error::Unauthorized) = r.find() {
+        event!(Level::ERROR, "Not matching account id");
+        return Ok(warp::reply::with_status(
+            "No permission to change the underlying resource".to_string(),
+            StatusCode::UNAUTHORIZED,
+        ));
+    }
+
+    if let Some(Error::CannotDecryptToken) = r.find() {
+        event!(Level::ERROR, "Cannot decrypt token");
+        return Ok(warp::reply::with_status(
+            "Cannot decrypt token".to_string(),
+            StatusCode::UNAUTHORIZED,
+        ));
+    }
+
     if let Some(Error::DatabaseQueryError(e)) = r.find() {
         event!(Level::ERROR, "Database query error");
 

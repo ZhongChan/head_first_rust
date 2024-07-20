@@ -41,10 +41,12 @@ impl Store {
         &self,
         limit: Option<u32>,
         offset: u32,
+        account_id: AccountId,
     ) -> Result<Vec<Question>, Error> {
-        match sqlx::query("select * from questions limit $1 offset $2")
+        match sqlx::query("select * from questions where account_id = $3 limit $1 offset $2")
             .bind(limit)
             .bind(offset)
+            .bind(account_id.0)
             .map(|row| Question {
                 id: QuestionId(row.get("id")),
                 title: row.get("title"),
@@ -62,11 +64,16 @@ impl Store {
         }
     }
 
-    pub async fn add_question(&self, new_question: NewQuestion) -> Result<Question, Error> {
-        match sqlx::query("insert into questions (title,content,tags) values ($1,$2,$3) returning id,title,content,tags")
+    pub async fn add_question(
+        &self,
+        new_question: NewQuestion,
+        account_id: AccountId,
+    ) -> Result<Question, Error> {
+        match sqlx::query("insert into questions (title,content,tags,account_id) values ($1,$2,$3,$4) returning id,title,content,tags")
                 .bind(new_question.title)
                 .bind(new_question.content)
                 .bind(new_question.tags)
+                .bind(account_id.0)
                 .map(|row|{
                     Question{
                         id: QuestionId(row.get("id")) ,
@@ -115,9 +122,14 @@ impl Store {
         }
     }
 
-    pub async fn delete_question(&self, question_id: i32) -> Result<bool, Error> {
-        match sqlx::query("delete from questions where id = $1")
+    pub async fn delete_question(
+        &self,
+        question_id: i32,
+        account_id: AccountId,
+    ) -> Result<bool, Error> {
+        match sqlx::query("delete from questions where id = $1 and account_id = $2")
             .bind(question_id)
+            .bind(account_id.0)
             .execute(&self.connection)
             .await
         {
