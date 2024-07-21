@@ -43,8 +43,9 @@ pub async fn check_profanity(content: String) -> Result<String, handle_errors::E
         .with(RetryTransientMiddleware::new_with_policy(retry_policy))
         .build();
 
+    let apilayer_url = env::var("APILAYER_URL").expect("APILAYER URL NOT SET");
     let res = client
-        .post("https://api.apilayer.com/bad_words?censor_character=*")
+        .post(format!("{}/bad_words?censor_character=*", apilayer_url))
         .header("apikey", api_key)
         .body(content)
         .send()
