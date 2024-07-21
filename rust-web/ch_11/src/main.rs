@@ -1,9 +1,10 @@
 #![warn(clippy::all)]
-use clap::Parser;
+use config::Config;
 use handle_errors::return_error;
 use routes::answer::add_answer;
 use routes::authentications::{login, register};
 use routes::question::{add_question, delete_question, get_questions, update_question_tokio_spawn};
+use std::env;
 use store::Store;
 use tracing_subscriber::fmt::format::FmtSpan;
 use warp::filters::cors::Builder;
@@ -11,24 +12,10 @@ use warp::http::Method;
 use warp::Filter;
 
 mod apilayer;
+mod config;
 mod routes;
 mod store;
 mod types;
-
-#[derive(Parser, Debug)]
-#[clap(author,version,about,long_about=None)]
-struct Args {
-    #[clap(short, long, default_value = "warn")]
-    log_level: String,
-    #[clap(long, default_value = "localhost")]
-    database_host: String,
-    #[clap(long, default_value = "5432")]
-    database_port: u16,
-    #[clap(long, default_value = "rustwebdev")]
-    database_name: String,
-    #[clap(long, default_value = "3030")]
-    port: u16,
-}
 
 /// Get more info use
 ///
@@ -36,26 +23,28 @@ struct Args {
 /// `RUST_LOG=debug cargo run`
 ///
 /// # Use args
-/// `cargo run -- --port 8080`
+/// `cargo run -- --database_host localhost`
 ///
 ///
 #[tokio::main]
-async fn main() {
-    let args = Args::parse();
+async fn main() -> Result<(), handle_errors::Error> {
+    let config = Config::new().expect("Config can't be set");
 
     let log_filter = std::env::var("RUST_LOG").unwrap_or_else(|_| {
         format!(
             "handle_errors={},rust_web_dev={},warp={}",
-            args.log_level, args.log_level, args.log_level
+            config.log_level, config.log_level, config.log_level
         )
     });
 
     //fake database
     let store = Store::new(&format!(
-        "postgres://{}:{}/{}",
-        args.database_host, args.database_port, args.database_name
+        "postgres://{}:{}@{}:{}/{}",
+        config.db_user, config.db_password, config.db_host, config.db_port, config.db_name
     ))
-    .await;
+    .await
+    .map_err(|e| handle_errors::Error::DatabaseQueryError(e))?;
+
     let store_fileter = warp::any().map(move || store.clone());
 
     // tracing
@@ -157,7 +146,9 @@ async fn main() {
     tracing::info!("Q&A service build ID {}", env!("RUST_WEB_DEV_VERSION"));
 
     // start the server and pass the route filter to it
-    warp::serve(routes).run(([127, 0, 0, 1], args.port)).await;
+    warp::serve(routes).run(([0, 0, 0, 0], config.port)).await;
+
+    Ok(())
 }
 
 /// get_cors

@@ -228,6 +228,7 @@ version = "1.0.0"
 dependencies = [
  "chrono",
  "clap",
+ "dotenv",
  "env_logger",
  "handle_errors",
  "log",

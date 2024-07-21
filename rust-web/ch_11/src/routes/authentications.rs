@@ -1,4 +1,4 @@
-use std::future;
+use std::{env, future};
 
 use argon2::Config;
 use chrono::prelude::*;
@@ -68,7 +68,7 @@ fn issue_token(account_id: AccountId) -> String {
     let current_date_time = Utc::now();
     let dt = current_date_time + chrono::Duration::days(1);
 
-    let key = b"RANDOM WORDS WINTER MACINTOSH PC"; // 确保密钥长度为 32 字节
+    let key = env::var("PASETO_KEY").unwrap();
     let mut builder = paseto::tokens::PasetoBuilder::new();
     builder
         .set_encryption_key(&Vec::from(key))
@@ -82,7 +82,7 @@ fn issue_token(account_id: AccountId) -> String {
 pub fn verify_token(token: String) -> Result<Session, handle_errors::Error> {
     tracing::info!(token = token);
 
-    let key = b"RANDOM WORDS WINTER MACINTOSH PC"; // 确保密钥长度为 32 字节
+    let key = env::var("PASETO_KEY").unwrap();
     let token = paseto::tokens::validate_local_token(
         &token,
         None,
