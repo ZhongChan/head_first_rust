@@ -3,7 +3,7 @@ use std::collections::HashMap;
 
 /// Pagination struct that is getting extracted
 /// from query params
-#[derive(Debug, Default)]
+#[derive(Debug, Default, PartialEq)]
 pub struct Pagination {
     /// The index to the first item that has to be retured
     pub limit: Option<u32>,
@@ -50,4 +50,66 @@ pub fn extract_pagination(params: HashMap<String, String>) -> Result<Pagination,
         });
     }
     Err(Error::MissingParameters)
+}
+
+#[cfg(test)]
+mod pagination_tests {
+    use super::*;
+
+    #[test]
+    fn validate_pagination() {
+        let mut params = HashMap::new();
+        params.insert("limit".to_string(), "1".to_string());
+        params.insert("offset".to_string(), "1".to_string());
+        let pagination_result = extract_pagination(params);
+        let expected = Pagination {
+            limit: Some(1),
+            offset: 1,
+        };
+        assert_eq!(pagination_result.unwrap(), expected);
+    }
+
+    #[test]
+    fn missing_offset_parameter() {
+        let mut params = HashMap::new();
+        params.insert("limit".to_string(), "1".to_string());
+        let pagination_result = format!("{}", extract_pagination(params).unwrap_err());
+        let expected = format!("{}", Error::MissingParameters);
+        assert_eq!(pagination_result, expected);
+    }
+
+    #[test]
+    fn missing_limit_parameter() {
+        let mut params = HashMap::new();
+        params.insert("offset".to_string(), "1".to_string());
+        let pagination_result = format!("{}", extract_pagination(params).unwrap_err());
+        let expected = format!("{}", Error::MissingParameters);
+        assert_eq!(pagination_result, expected);
+    }
+
+    #[test]
+    fn warong_offset_type() {
+        let mut params = HashMap::new();
+        params.insert("limit".to_string(), "1".to_string());
+        params.insert("offset".to_string(), "NOT_A_NUMBER".to_string());
+        let pagination_result = format!("{}", extract_pagination(params).unwrap_err());
+        let expected = format!(
+            "{}",
+            "Cannot parse parameter: invalid digit found in string"
+        );
+        assert_eq!(pagination_result, expected);
+    }
+
+    #[test]
+    fn warong_limit_type() {
+        let mut params = HashMap::new();
+        params.insert("limit".to_string(), "NOT_A_NUMBER".to_string());
+        params.insert("offset".to_string(), "1".to_string());
+        let pagination_result = format!("{}", extract_pagination(params).unwrap_err());
+        let expected = format!(
+            "{}",
+            "Cannot parse parameter: invalid digit found in string"
+        );
+        assert_eq!(pagination_result, expected);
+    }
 }
