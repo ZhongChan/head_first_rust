@@ -69,6 +69,7 @@ fn issue_token(account_id: AccountId) -> String {
     let dt = current_date_time + chrono::Duration::days(1);
 
     let key = env::var("PASETO_KEY").unwrap();
+    println!("PASETO_KEY:{}", key);
     let mut builder = paseto::tokens::PasetoBuilder::new();
     builder
         .set_encryption_key(&Vec::from(key))
@@ -123,10 +124,17 @@ mod tests {
     use chrono::Duration;
     use paseto::PasetoBuilder;
     use serde_json::json;
+    use serial_test::serial;
     use tracing_subscriber;
 
+    fn set_env() {
+        env::set_var("PASETO_KEY", "RANDOM WORDS WINTER MACINTOSH PC");
+    }
+
     #[test]
+    #[serial]
     fn test_issue_and_verify_token() {
+        set_env();
         // 初始化 tracing
         tracing_subscriber::fmt::try_init().ok();
 
@@ -134,9 +142,7 @@ mod tests {
         let account_id = AccountId(4);
 
         // 生成令牌
-        // let token = issue_token(account_id.clone());
-        let token = "v2.local.MMe87YWIAZHuCj15xYxZAbZad59Dq7YAZYKigDqWnJiBVBZKcwyceBXeWSfJMmetymIQ8kbIeK5OgQZgVMZUlzB8oDL4f1YzV-FLI9SU7Lq1sUK6crIfjFJA6lizai79Cov2W_halGpj9OOR7ArXeLlmJX7KyR86FEQ1CGP_Lr0";
-        println!("{}", token);
+        let token = issue_token(account_id.clone());
 
         // 验证令牌
         let session = verify_token(token.to_string()).expect("Failed to verify token");
@@ -146,7 +152,9 @@ mod tests {
     }
 
     #[test]
+    #[serial]
     fn test_expired_token() {
+        set_env();
         // 初始化 tracing
         tracing_subscriber::fmt::try_init().ok();
 
@@ -173,7 +181,9 @@ mod tests {
     }
 
     #[test]
+    #[serial]
     fn test_verify_invalid_token() {
+        set_env();
         // 初始化 tracing
         tracing_subscriber::fmt::try_init().ok();
 

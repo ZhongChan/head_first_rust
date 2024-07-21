@@ -27,6 +27,8 @@ chrono = "0.4.19"
 clap = {version = "3.1.7", features = ["derive"]}
 proc-macro2 = "1.0.37"
 dotenv = "0.15.0"
+serial_test = "0.5"
+
 
 
 [profile.dev]

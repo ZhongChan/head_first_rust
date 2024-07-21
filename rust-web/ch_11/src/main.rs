@@ -31,6 +31,13 @@ mod types;
 async fn main() -> Result<(), handle_errors::Error> {
     dotenv::dotenv().ok();
     let config = Config::new().expect("Config can't be set");
+    let db_password = match &config.db_password {
+        Some(password) => password,
+        None => {
+            eprintln!("Warning: db_password is not set. Using default empty password.");
+            ""
+        }
+    };
 
     let log_filter = std::env::var("RUST_LOG").unwrap_or_else(|_| {
         format!(
@@ -42,7 +49,7 @@ async fn main() -> Result<(), handle_errors::Error> {
     //fake database
     let store = Store::new(&format!(
         "postgres://{}:{}@{}:{}/{}",
-        config.db_user, config.db_password, config.db_host, config.db_port, config.db_name
+        config.db_user, db_password, config.db_host, config.db_port, config.db_name
     ))
     .await
     .map_err(|e| handle_errors::Error::DatabaseQueryError(e))?;
