@@ -1196,6 +1196,12 @@ dependencies = [
 [[package]]
 name = "mock_server"
 version = "0.1.0"
+dependencies = [
+ "bytes",
+ "serde_json",
+ "tokio",
+ "warp",
+]
 
 [[package]]
 name = "multer"
