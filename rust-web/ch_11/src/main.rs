@@ -1,5 +1,6 @@
 #![warn(clippy::all)]
 use config::Config;
+use dotenv;
 use handle_errors::return_error;
 use routes::answer::add_answer;
 use routes::authentications::{login, register};
@@ -28,6 +29,7 @@ mod types;
 ///
 #[tokio::main]
 async fn main() -> Result<(), handle_errors::Error> {
+    dotenv::dotenv().ok();
     let config = Config::new().expect("Config can't be set");
 
     let log_filter = std::env::var("RUST_LOG").unwrap_or_else(|_| {

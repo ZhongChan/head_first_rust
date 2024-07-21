@@ -1,5 +1,4 @@
 use clap::Parser;
-use dotenv;
 use std::env;
 
 /// Q&A web service API
@@ -31,7 +30,6 @@ pub struct Config {
 
 impl Config {
     pub fn new() -> Result<Self, handle_errors::Error> {
-        dotenv::dotenv().ok();
         let config = Config::parse();
 
         if let Err(_) = env::var("APILAYER_KEY") {
