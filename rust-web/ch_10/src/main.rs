@@ -24,6 +24,9 @@ struct Args {
     port: u16,
 }
 
+/// Get more info use
+///
+/// `RUST_LOG=debug cargo run`
 #[tokio::main]
 async fn main() {
     //init config
@@ -142,6 +145,9 @@ async fn main() {
         .with(get_cors())
         .with(warp::trace::request())
         .recover(return_error);
+
+    // build info
+    tracing::info!("Q&A service build ID {}", env!("RUST_WEB_DEV_VERSION"));
 
     // start the server and pass the route filter to it
     warp::serve(routes).run(([127, 0, 0, 1], config.port)).await;

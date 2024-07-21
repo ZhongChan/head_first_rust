@@ -1,4 +1,4 @@
-log_level = "warn"
+log_level = "info"
 database_host = "localhost"
 database_port = 5432
 database_name = "rustwebdev"

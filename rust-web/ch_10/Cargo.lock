@@ -233,6 +233,7 @@ dependencies = [
  "log",
  "log4rs",
  "paseto",
+ "platforms",
  "rand 0.4.6",
  "reqwest",
  "reqwest-middleware",
@@ -1523,6 +1524,12 @@ name = "pkg-config"
 version = "0.3.30"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d231b230927b5e4ad203db57bbcbee2802f6bce620b1e4a9024a07d94e2907ec"
+
+[[package]]
+name = "platforms"
+version = "2.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e8d0eef3571242013a0d5dc84861c3ae4a652e56e12adf8bdc26ff5f8cb34c94"
 
 [[package]]
 name = "poly1305"

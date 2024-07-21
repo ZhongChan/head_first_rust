@@ -28,3 +28,6 @@ config = {version = "0.13.1",features = ["toml"]}
 
 [profile.dev]
 incremental = true
+
+[build-dependencies]
+platforms = "2.0.0"
