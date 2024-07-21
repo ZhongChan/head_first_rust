@@ -23,7 +23,9 @@ rand = "0.4"
 rust-argon2 = "1.0"
 paseto = "2.0"
 chrono = "0.4.19"
-config = {version = "0.13.1",features = ["toml"]}
+# config = {version = "0.13.1",features = ["toml"]}
+clap = {version = "3.1.7", features = ["derive"]}
+proc-macro2 = "1.0.37"
 
 
 [profile.dev]
