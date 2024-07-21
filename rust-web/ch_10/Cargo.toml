@@ -1,6 +1,6 @@
 [package]
 name = "ch_10"
-version = "0.1.0"
+version = "1.0.0"
 edition = "2021"
 
 [dependencies]
@@ -23,6 +23,8 @@ rand = "0.4"
 rust-argon2 = "1.0"
 paseto = "2.0"
 chrono = "0.4.19"
+config = {version = "0.13.1",features = ["toml"]}
+
 
 [profile.dev]
 incremental = true

@@ -1,4 +1,5 @@
 #![warn(clippy::all)]
+use config::Config;
 use handle_errors::return_error;
 use routes::answer::add_answer;
 use routes::authentications::{login, register};
@@ -14,13 +15,37 @@ mod routes;
 mod store;
 mod types;
 
+#[derive(Debug, Default, serde::Deserialize, PartialEq)]
+struct Args {
+    log_level: String,
+    database_host: String,
+    database_port: u16,
+    database_name: String,
+    port: u16,
+}
+
 #[tokio::main]
 async fn main() {
-    let log_filter =
-        std::env::var("RUST_LOG").unwrap_or_else(|_| "ch_07=info,warp=error".to_owned());
+    //init config
+    let config = Config::builder()
+        .add_source(config::File::with_name("setup"))
+        .build()
+        .unwrap();
+    let config = config.try_deserialize::<Args>().unwrap();
+
+    let log_filter = std::env::var("RUST_LOG").unwrap_or_else(|_| {
+        format!(
+            "handle_errors={},rust_web_dev={},warp={}",
+            config.log_level, config.log_level, config.log_level
+        )
+    });
 
     //fake database
-    let store = Store::new("postgres://localhost:5432/rustwebdev").await;
+    let store = Store::new(&format!(
+        "postgres://{}:{}/{}",
+        config.database_host, config.database_port, config.database_name
+    ))
+    .await;
     let store_fileter = warp::any().map(move || store.clone());
 
     // tracing
@@ -119,7 +144,7 @@ async fn main() {
         .recover(return_error);
 
     // start the server and pass the route filter to it
-    warp::serve(routes).run(([127, 0, 0, 1], 3030)).await;
+    warp::serve(routes).run(([127, 0, 0, 1], config.port)).await;
 }
 
 /// get_cors
