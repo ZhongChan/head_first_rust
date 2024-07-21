@@ -28,6 +28,7 @@ clap = {version = "3.1.7", features = ["derive"]}
 proc-macro2 = "1.0.37"
 dotenv = "0.15.0"
 serial_test = "0.5"
+mock_server ={ path = "mock_server",version = "0.1.0"}
 
 
 

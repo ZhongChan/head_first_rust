@@ -233,6 +233,7 @@ dependencies = [
  "handle_errors",
  "log",
  "log4rs",
+ "mock_server",
  "paseto",
  "platforms",
  "proc-macro2",
@@ -1191,6 +1192,10 @@ dependencies = [
  "wasi",
  "windows-sys 0.48.0",
 ]
+
+[[package]]
+name = "mock_server"
+version = "0.1.0"
 
 [[package]]
 name = "multer"
