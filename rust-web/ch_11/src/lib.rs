@@ -1,71 +1,23 @@
 #![warn(clippy::all)]
-use config::Config;
-use dotenv;
 use handle_errors::return_error;
 use routes::answer::add_answer;
 use routes::authentications::{login, register};
 use routes::question::{add_question, delete_question, get_questions, update_question_tokio_spawn};
-use std::env;
 use store::Store;
 use tracing_subscriber::fmt::format::FmtSpan;
 use warp::filters::cors::Builder;
 use warp::http::Method;
+use warp::reply::Reply;
 use warp::Filter;
 
 mod apilayer;
-mod config;
+pub mod config;
 mod routes;
 mod store;
 mod types;
 
-/// Get more info use
-///
-/// # Use toml
-/// `RUST_LOG=debug cargo run`
-///
-/// # Use args
-/// `cargo run -- --database_host localhost`
-///
-///
-#[tokio::main]
-async fn main() -> Result<(), handle_errors::Error> {
-    dotenv::dotenv().ok();
-    let config = Config::new().expect("Config can't be set");
-    let db_password = match &config.db_password {
-        Some(password) => password,
-        None => {
-            eprintln!("Warning: db_password is not set. Using default empty password.");
-            ""
-        }
-    };
-
-    let log_filter = std::env::var("RUST_LOG").unwrap_or_else(|_| {
-        format!(
-            "handle_errors={},rust_web_dev={},warp={}",
-            config.log_level, config.log_level, config.log_level
-        )
-    });
-
-    //fake database
-    let store = Store::new(&format!(
-        "postgres://{}:{}@{}:{}/{}",
-        config.db_user, db_password, config.db_host, config.db_port, config.db_name
-    ))
-    .await
-    .map_err(|e| handle_errors::Error::DatabaseQueryError(e))?;
-
+async fn build_routes(store: Store) -> impl Filter<Extract = impl Reply> + Clone {
     let store_fileter = warp::any().map(move || store.clone());
-
-    // tracing
-    tracing_subscriber::fmt()
-        // Use the filter we built above to determine which traces to record.
-        .with_env_filter(log_filter)
-        // Record an event when each span cloese.
-        // This can be used to time our
-        // route's durations!
-        .with_span_events(FmtSpan::CLOSE)
-        .init();
-
     // create a path Filter
     let path_hello = warp::path("hello").map(|| warp::reply::html("Hello, Wrap Filter!"));
 
@@ -151,13 +103,57 @@ async fn main() -> Result<(), handle_errors::Error> {
         .with(warp::trace::request())
         .recover(return_error);
 
-    // build info
-    tracing::info!("Q&A service build ID {}", env!("RUST_WEB_DEV_VERSION"));
+    routes
+}
 
+pub async fn setup_store(config: &config::Config) -> Result<store::Store, handle_errors::Error> {
+    let db_password = match &config.db_password {
+        Some(password) => password,
+        None => {
+            eprintln!("Warning: db_password is not set. Using default empty password.");
+            ""
+        }
+    };
+
+    let log_filter = std::env::var("RUST_LOG").unwrap_or_else(|_| {
+        format!(
+            "handle_errors={},rust_web_dev={},warp={}",
+            config.log_level, config.log_level, config.log_level
+        )
+    });
+
+    // tracing
+    tracing_subscriber::fmt()
+        // Use the filter we built above to determine which traces to record.
+        .with_env_filter(log_filter)
+        // Record an event when each span cloese.
+        // This can be used to time our
+        // route's durations!
+        .with_span_events(FmtSpan::CLOSE)
+        .init();
+
+    let store = Store::new(&format!(
+        "postgres://{}:{}@{}:{}/{}",
+        config.db_user, db_password, config.db_host, config.db_port, config.db_name
+    ))
+    .await
+    .map_err(|e| handle_errors::Error::DatabaseQueryError(e))?;
+    Ok(store)
+}
+
+/// Get more info use
+///
+/// # Use toml
+/// `RUST_LOG=debug cargo run`
+///
+/// # Use args
+/// `cargo run -- --database_host localhost`
+///
+///
+pub async fn run(config: config::Config, store: store::Store) {
+    let routes = build_routes(store).await;
     // start the server and pass the route filter to it
     warp::serve(routes).run(([0, 0, 0, 0], config.port)).await;
-
-    Ok(())
 }
 
 /// get_cors
