@@ -119,7 +119,7 @@ pub fn auth() -> impl Filter<Extract = (Session,), Error = warp::Rejection> + Cl
 }
 
 #[cfg(test)]
-mod tests {
+mod auth_tests {
     use super::*;
     use chrono::Duration;
     use paseto::PasetoBuilder;
@@ -129,6 +129,17 @@ mod tests {
 
     fn set_env() {
         env::set_var("PASETO_KEY", "RANDOM WORDS WINTER MACINTOSH PC");
+    }
+
+    #[tokio::test]
+    async fn post_questions_auth() {
+        set_env();
+        let token = issue_token(AccountId(3));
+        let filter = auth();
+        let res = warp::test::request()
+            .header("Autorization", token)
+            .filter(&filter);
+        assert_eq!(res.await.unwrap().account_id, AccountId(3));
     }
 
     #[test]
