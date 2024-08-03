@@ -1,6 +1,9 @@
-use std::{io, time::Duration};
+use std::{io, path::PathBuf, time::Duration};
 
-use rocket::tokio::{task::spawn_blocking, time::sleep};
+use rocket::{
+    fs::{relative, FileServer, NamedFile},
+    tokio::{task::spawn_blocking, time::sleep},
+};
 
 #[macro_use]
 extern crate rocket;
@@ -30,11 +33,25 @@ async fn blocking_task() -> io::Result<Vec<u8>> {
     Ok(vec)
 }
 
+///  Multiple Segments
+#[get("/page/<path..>")]
+async fn get_page(path: PathBuf) -> Option<NamedFile> {
+    let mut static_path = PathBuf::from("static");
+    static_path.push(path);
+
+    NamedFile::open(static_path).await.ok()
+}
+
+/// 启动函数
+/// * (1): 将 static 文件夹中的内容挂载到 /static 路径下。
 #[rocket::main]
 async fn main() -> Result<(), rocket::Error> {
     let r = rocket::build();
-    let m = r.mount("/", routes![hello, delay, blocking_task]);
-    m.launch().await?;
+    let r = r
+        .mount("/", routes![hello, delay, blocking_task, get_page])
+        .mount("/static", FileServer::from(relative!("static"))); // (1)
+
+    r.launch().await?;
 
     Ok(())
 }
