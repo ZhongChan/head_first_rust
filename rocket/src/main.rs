@@ -5,9 +5,14 @@ use rocket::tokio::{task::spawn_blocking, time::sleep};
 #[macro_use]
 extern crate rocket;
 
-#[get("/hello")]
-async fn hello() -> &'static str {
-    "Hello, world!"
+/// Dynamic Paths
+#[get("/hello/<name>/<age>/<cool>")]
+async fn hello(name: &str, age: u8, cool: bool) -> String {
+    if cool {
+        format!("You're a cool {} year old, {}", age, name)
+    } else {
+        format!("{}, we need to talk about your coolness.", name)
+    }
 }
 
 #[get("/delay/<seconds>")]
