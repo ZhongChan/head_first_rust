@@ -7,5 +7,5 @@ mod routes;
 
 #[launch]
 pub fn rocket() -> _ {
-    rocket::build().mount("/api", routes![])
+    rocket::build().mount("/api", routes![routes::users::get_user])
 }
