@@ -1,9 +1,6 @@
-use rocket::{
-    serde::json::{json, Json, Value},
-    Route,
-};
+use rocket::{serde::json::Json, Route};
 
-use crate::models::{
+use crate::models::user::{
     UserLoginWrapper, UserRegisterWrapper, UserResp, UserUpdateWrapper, UserWrapper,
 };
 
