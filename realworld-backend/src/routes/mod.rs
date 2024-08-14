@@ -9,5 +9,6 @@ pub fn get_routes() -> Vec<Route> {
     let mut routes = Vec::new();
     routes.append(&mut users::get_routes());
     routes.append(&mut articles::get_routes());
+    routes.append(&mut profiles::get_routes());
     routes
 }

@@ -50,3 +50,17 @@ pub struct UserUpdate {
 pub struct UserUpdateWrapper {
     pub user: UserUpdate,
 }
+
+#[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct Profile {
+    pub username: String,
+    pub bio: Option<String>,
+    pub image: Option<String>,
+    pub following: bool,
+}
+
+#[derive(Serialize)]
+pub struct ProfileResponse {
+    pub profile: Profile,
+}
