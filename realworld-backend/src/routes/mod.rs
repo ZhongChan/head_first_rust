@@ -10,5 +10,6 @@ pub fn get_routes() -> Vec<Route> {
     routes.append(&mut users::get_routes());
     routes.append(&mut articles::get_routes());
     routes.append(&mut profiles::get_routes());
+    routes.append(&mut tags::get_routes());
     routes
 }
