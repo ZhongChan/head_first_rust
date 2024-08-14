@@ -75,3 +75,39 @@ pub struct UpdateArticle {
 pub struct UpdateArticleWrapper {
     pub article: UpdateArticle,
 }
+
+#[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct CommentResponse {
+    pub id: i32,
+    #[serde(serialize_with = "serialize_iso8601")]
+    pub created_at: DateTime<Utc>,
+    #[serde(serialize_with = "serialize_iso8601")]
+    pub updated_at: DateTime<Utc>,
+    pub body: String,
+    pub author: AuthorResponse,
+}
+
+#[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct SingleCommentWrapper {
+    pub comment: CommentResponse,
+}
+
+#[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct MultipleCommentsWrapper {
+    pub comments: Vec<CommentResponse>,
+}
+
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct NewComment {
+    pub body: String,
+}
+
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct NewCommentWrapper {
+    pub comment: NewComment,
+}
