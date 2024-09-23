@@ -1,21 +1,20 @@
 use std::net::TcpListener;
 
-use actix_web::{dev::Server, web, App, HttpRequest, HttpResponse, HttpServer, Responder};
+use actix_web::{dev::Server, web, App, HttpResponse, HttpServer};
 
-async fn greet(req: HttpRequest) -> impl Responder {
-    let name = req.match_info().get("name").unwrap_or("World");
-    format!("Hello {}!", name)
+async fn health_check() -> HttpResponse {
+    HttpResponse::Ok().finish()
 }
 
-async fn health_check() -> impl Responder {
-    HttpResponse::Ok()
+async fn subscribe() -> HttpResponse {
+    HttpResponse::Ok().finish()
 }
 
 pub fn run(listener: TcpListener) -> Result<Server, std::io::Error> {
     let server = HttpServer::new(|| {
         App::new()
             .route("/health_check", web::get().to(health_check))
-            .route("/{name}", web::get().to(greet))
+            .route("/suscriptions", web::get().to(subscribe))
     })
     .listen(listener)?
     .run();
