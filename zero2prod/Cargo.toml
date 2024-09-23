@@ -3,6 +3,19 @@ name = "zero2prod"
 version = "0.1.0"
 edition = "2021"
 
+[lib]
+# 可以在这里使用任何路径，但遵循社区惯例。
+# 可以通过 `name` 字段指定库名。如果未指定，
+# cargo 会默认使用 `package.name`，这正是所需的。
+path = "src/lib.rs"
+
+[[bin]]
+# 注意双方括号：在 TOML 语法中表示数组。
+# 一个项目只能有一个库，但可以有多个二进制文件！
+# 如果你想在同一仓库中管理多个库，可以了解一下工作区功能——我们稍后会介绍。
+path = "src/main.rs"
+name = "zero2prod"
+
 [dependencies]
 actix-web = "4"
 tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
