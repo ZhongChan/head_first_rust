@@ -36,7 +36,7 @@ async fn subscribe_returns_a_200_for_valid_form_data() {
     // Act
     let body = "name=le%20guin&email=ursula_le_guin%40gmail.com";
     let response = client
-        .post(&format!("{}/suscriptions", &address))
+        .post(&format!("{}/subscriptions", &address))
         .header("Content-type", "application/x-www-form-urlencoded")
         .body(body)
         .send()
@@ -62,7 +62,7 @@ async fn subscribe_returns_a_400_when_data_is_missing() {
 
     for (body, err_msg) in test_cases {
         let response = client
-            .post(&format!("{}/suscriptions", &address))
+            .post(&format!("{}/subscriptions", &address))
             .header("Content-type", "application/x-www-form-urlencoded")
             .body(body)
             .send()
