@@ -1,13 +1,22 @@
 use std::net::TcpListener;
 
-use env_logger::Env;
 use sqlx::PgPool;
 use zero2prod::{configrations::get_config, startup::run};
 
+use tracing::subscriber::set_global_default;
+use tracing_bunyan_formatter::{BunyanFormattingLayer, JsonStorageLayer};
+use tracing_subscriber::{layer::SubscriberExt, EnvFilter, Registry};
+
 #[tokio::main]
 async fn main() -> Result<(), std::io::Error> {
-    // `init` dos call `set_logger`
-    env_logger::Builder::from_env(Env::default().default_filter_or("info")).init();
+    let env_filter = EnvFilter::try_from_default_env().unwrap_or_else(|_| EnvFilter::new("info"));
+    let formatting_layer = BunyanFormattingLayer::new("zero2prod".into(), std::io::stdout);
+
+    let subscriber = Registry::default()
+        .with(env_filter)
+        .with(JsonStorageLayer)
+        .with(formatting_layer);
+    set_global_default(subscriber).expect("Faild to set subscriber");
 
     let configuration = get_config().expect("Failed to read configuration.");
 
