@@ -1,4 +1,5 @@
 use chrono::Utc;
+use tracing::Instrument;
 use uuid::Uuid;
 
 use actix_web::{web, HttpResponse};
@@ -18,16 +19,16 @@ pub async fn subscribe(
 ) -> HttpResponse {
     let request_id = Uuid::new_v4();
 
-    tracing::info!(
-        "request_id {} - Adding '{}' '{}' as a new subscriber.",
-        request_id,
-        form.email,
-        form.name
-    );
-    tracing::info!(
-        "request_id {} - Saving new subscriber details in the database",
-        request_id
-    );
+    // Spans, like logs, have an associated level
+    // `info_span` creates a span at the info-level
+    let request_span = tracing::info_span!("Adding a new subscriber.",%request_id,subscriber_email = %form.email,subscriber_name = %form.name);
+
+    // Using `enter` in an async function is a recipe for disaster!
+    let _request_span_gurad = request_span.enter();
+    // `_request_span_gurad` is dropped at the end of `subscribe`
+    // That's when we "exit" the span
+
+    let query_span = tracing::info_span!("Saving new subscriber details in the database");
 
     let result = sqlx::query!(
         r#"
@@ -40,6 +41,7 @@ pub async fn subscribe(
         Utc::now()
     )
     .execute(db_pool.get_ref())
+    .instrument(query_span)
     .await;
 
     match result {
