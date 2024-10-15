@@ -2,7 +2,17 @@ use std::{net::TcpListener, vec};
 
 use sqlx::{Connection, PgConnection, PgPool};
 use uuid::Uuid;
-use zero2prod::configrations::{get_config, DatabaseSettings};
+use zero2prod::{
+    configrations::{get_config, DatabaseSettings},
+    telemetry::{get_subscriber, init_subscriber},
+};
+
+use once_cell::sync::Lazy;
+
+static TRACING: Lazy<()> = Lazy::new(|| {
+    let subscriber = get_subscriber("test".to_string(), "debug".to_string());
+    init_subscriber(subscriber);
+});
 
 #[tokio::test]
 async fn health_check_works() {
@@ -28,6 +38,9 @@ pub struct TestApp {
 }
 
 async fn spawn_app() -> TestApp {
+    // The first time `init` is invoked the code in `TRACING` is executed.
+    Lazy::force(&TRACING);
+
     let listener = TcpListener::bind("127.0.0.1:0").expect("Failed to bind random port");
     let port = listener.local_addr().unwrap().port();
 
