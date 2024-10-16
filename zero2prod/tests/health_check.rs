@@ -10,8 +10,16 @@ use zero2prod::{
 use once_cell::sync::Lazy;
 
 static TRACING: Lazy<()> = Lazy::new(|| {
-    let subscriber = get_subscriber("test".to_string(), "debug".to_string());
-    init_subscriber(subscriber);
+    let subscirber_name = "test".to_string();
+    let default_filter_level = "debug".to_string();
+
+    if std::env::var("TEST_LOG").is_ok() {
+        let subscriber = get_subscriber(subscirber_name, default_filter_level, std::io::stdout);
+        init_subscriber(subscriber);
+    } else {
+        let subscriber = get_subscriber(subscirber_name, default_filter_level, std::io::sink);
+        init_subscriber(subscriber);
+    }
 });
 
 #[tokio::test]

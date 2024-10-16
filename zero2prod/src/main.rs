@@ -9,7 +9,7 @@ use zero2prod::{
 
 #[tokio::main]
 async fn main() -> Result<(), std::io::Error> {
-    let subscriber = get_subscriber("zero2prod".to_string(), "info".to_string());
+    let subscriber = get_subscriber("zero2prod".to_string(), "info".to_string(), std::io::stdout);
     init_subscriber(subscriber);
 
     let configuration = get_config().expect("Failed to read configuration.");
