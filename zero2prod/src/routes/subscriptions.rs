@@ -1,5 +1,4 @@
 use chrono::Utc;
-use tracing::Instrument;
 use uuid::Uuid;
 
 use actix_web::{web, HttpResponse};
@@ -26,9 +25,21 @@ pub async fn subscribe(
     form: web::Form<FormData>,
     db_pool: web::Data<PgPool>, //(2)
 ) -> HttpResponse {
-    let query_span = tracing::info_span!("Saving new subscriber details in the database");
+    match insert_subscriber(&db_pool, &form).await {
+        Ok(_) => HttpResponse::Ok().finish(),
+        Err(e) => {
+            tracing::error!("Failed to execute query: {:?}", e);
+            HttpResponse::InternalServerError().finish()
+        }
+    }
+}
 
-    let result = sqlx::query!(
+#[tracing::instrument(
+    name = "Saving new subscriber details in the database",
+    skip(form, db_pool)
+)]
+pub async fn insert_subscriber(db_pool: &PgPool, form: &FormData) -> Result<(), sqlx::Error> {
+    sqlx::query!(
         r#"
               insert into subscriptions (id, email, name, subscribed_at)
               values ($1, $2, $3, $4)
@@ -38,15 +49,12 @@ pub async fn subscribe(
         form.name,
         Utc::now()
     )
-    .execute(db_pool.get_ref())
-    .instrument(query_span)
-    .await;
-
-    match result {
-        Ok(_) => HttpResponse::Ok().finish(),
-        Err(e) => {
-            tracing::error!("Failed to execute query: {:?}", e);
-            HttpResponse::InternalServerError().finish()
-        }
-    }
+    .execute(db_pool)
+    .await
+    .map_err(|e| {
+        tracing::error!("Failed to execute query: {:?}", e);
+        e
+        // Using the `?` operator to return early
+    })?;
+    Ok(())
 }
