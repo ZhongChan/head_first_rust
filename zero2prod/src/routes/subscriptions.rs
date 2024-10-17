@@ -4,7 +4,7 @@ use uuid::Uuid;
 use actix_web::{web, HttpResponse};
 use sqlx::PgPool;
 
-use unicode_segmentation::UnicodeSegmentation;
+use crate::domain::{NewSubscriber, SubscirberName};
 
 #[derive(serde::Deserialize)]
 pub struct FormData {
@@ -26,11 +26,12 @@ pub async fn subscribe(
     form: web::Form<FormData>,
     db_pool: web::Data<PgPool>, //(2)
 ) -> HttpResponse {
-    if !is_valiad_name(&form.name) {
-        return HttpResponse::BadRequest().finish();
-    }
+    let new_subscriber = NewSubscriber {
+        email: form.0.email,
+        name: SubscirberName::parse(form.0.name),
+    };
 
-    match insert_subscriber(&db_pool, &form).await {
+    match insert_subscriber(&db_pool, &new_subscriber).await {
         Ok(_) => HttpResponse::Ok().finish(),
         Err(e) => {
             tracing::error!("Failed to execute query: {:?}", e);
@@ -41,17 +42,20 @@ pub async fn subscribe(
 
 #[tracing::instrument(
     name = "Saving new subscriber details in the database",
-    skip(form, db_pool)
+    skip(new_subscriber, db_pool)
 )]
-pub async fn insert_subscriber(db_pool: &PgPool, form: &FormData) -> Result<(), sqlx::Error> {
+pub async fn insert_subscriber(
+    db_pool: &PgPool,
+    new_subscriber: &NewSubscriber,
+) -> Result<(), sqlx::Error> {
     sqlx::query!(
         r#"
               insert into subscriptions (id, email, name, subscribed_at)
               values ($1, $2, $3, $4)
               "#,
         Uuid::new_v4(),
-        form.email,
-        form.name,
+        new_subscriber.email,
+        new_subscriber.name.inner_ref(),
         Utc::now()
     )
     .execute(db_pool)
@@ -62,13 +66,4 @@ pub async fn insert_subscriber(db_pool: &PgPool, form: &FormData) -> Result<(), 
         // Using the `?` operator to return early
     })?;
     Ok(())
-}
-
-pub fn is_valiad_name(s: &str) -> bool {
-    let is_empty_or_whitespace = s.trim().is_empty();
-    let is_too_long = s.graphemes(true).count() > 256;
-    let forbidden_characters = ['/', '(', ')', '"', '<', '>', '\\', '{', '}'];
-    let contains_forbidden_characters = s.chars().any(|g| forbidden_characters.contains(&g));
-
-    !(is_empty_or_whitespace || is_too_long || contains_forbidden_characters)
 }
