@@ -29,3 +29,9 @@ impl SubscirberName {
         }
     }
 }
+
+impl AsRef<str> for SubscirberName {
+    fn as_ref(&self) -> &str {
+        &self.0
+    }
+}
