@@ -4,7 +4,7 @@ use uuid::Uuid;
 use actix_web::{web, HttpResponse};
 use sqlx::PgPool;
 
-use crate::domain::{NewSubscriber, SubscirberName};
+use crate::domain::{NewSubscriber, SubscriberName};
 
 #[derive(serde::Deserialize)]
 pub struct FormData {
@@ -28,7 +28,7 @@ pub async fn subscribe(
 ) -> HttpResponse {
     let new_subscriber = NewSubscriber {
         email: form.0.email,
-        name: SubscirberName::parse(form.0.name).expect("Name validation failed"),
+        name: SubscriberName::parse(form.0.name).expect("Name validation failed"),
     };
 
     match insert_subscriber(&db_pool, &new_subscriber).await {
