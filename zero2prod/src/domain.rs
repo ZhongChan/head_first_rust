@@ -12,11 +12,7 @@ impl SubscirberName {
         &mut self.0
     }
 
-    pub fn inner_ref(&self) -> &str {
-        &self.0
-    }
-
-    pub fn parse(s: String) -> SubscirberName {
+    pub fn parse(s: String) -> Result<SubscirberName, String> {
         let is_empty_or_whitespace = s.trim().is_empty();
         let is_too_long = s.graphemes(true).count() > 256;
         let forbidden_characters = ['/', '(', ')', '"', '<', '>', '\\', '{', '}'];
@@ -25,7 +21,7 @@ impl SubscirberName {
         if !(is_empty_or_whitespace || is_too_long || contains_forbidden_characters) {
             panic!("{} is not a valid subscriber name.", s)
         } else {
-            Self(s)
+            Ok(Self(s))
         }
     }
 }
