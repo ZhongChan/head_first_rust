@@ -37,6 +37,10 @@ validator = "0.16"
 
 [dev-dependencies]
 claims = "0.7"
+# We are not using fake >= 2.4 because it relies on rand 0.8
+# which has been recently released and it is not yet used by
+# quickcheck (solved in its upcoming 1.0 release!)
+fake = "~2.3"
 
 [dependencies.sqlx]
 version = "0.7"
