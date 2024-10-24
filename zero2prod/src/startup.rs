@@ -1,5 +1,5 @@
 use crate::{
-    email_client::{self, EmailClient},
+    email_client::EmailClient,
     routes::{health_check, subscribe},
 };
 use actix_web::{dev::Server, web, App, HttpServer};

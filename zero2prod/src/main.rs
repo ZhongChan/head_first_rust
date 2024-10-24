@@ -26,7 +26,11 @@ async fn main() -> Result<(), std::io::Error> {
         .sender()
         .expect("Invalid sender email address.");
 
-    let email_client = EmailClient::new(configuration.email_client.base_url, sender);
+    let email_client = EmailClient::new(
+        configuration.email_client.base_url,
+        sender,
+        configuration.email_client.authorization_token,
+    );
 
     let address = format!("127.0.0.1:{}", configuration.app_port);
     let listener = TcpListener::bind(address)?;
