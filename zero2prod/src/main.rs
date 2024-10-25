@@ -1,5 +1,4 @@
 use std::net::TcpListener;
-
 use secrecy::ExposeSecret;
 use sqlx::PgPool;
 use zero2prod::{
@@ -26,10 +25,12 @@ async fn main() -> Result<(), std::io::Error> {
         .sender()
         .expect("Invalid sender email address.");
 
+    let timeout = configuration.email_client.timeout();
     let email_client = EmailClient::new(
         configuration.email_client.base_url,
         sender,
         configuration.email_client.authorization_token,
+        timeout,
     );
 
     let address = format!("127.0.0.1:{}", configuration.app_port);

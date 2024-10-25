@@ -1,5 +1,5 @@
 use std::{net::TcpListener, vec};
-
+use std::time::Duration;
 use secrecy::ExposeSecret;
 use sqlx::{Connection, PgConnection, PgPool};
 use uuid::Uuid;
@@ -65,11 +65,11 @@ async fn spawn_app() -> TestApp {
     let email_client = EmailClient::new(
         configuration.email_client.base_url,
         sender,
-        configuration.email_client.authorization_token,
+        configuration.email_client.authorization_token, Duration::from_secs(10),
     );
 
     let server = zero2prod::startup::run(listener, db_pool.clone(), email_client.clone())
-        .expect("Faild to bind address.");
+        .expect("Failed to bind address.");
     let _ = tokio::spawn(server);
     let address = format!("http://127.0.0.1:{}", port);
 

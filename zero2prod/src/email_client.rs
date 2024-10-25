@@ -17,9 +17,10 @@ impl EmailClient {
         base_url: String,
         sender: SubscriberEmail,
         authorization_token: Secret<String>,
+        timeout: Duration,
     ) -> Self {
         let http_client = Client::builder()
-            .timeout(Duration::from_secs(10))
+            .timeout(timeout)
             .build()
             .unwrap();
 
@@ -184,7 +185,7 @@ mod tests {
 
 
     fn email_client(base_url: String) -> EmailClient {
-        EmailClient::new(base_url, email(), Secret::new(Faker.fake()))
+        EmailClient::new(base_url, email(), Secret::new(Faker.fake()), Duration::from_secs(1))
     }
 
     fn email() -> SubscriberEmail {
