@@ -16,7 +16,7 @@ pub struct FormData {
 }
 
 // subscribe
-// (2) Retriving a connection from the application state!
+// (2) Retrieving a connection from the application state!
 #[tracing::instrument(
     name = "Adding a new subscriber", 
     skip(form, db_pool),
@@ -53,8 +53,8 @@ pub async fn insert_subscriber(
 ) -> Result<(), sqlx::Error> {
     sqlx::query!(
         r#"
-              insert into subscriptions (id, email, name, subscribed_at)
-              values ($1, $2, $3, $4)
+              insert into subscriptions (id, email, name, subscribed_at, status)
+              values ($1, $2, $3, $4, 'confirmed')
               "#,
         Uuid::new_v4(),
         new_subscriber.email.as_ref(),
