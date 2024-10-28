@@ -1,15 +1,13 @@
-use secrecy::ExposeSecret;
 use sqlx::{Connection, PgConnection, PgPool};
-use std::time::Duration;
-use std::net::TcpListener;
 use uuid::Uuid;
 use zero2prod::{
-    configrations::{get_config, DatabaseSettings},
-    email_client::EmailClient,
+    configrations::{get_config, DatabaseSettings}
+    ,
     telemetry::{get_subscriber, init_subscriber},
 };
 
 use once_cell::sync::Lazy;
+use zero2prod::startup::{get_connection_pool, Application};
 
 static TRACING: Lazy<()> = Lazy::new(|| {
     let subscriber_name = "test".to_string();
@@ -25,7 +23,6 @@ static TRACING: Lazy<()> = Lazy::new(|| {
 });
 
 
-
 pub struct TestApp {
     pub address: String,
     pub db_pool: PgPool,
@@ -35,35 +32,27 @@ pub async fn spawn_app() -> TestApp {
     // The first time `init` is invoked the code in `TRACING` is executed.
     Lazy::force(&TRACING);
 
-    let listener = TcpListener::bind("127.0.0.1:0").expect("Failed to bind random port");
-    let port = listener.local_addr().unwrap().port();
+    let configuration = {
+        let mut c = get_config().expect("Failed to read configuration.");
+        c.database.database_name = Uuid::new_v4().to_string();
+        c.application.port = 0;
+        c
+    };
 
-    let mut configuration = get_config().expect("Failed to read configuration.");
-    configuration.database.database_name = Uuid::new_v4().to_string();
-    let db_pool = configure_database(&configuration.database).await;
+    // Create and migrate the database
+    configure_database(&configuration.database).await;
 
-    let sender = configuration
-        .email_client
-        .sender()
-        .expect("Invalid sender email address.");
-    let email_client = EmailClient::new(
-        configuration.email_client.base_url,
-        sender,
-        configuration.email_client.authorization_token, Duration::from_secs(10),
-    );
+    let application = Application::build(configuration.clone()).await.expect("Failed to build application.");
+    let address = format!("http://127.0.0.1:{}", application.port());
+    let _ = tokio::spawn(application.run_until_stopped());
 
-    let server = zero2prod::startup::run(listener, db_pool.clone(), email_client.clone())
-        .expect("Failed to bind address.");
-    let _ = tokio::spawn(server);
-    let address = format!("http://127.0.0.1:{}", port);
-
-    TestApp { address, db_pool }
+    TestApp { address, db_pool: get_connection_pool(&configuration.database) }
 }
 
 pub async fn configure_database(config: &DatabaseSettings) -> PgPool {
     // Create Database
     let mut connection =
-        PgConnection::connect(&config.connection_string_without_db().expose_secret())
+        PgConnection::connect_with(&config.without_db())
             .await
             .expect("Failed to connect to Postgres");
 
@@ -73,7 +62,7 @@ pub async fn configure_database(config: &DatabaseSettings) -> PgPool {
         .expect("Failed to create database.");
 
     // Migrate database
-    let db_pool = PgPool::connect(&config.connection_string().expose_secret())
+    let db_pool = PgPool::connect_with(config.with_db())
         .await
         .expect("Failed to connect to Postgres.");
 

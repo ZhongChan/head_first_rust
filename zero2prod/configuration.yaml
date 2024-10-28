@@ -1,10 +1,13 @@
-app_port: 8000
+application:
+  host: "127.0.0.1"
+  port: 8000
 database:
   host: "127.0.0.1"
   port: 5432
   username: "postgres"
   password: "password"
   database_name: "newsletter"
+  require_ssl: false
 email_client:
   base_url: "localhost"
   sender_email: "test@gmail.com"
